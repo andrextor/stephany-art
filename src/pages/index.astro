@@ -2,7 +2,6 @@
 import { Picture } from 'astro:assets';
 import artistPhoto from '../assets/artist/stephany-at-biarco.webp';
 import ArtworkCard from '../components/ArtworkCard.astro';
-import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import ScrollWorld from '../components/ScrollWorld.astro';
 import TaglineReveal from '../components/TaglineReveal.astro';
@@ -16,7 +15,7 @@ const origin = Astro.site ?? Astro.url;
 const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 ---
 
-<Layout jsonLd={jsonLd} hideFooter>
+<Layout jsonLd={jsonLd}>
   <ScrollWorld />
 
   <div class="after-world">
@@ -123,21 +122,5 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
         </section>
       )
     }
-
-    <Footer />
   </div>
-
-  <script>
-    // Stacked sections: a section taller than the viewport must pin once its bottom is
-    // in view, not its top, so each one publishes its height for the sticky offset.
-    const stack = document.querySelector<HTMLElement>('.after-world');
-    if (stack) {
-      const observer = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          (entry.target as HTMLElement).style.setProperty('--h', `${entry.contentRect.height}px`);
-        }
-      });
-      for (const section of stack.children) observer.observe(section);
-    }
-  </script>
 </Layout>

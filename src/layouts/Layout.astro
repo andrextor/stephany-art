@@ -13,7 +13,6 @@ interface Props {
   imageAlt?: string;
   type?: 'website' | 'article';
   jsonLd?: JsonLd;
-  hideFooter?: boolean;
 }
 
 const {
@@ -23,7 +22,6 @@ const {
   imageAlt = `El taller de ${site.artistName}`,
   type = 'website',
   jsonLd,
-  hideFooter = false,
 } = Astro.props;
 
 const fullTitle = title ? `${title} · ${site.artistName}` : `${site.artistName} · ${site.role}`;
@@ -69,6 +67,6 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     <main id="contenido">
       <slot />
     </main>
-    {!hideFooter && <Footer class="mt-24" />}
+    <Footer class="mt-24" />
   </body>
 </html>

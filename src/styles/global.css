@@ -67,10 +67,14 @@ body {
   object-fit: cover;
 }
 
-/* The page after the flight slides over the frozen last frame. */
+/* Home ends on a full-bleed band, so the footer's top margin would leave a stray stripe. */
+main:has(.after-world) + footer {
+  margin-top: 0;
+}
+
+/* The page after the flight starts right under the last frame, which scrolls away with it. */
 .js .after-world {
   position: relative;
-  z-index: 25;
   background-color: var(--color-bg);
 }
 
@@ -263,12 +267,4 @@ body {
   ::view-transition-new(*) {
     animation: none;
   }
-}
-
-/* Home: the sections after the flight stack. Each one pins while the next slides over
-   it; a section taller than the viewport pins once its bottom is in view (--h is set
-   by the script in index.astro). */
-.js .after-world > :not(script) {
-  position: sticky;
-  top: min(0px, calc(100svh - var(--h, 0px)));
 }

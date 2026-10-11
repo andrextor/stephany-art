@@ -78,6 +78,9 @@
     10. Copy timing: stops after the first fade in during the last `copyLead` vh of the
         incoming connector and hold at full opacity through the scene (was a single peak
         at mid-scene). On phones the copy sits higher (bottom ≈ 18dvh) under a taller veil.
+    12. Normal-page exit: past the end of the track, `--sw-exit` (px scrolled beyond it)
+        shifts the stage and copy layer up, so the last frame scrolls away glued to the
+        top of the page content instead of staying fixed under it.
     11. Copy parallax goes through `--sw-py` instead of an inline transform, which used to
         overwrite the desktop `translateY(-50%)` centering and left the copy in the lower half.
      9. Scene stills load on demand: only the first scene's poster has a src at mount;
@@ -303,6 +306,7 @@ export function mountScrollWorld(container, config) {
       container.style.setProperty('--sw-accent', SECTIONS[near].accent || '');
     }
     scrollbarFill.style.transform = `scaleX(${clamp(y / (totalW * vh))})`;
+    container.style.setProperty('--sw-exit', `${Math.max(0, y - totalW * vh)}px`);
     container.classList.toggle('sw-leaving', y > totalW * vh);
     container.classList.toggle('sw-past', y >= totalW * vh + vh);
     hint.style.opacity = clamp(1 - y / (0.5 * vh));
@@ -422,11 +426,11 @@ function injectCSS() {
   .sw-nav__item{font:inherit;font-size:.82rem;color:var(--sw-ink-soft);border:0;background:transparent;cursor:pointer;padding:7px 14px;border-radius:999px;transition:color .25s,background .25s;}
   .sw-nav__item:hover{color:var(--sw-ink);} .sw-nav__item.is-active{color:#fff;background:var(--sw-accent);}
   .sw-topcta{text-decoration:none;font-weight:600;font-size:.9rem;color:#fff;background:var(--sw-ink);padding:10px 20px;border-radius:999px;white-space:nowrap;}
-  .sw-stage{position:fixed;inset:0;z-index:10;pointer-events:none;}
+  .sw-stage{position:fixed;inset:0;z-index:10;pointer-events:none;transform:translateY(calc(-1 * var(--sw-exit,0px)));}
   .sw-scene{position:absolute;inset:0;opacity:0;overflow:hidden;will-change:opacity;}
   .sw-scene__video,.sw-scene__still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;}
   .sw-scene__still{will-change:transform;} .sw-scene.has-clip .sw-scene__still{opacity:0;} .sw-scene__video{z-index:1;}
-  .sw-copylayer{position:fixed;inset:0;z-index:20;pointer-events:none;}
+  .sw-copylayer{position:fixed;inset:0;z-index:20;pointer-events:none;transform:translateY(calc(-1 * var(--sw-exit,0px)));}
   .sw-copylayer::before{content:"";position:absolute;inset:0;width:min(58vw,780px);background:linear-gradient(90deg,var(--sw-bg) 0%,color-mix(in srgb,var(--sw-bg) 82%,transparent) 34%,color-mix(in srgb,var(--sw-bg) 40%,transparent) 62%,transparent 100%);}
   .sw-copy{position:absolute;left:clamp(18px,5vw,64px);top:50%;transform:translateY(calc(-50% + var(--sw-py,0vh)));width:min(42vw,460px);opacity:0;will-change:opacity,transform;}
   .sw-copy__num{font-family:ui-monospace,Menlo,monospace;font-size:.74rem;letter-spacing:.12em;color:var(--sw-ink-soft);}
