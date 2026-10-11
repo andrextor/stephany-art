@@ -276,6 +276,40 @@ Una o dos fotos suyas pintando en el taller: la actual es de un evento con logos
 
 Capturas de home y `/obras` en 390 y 1440 px; filtros de `/obras` siguen funcionando; Lighthouse móvil ≥ 99 y CLS 0; contraste AA de cartelas sobre lino y nogal.
 
+### 5.7 Fase 10 "movimiento y espirales" (rama `feat/movimiento`, pendiente de aprobación)
+
+**Pedido (11/10/2026):** con el nuevo diseño de la fase 9, el cliente sí quiere el scroll que teníamos en las secciones, y pide tomar como referencia las mejoras de la landing de Arko (`midudev/mcp-higgsfield-landing`): scroll y figuras decorativas.
+
+**Lo que hace Arko después de su recorrido** (revisado en el código):
+- Scroll suave en toda la página con Lenis (`autoRaf`, anclas suaves), desactivado con reduced motion.
+- Apariciones escalonadas: cada bloque entra con un retraso propio (`--d: 0, 100, 200 ms`) en vez de todos a la vez.
+- La frase principal se enciende palabra a palabra según avanza el scroll, ligada a la posición y no a un disparo único.
+- Espirales de arena rastrillada (SVG de anillos irregulares hechos a mano) detrás de la frase y del CTA final, al 10 % de opacidad, que se trazan del centro hacia fuera al hacer scroll.
+- Fotos recortadas en arco (`mask-arch`) y óvalos en lugar de rectángulos.
+
+#### Propuesta para Stephany
+
+1. **Secciones apiladas de vuelta** (interpretación de "el scroll que teníamos"): "Obra insignia", "Sobre mí + más obras", "Cómo funciona un encargo" y el pie vuelven a deslizarse uno sobre otro, con el mismo código de la fase 7 (`sticky` + `--h` publicado por `ResizeObserver`, sin tapar texto sin leer). La salida del recorrido sigue como en la fase 8: el último fotograma sube con el contenido.
+2. **Scroll suave** con Lenis en toda la web (dependencia `lenis`, ~4 KB gzip, sin GSAP). Apagado con reduced motion. El recorrido ya suaviza el vídeo; se comprueba que no se sume un segundo retraso.
+3. **Espiral de Stephany como figura decorativa.** El motivo sale de su propia obra: el relieve de *La noche oscura del alma* y el cielo en remolino de *Tránsito del alma*. Una espiral continua trazada a mano (no anillos), SVG generado en el build, `currentColor` al 10–12 %:
+   - detrás de la cita, en la columna lino de "Obra insignia" (esquina inferior derecha, recortada);
+   - en la banda bambú del encargo (esquina superior derecha);
+   - en el pie nogal (esquina inferior derecha), igual que Arko en su CTA final.
+   Se traza al hacer scroll con animaciones CSS ligadas a la vista (`animation-timeline: view()`, `stroke-dashoffset`), sin JS. Donde no hay soporte (Firefox) se ve ya dibujada.
+4. **La cita se enciende palabra a palabra** en "Obra insignia", ligada al scroll como en Arko.
+5. **Apariciones escalonadas** solo para títulos, cartelas y botones (no para las obras), con retrasos de 0/100/200 ms, sin desenfoque, y siempre visibles en el primer pintado: lo que ya está en pantalla al cargar no se anima.
+6. **Foto de la artista en arco**: la parte superior redondeada como una ventana del ático. Además recorta los logos del fondo del evento.
+
+#### Fuera de alcance
+
+El recorrido (clips, paradas, textos), la paleta y el contenido.
+
+#### Verificación
+
+Secciones apiladas sin texto oculto en 390×844 y 1440×900; la espiral visible y trazada en Chrome y Safari, dibujada en Firefox; reduced motion sin Lenis, sin trazado y sin apariciones; Lighthouse móvil ≥ 99, CLS 0.
+
+Coste: 0 créditos. Archivos: `global.css`, `index.astro`, `Footer.astro`, `Layout.astro`, un componente `Spiral.astro` nuevo, `package.json` (lenis).
+
 ---
 
 ## 6. Stack
@@ -351,6 +385,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo` (paleta Nogal + secciones apiladas), pendiente de merge |
 | **8 · Página normal** | §5.5: sin secciones apiladas; el último fotograma del recorrido sube con el contenido | ✅ en rama `feat/pagina-normal`, pendiente de merge. Salida verificada: hueco 0 px entre fotograma y contenido en 390 y 1440 px |
 | **9 · La obra y la artista** | §5.6: obra insignia junto a la artista, tarjetas sin caja con cartela de museo | ✅ en rama `feat/obra-y-artista`, pendiente de merge |
+| **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | Propuesta (11/10), pendiente de aprobación |
 
 ---
 
