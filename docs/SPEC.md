@@ -142,25 +142,70 @@ Cormorant es una excepción a la lista de fuentes del skill (`Geist, Manrope, Ge
 
 ### 5.2 Color
 
-Sacado de su biografía (crema + dorado) y del vídeo (paredes blancas, nogal):
+Sacado del vídeo del taller (nogal de las vigas, pared encalada, bambú del balcón). La paleta crema + dorado de la biografía se usó hasta la fase 6 y se sustituyó en la fase 7 (§5.4):
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--bg` | `#FAF8F3` | Crema de la biografía, fondo general |
-| `--surface` | `#FFFFFF` | Tarjetas de obra (blanco de sala: el cuadro se ve con su color real) |
-| `--ink` | `#1F1A16` | Texto y botón principal (nogal casi negro, texto crema) |
-| `--ink-soft` | `#5E554D` | Texto secundario |
-| `--gold` | `#B8912F` | Filetes, separadores, foco. **Nunca para texto pequeño** (contraste insuficiente sobre crema) |
-| `--line` | `#E6E0D5` | Bordes completos de tarjeta |
+| `--bg` | `#F5F2E8` | Lino, fondo general |
+| `--surface` | `#FCFBF6` | Tarjetas de obra (casi blanco: el cuadro se ve con su color real) |
+| `--ink` | `#221B14` | Texto y botón principal (nogal de las vigas, texto lino) |
+| `--ink-soft` | `#5A5146` | Texto secundario (tierra) |
+| `--moss` | `#5C7A46` | Bambú: filetes, subrayado del menú, raíl del recorrido, foco. **Nunca para texto pequeño** (4,3:1) |
+| `--moss-deep` | `#3F5A33` | Musgo: numerales, años, icono de certificado (6,9:1) |
+| `--line` | `#E2DCCB` | Bordes completos de tarjeta |
 
 Tema claro: un fondo oscuro altera la lectura de obras luminosas (colibrí, velero). Sin degradados de fondo. En el scroll‑world el texto va sobre un velo `--ink` al 40 %.
 
 ### 5.3 Formas y movimiento
 
 - El cuadro manda: tarjetas `rounded-lg` con borde completo, obra siempre entera (`object-fit: contain`) dentro de una proporción fija; nunca recortada.
-- Filete dorado fino como único ornamento, igual que en la biografía.
+- Filete verde bambú fino como único ornamento.
 - Movimiento lento, `cubic-bezier(0.32,0.72,0,1)`, apariciones con IntersectionObserver.
 - Iconos: Phosphor (WhatsApp, filtros, flechas).
+
+### 5.4 Fase 7 "casa de campo" (aprobada e implementada el 11/10/2026, rama `feat/casa-de-campo`)
+
+El vídeo manda: ático de vigas oscuras, paredes encaladas, tablones, bambú en el balcón y luz nublada. La web de hoy sale de la biografía (crema + dorado) y queda más "galería" que "taller en el campo". Propuesta: mover el color hacia lo que se ve en el vídeo y reservar el oro para nada.
+
+#### Color
+
+Muestreado del fotograma F2 (madera `#221715`, bambú olivo `#938667`):
+
+| Token | Hoy | Propuesta | Contraste sobre `--bg` | Uso |
+|---|---|---|---|---|
+| `--bg` | `#FAF8F3` | `#F5F2E8` lino | — | Fondo general, un punto más cálido y menos "pantalla" |
+| `--surface` | `#FFFFFF` | `#FCFBF6` | — | Tarjetas de obra. Sigue casi blanco: el cuadro conserva su color |
+| `--ink` | `#1F1A16` | `#221B14` nogal | 15,2:1 | Texto, botón principal |
+| `--ink-soft` | `#5E554D` | `#5A5146` tierra | 6,9:1 | Texto secundario |
+| `--gold` → `--moss` | `#B8912F` | `#5C7A46` bambú | 4,3:1 | Filetes, subrayado del menú, raíl del recorrido, foco. Solo decorativo (≥ 3:1) |
+| `--gold-deep` → `--moss-deep` | `#8A6A1F` | `#3F5A33` musgo | 6,9:1 | Numerales, años, icono de certificado: todo lo que hoy es dorado y es texto |
+| `--line` | `#E6E0D5` | `#E2DCCB` | — | Bordes |
+
+Se descarta un segundo acento (terracota/arcilla): con el verde y el nogal basta; más colores compiten con los cuadros. Sin texturas de papel ni degradados: pesan y ensucian la obra. Tema claro, como hasta ahora.
+
+#### Tipografía
+
+Se mantienen Cormorant Garamond + Manrope (aprobadas). Un solo añadido: **la cursiva de Cormorant** (un archivo más, 23 KB, precargado junto a la redonda porque `<Font preload>` no distingue estilos), para lo que tiene voz propia y no es titular: la cita de la artista, los numerales de "Cómo funciona un encargo" y el nombre de la obra en la lista de exposiciones. Los titulares siguen en redonda. Nada más cambia de tamaño ni de peso.
+
+#### Transiciones de página
+
+Hoy cada navegación es un corte en blanco. Propuesta con la View Transitions API entre documentos (CSS puro, sin router en cliente, sin tocar el motor del recorrido ni el script de reveal):
+
+1. **Fundido entre páginas**: 450 ms con la curva de la casa. Firefox y navegadores sin soporte siguen con el corte de siempre; `prefers-reduced-motion` lo desactiva.
+2. **La obra viaja**: al abrir una ficha desde la tarjeta, la imagen se desplaza y crece hasta su sitio en la ficha, y vuelve a la tarjeta al retroceder (`view-transition-name: obra-<slug>` en tarjeta y ficha).
+3. **La cabecera no parpadea**: la píldora del menú se mantiene fija durante el cambio de página.
+4. **Reveal sin retraso en el primer pintado**: lo que ya está en pantalla al cargar aparece de inmediato; solo lo que viene de abajo se anima al hacer scroll. Hoy todo arranca invisible y aparece con retraso, y en la transición 2 la tarjeta destino estaría a opacidad 0.
+
+Fuera de alcance: transiciones del recorrido (clips fijos hasta tener créditos), modo oscuro, cursor o efectos de hover nuevos.
+
+#### Verificación
+
+- Contraste AA en todos los textos (tabla anterior).
+- Lighthouse móvil tras el cambio: `/` 99/100/100/100, ficha 100/100/100/100, CLS 0.
+- Capturas de home, catálogo y ficha en 390 px y 1440 px revisadas; cursiva servida (`document.fonts.check`), `view-transition-name` presente en tarjeta, ficha y cabecera; tarjetas visibles en el primer pintado.
+- Pendiente: ver la transición tarjeta → ficha en Chrome y Safari reales (el Chromium de pruebas no permite observar la animación entre documentos).
+
+Coste: 0 créditos. Archivos: `global.css`, `astro.config.mjs`, `Layout.astro` (`theme-color`), `favicon.svg`, `ArtworkCard.astro`, `obras/[slug].astro`, `Header.astro`, `TaglineReveal.astro`, `index.astro`, `reveal.ts`.
 
 ---
 
@@ -234,6 +279,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **4 · Home** | Secciones §4.2 | ✅ Tagline reveal, encargo en 3 pasos (PENDIENTE validar), FAQ oculta hasta tener respuestas |
 | **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (9 cambios documentados en su cabecera), 5 paradas, 4 clips MP4 (WebM solo si el MP4 no se puede reproducir), 720p y stills de 960 px en móvil, reduced‑motion | ✅ Revisado el 11/10: la salida del recorrido deja el último fotograma fijo y la página se desliza por encima; póster + altura reservada antes de que arranque el motor; copia de la primera parada renderizada en HTML (LCP ≈ primer pintado); stills bajo demanda. Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
 | **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | ✅ Lighthouse 100/100/100/100 en `/`, `/obras` y una ficha (móvil y escritorio). Pendiente: prueba en iPhone real |
+| **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo`, pendiente de merge |
 
 ---
 

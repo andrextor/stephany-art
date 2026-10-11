@@ -17,7 +17,7 @@ export default defineConfig({
       cssVariable: '--font-cormorant',
       provider: fontProviders.google(),
       weights: [500],
-      styles: ['normal'],
+      styles: ['normal', 'italic'],
       display: 'swap',
       subsets: ['latin'],
       fallbacks: ['Georgia', 'serif'],

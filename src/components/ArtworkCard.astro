@@ -21,7 +21,7 @@ const image = mainImage(artwork);
   data-status={status ?? 'none'}
   class="group flex flex-col gap-4 rounded-lg border border-line bg-surface p-3 transition-transform duration-700 ease-fluid hover:-translate-y-1 active:translate-y-px"
 >
-  <div class="flex aspect-4/5 items-center justify-center overflow-hidden bg-bg">
+  <div class="flex aspect-4/5 items-center justify-center overflow-hidden bg-bg" style={`view-transition-name: obra-${artwork.id}`}>
     <Picture
       src={image.src}
       alt={image.alt}
