@@ -38,7 +38,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
         href={`/obras/${hero.id}`}
         class="group flex flex-col items-center justify-center gap-5 bg-ink px-4 py-16 md:px-10 md:py-20"
       >
-        <div style={`view-transition-name: obra-${hero.id}`}>
+        <div data-reveal style={`view-transition-name: obra-${hero.id}`}>
           <Picture
             src={heroImage.src}
             alt={heroImage.alt}
@@ -97,7 +97,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 
     <section id="sobre" aria-labelledby="sobre-titulo" class="grid border-t border-line md:grid-cols-[1fr_1.6fr]">
       <div class="flex flex-col gap-6 bg-surface px-4 py-16 md:px-10 md:py-20">
-        <div class="max-w-sm">
+        <div data-reveal class="mx-auto w-full max-w-sm">
           <Picture
             src={artistPhoto}
             alt="Stephany Londoño con el catálogo de la Bienal de Armenia"
@@ -105,7 +105,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
             fallbackFormat="webp"
             widths={[320, 480, 640]}
             sizes="(min-width: 768px) 24rem, 90vw"
-            class="arch aspect-4/5 w-full object-cover"
+            class="arch aspect-4/5 w-full object-cover object-top"
           />
         </div>
         <h2 id="sobre-titulo" data-reveal class="text-4xl">Sobre mí</h2>
@@ -144,8 +144,8 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
         </div>
         <div class="grid grid-cols-2 items-end gap-x-6 gap-y-12 lg:grid-cols-3">
           {
-            more.map((artwork) => (
-              <ArtworkCard artwork={artwork} sizes="(min-width: 1024px) 18vw, (min-width: 768px) 28vw, 45vw" />
+            more.map((artwork, index) => (
+              <ArtworkCard artwork={artwork} delay={(index % 3) * 120} sizes="(min-width: 1024px) 18vw, (min-width: 768px) 28vw, 45vw" />
             ))
           }
         </div>

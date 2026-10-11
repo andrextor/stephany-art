@@ -152,7 +152,7 @@ const details = [
             </a>
           </div>
           <div class="grid items-end gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((other) => <ArtworkCard artwork={other} />)}
+            {related.map((other, index) => <ArtworkCard artwork={other} delay={(index % 3) * 120} />)}
           </div>
         </section>
       )

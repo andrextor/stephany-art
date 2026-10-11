@@ -7,6 +7,8 @@ interface Props {
   eager?: boolean;
   headingLevel?: 2 | 3;
   sizes?: string;
+  /** Entrance delay in ms, to stagger cards in a row. */
+  delay?: number;
 }
 
 const {
@@ -14,6 +16,7 @@ const {
   eager = false,
   headingLevel = 3,
   sizes = '(min-width: 1152px) 352px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw',
+  delay = 0,
 } = Astro.props;
 const Heading = headingLevel === 2 ? 'h2' : 'h3';
 const { title, category, status, year } = artwork.data;
@@ -24,6 +27,8 @@ const image = mainImage(artwork);
   href={`/obras/${artwork.id}`}
   data-category={category}
   data-status={status ?? 'none'}
+  data-reveal
+  style={`--d: ${delay}ms`}
   class="group flex flex-col gap-4"
 >
   <div style={`view-transition-name: obra-${artwork.id}`}>

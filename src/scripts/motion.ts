@@ -15,7 +15,9 @@ const reveal = new IntersectionObserver(
       reveal.unobserve(entry.target);
     }
   },
-  { rootMargin: '0px 0px -10% 0px' },
+  // No bottom margin: the footer's last line sits at the very end of the page, where a
+  // negative margin would keep it from ever counting as visible.
+  { threshold: 0 },
 );
 for (const element of document.querySelectorAll<HTMLElement>('[data-reveal]')) {
   if (reduceMotion || element.getBoundingClientRect().top < window.innerHeight) {
