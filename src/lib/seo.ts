@@ -11,7 +11,7 @@ export const artistJsonLd = (origin: URL): JsonLd => ({
   nationality: { '@type': 'Country', name: site.country },
   url: new URL('/', origin).href,
   description: site.bio[0],
-  // PENDIENTE: sameAs con Instagram cuando se confirme
+  sameAs: [site.instagram.url],
 });
 
 export const websiteJsonLd = (origin: URL): JsonLd => ({

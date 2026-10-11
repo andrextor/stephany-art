@@ -53,7 +53,11 @@ export const site = {
   // plazos de entrega, tamaños, envíos a otras ciudades o países, formas de pago,
   // retoques, si pinta a partir de una foto, certificado de autenticidad.
   faq: [] as ReadonlyArray<{ question: string; answer: string }>,
-  // PENDIENTE: email, Instagram, ciudad
+  instagram: {
+    handle: '@stephanylondonoart',
+    url: 'https://www.instagram.com/stephanylondonoart/',
+  },
+  // PENDIENTE: email, ciudad
 } as const;
 
 export const whatsappUrl = (message: string): string =>

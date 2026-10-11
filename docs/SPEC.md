@@ -319,6 +319,12 @@ Resultado: en 390×844 y 1440×900 cada sección apilada termina en el borde inf
 - Foto de la artista centrada en su columna y anclada arriba (`object-top`), para que la cara quede dentro del arco.
 - La foto ya no parece un parche. `stephany-portrait.webp` sale de la foto original del evento, que se conserva como fuente: recorte de retrato de la cabeza al catálogo, color natural un poco más cálido y luminoso con sharp (se probaron blanco y negro cálido y color desaturado: los dos la dejaban sin vida). Abajo se funde con la banda (`.fade-bottom`) y lleva un pie que da contexto: "En la 5.ª Bienal Internacional de Arte de Armenia, 2024". Sigue pendiente una foto de Stephany pintando en el taller.
 
+### 5.9 Instagram (11/10/2026)
+
+- Botón flotante redondo abajo a la derecha en todas las páginas, solo con el icono (sin texto "Contáctanos"), con `aria-label` y respetando la zona segura del móvil. Enlace limpio `https://www.instagram.com/stephanylondonoart/`, sin el parámetro de seguimiento que traía el enlace compartido.
+- También en el pie (`Instagram @stephanylondonoart`) y en el JSON-LD de la artista (`sameAs`).
+- Al hacer este cambio se detectó una regresión de la fase 11: la edición de las apariciones había borrado el final de `global.css` (tema del recorrido, textos de las paradas, preludio y transiciones entre páginas). Restaurado desde la fase 10 y comprobado: tipografía y colores del recorrido, preludio idéntico al motor y transiciones presentes.
+
 ---
 
 ## 6. Stack

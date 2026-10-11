@@ -36,6 +36,9 @@ const year = new Date().getFullYear();
       <p class="font-display text-2xl text-bg">{site.artistName}</p>
       <p>{site.role} · {site.country}</p>
       <p>WhatsApp {site.whatsapp.display}</p>
+      <a href={site.instagram.url} target="_blank" rel="noopener" class="underline-offset-4 hover:text-bg hover:underline">
+        Instagram {site.instagram.handle}
+      </a>
       <p class="pt-4">© {year} {site.artistName}. Todas las obras son originales.</p>
     </div>
   </div>
