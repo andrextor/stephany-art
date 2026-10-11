@@ -124,11 +124,11 @@ cut, scene change, fade, dissolve, crossfade, morphing, warping beams, bending w
 
 | Archivo | Estado |
 |---|---|
-| `keyframes/F1-atico.png` | ✅ v3: **outpaint de F2** (F2 intacta en el centro). Las versiones reinventadas hacían que la pared de paneles de la izquierda se "construyera" durante el avance (regla 12) |
-| `keyframes/F2-caballete.png` | ✅ |
-| `keyframes/F3-comision.png` | ✅ |
-| `keyframes/F4-personales.png` | ✅ v3 (v1 `-frontal` descartada por la regla 1, v2 `-con-puerta` por la regla 3) |
-| `keyframes/F5-en-proceso.png` | ✅ v4: giro de 45° más a la derecha por la misma pared lateral; el caballete está más adelante en esa pared |
+| `keyframes/F1-atico.webp` | ✅ v3: **outpaint de F2** (F2 intacta en el centro). Las versiones reinventadas hacían que la pared de paneles de la izquierda se "construyera" durante el avance (regla 12) |
+| `keyframes/F2-caballete.webp` | ✅ |
+| `keyframes/F3-comision.webp` | ✅ |
+| `keyframes/F4-personales.webp` | ✅ v3 (v1 `-frontal` descartada por la regla 1, v2 `-con-puerta` por la regla 3) |
+| `keyframes/F5-en-proceso.webp` | ✅ v4: giro de 45° más a la derecha por la misma pared lateral; el caballete está más adelante en esa pared |
 | `transitions/clip1-entrada-atico.mp4` | ✅ v2: avance recto, la pared izquierda ya existe desde el primer fotograma. Sale a 1928×1076: normalizar a 1920×1080 al concatenar |
 | `transitions/clip2-taller-comision.mp4` | ✅ |
 | `transitions/clip3-comision-personales.mp4` | ✅ v3: giro en el sitio, pared del fondo rígida, sin puerta |

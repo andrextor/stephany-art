@@ -1,8 +1,8 @@
 # Spec · web de Stephany Londoño, artista plástica
 
-Borrador 1 · 11/10/2026. Basado en el flujo de la landing de Arko (`landing-page-design` + `scroll-world`) adaptado a un portafolio de artista.
+Borrador 2 · 11/10/2026. Basado en el flujo de la landing de Arko (`landing-page-design` + `scroll-world`) adaptado a un portafolio de artista.
 
-**Regla de oro (como en Arko):** es una persona real. Solo se usan datos que ella confirme. Lo que falte se marca como `PENDIENTE` en el contenido y nunca se inventa: ni títulos, ni técnicas, ni medidas, ni precios, ni premios, ni testimonios.
+**Regla de oro:** es una persona real. Solo se usan datos confirmados: la *Biografía Artística* oficial (PDF) y lo que ella responda. Lo que falte va marcado `PENDIENTE` en el contenido y nunca se inventa (títulos, técnicas, medidas, precios, premios, testimonios).
 
 ---
 
@@ -10,63 +10,71 @@ Borrador 1 · 11/10/2026. Basado en el flujo de la landing de Arko (`landing-pag
 
 | | |
 |---|---|
-| **Acción principal** | Encargar una obra (comisión) → WhatsApp con mensaje prellenado. `PENDIENTE confirmar canal` |
-| **Acción secundaria** (más abajo y en cada ficha) | Preguntar por una obra concreta disponible → WhatsApp con el título de la obra |
-| **Oferta** | Retratos y obras por encargo (personas, mascotas, paisajes) + obra personal disponible. `PENDIENTE: qué tipos de encargo acepta, rangos de tamaño, tiempos` |
-| **Público (asumido)** | Personas en Colombia que buscan un regalo o un retrato familiar pintado a mano, y coleccionistas que la siguen en Instagram |
-| **Objeciones (asumidas)** | Precio, cuánto tarda, si el resultado se parecerá a la foto, cómo se envía la obra |
+| **Acción principal** | Encargar una obra → WhatsApp **+57 313 793 7797** con mensaje prellenado |
+| **Acción secundaria** (más abajo y en cada ficha) | Preguntar por una obra concreta → WhatsApp con el título de la obra |
+| **Precios** | **Los encargos nunca muestran precio** (lo impide el schema). Obra personal: precio opcional y oculto por defecto |
+| **Público (asumido)** | Personas en Colombia que buscan un retrato o una obra por encargo, y coleccionistas |
+| **Objeciones (asumidas)** | Precio, plazos, si el resultado se parecerá a la foto, envío |
 | **Tráfico (asumido)** | Instagram y boca a boca |
-| **Tono** | Cercano, sereno, de taller. Habla ella en primera persona |
+| **Tono** | El de su biografía: introspectivo, sereno, poético, sin grandilocuencia |
 
 ---
 
-## 2. Contenido editable (lo más importante)
+## 2. Contenido editable
 
-Todo lo que cambia con el tiempo vive en archivos de contenido, nunca dentro de los componentes. Editar una obra = editar un archivo Markdown.
+Todo lo que cambia vive en archivos de contenido, nunca dentro de los componentes. Nombres de archivos, carpetas y claves en inglés; textos visibles en español.
 
-### 2.1 Obras · `src/content/obras/<slug>.md`
+### 2.1 Obras · colección `artworks`
 
-Una obra = un archivo. Colección de Astro con schema validado (si falta un campo obligatorio o un valor no es válido, el build falla con un mensaje claro).
+- Schema: `src/content.config.ts`.
+- Una obra = un archivo: `src/content/artworks/<slug>.md`. El cuerpo del Markdown es la descripción.
+- Imágenes de cada obra: `src/assets/artworks/<slug>/<nombre-descriptivo>.webp`. Astro genera AVIF/WebP y `srcset` en el build.
 
 ```md
 ---
-title: "Colibrí en flor de cerezo"      # PENDIENTE si no hay título
-category: comision                      # comision | personal | en-proceso
-status: entregada                       # disponible | vendida | entregada | reservada | en-proceso | no-disponible
-year: 2025
-technique: "Óleo sobre lienzo"          # PENDIENTE
-dimensions: { width: 60, height: 80, unit: cm }   # opcional
-price: { amount: 2400000, currency: COP, visible: false }  # opcional; visible:false = "precio a consultar"
+title: "Tránsito del alma"
+category: personal                # commission | personal
+status: in-progress               # opcional: available | reserved | sold | delivered | in-progress | private-collection
+year: 2026                        # opcional
+technique: "Óleo sobre lienzo"    # opcional
+dimensions: { width: 100, height: 120, unit: cm }   # opcional
+price: { amount: 3500000, currency: COP, visible: false }  # opcional, prohibido en commission
 images:
-  - { src: ../../assets/obras/colibri/principal.webp, alt: "Colibrí de plumas multicolor posado en una rama con flores rosadas", kind: principal }
-  - { src: ../../assets/obras/colibri/taller.webp, alt: "...", kind: taller }   # principal | detalle | proceso | taller
-featured: true     # aparece en la home
-order: 10          # orden manual dentro de su categoría
-draft: false       # true = no se publica
+  - src: ../../assets/artworks/sea-stairs/woman-climbing-sea-stairs.webp
+    alt: "Texto alternativo descriptivo"
+    kind: main                    # main | detail | process | studio | certificate
+featured: true                    # sale en la home
+order: 10                         # orden dentro de su categoría
+draft: false                      # true = no se publica
 ---
-Texto libre de la obra: historia, inspiración, para quién fue (sin datos personales del cliente).
+Descripción de la obra.
 ```
+
+**Categorías:** solo dos, *Obras por comisión* y *Obras personales*. "En proceso" es un **estado** de una obra personal, no una categoría.
 
 **Estados y cómo se muestran**
 
 | `status` | Etiqueta | CTA en la ficha |
 |---|---|---|
-| `disponible` | Disponible | Preguntar por esta obra |
-| `reservada` | Reservada | Avisarme si se libera |
-| `vendida` | Vendida | Encargar algo parecido |
-| `entregada` | Encargo entregado | Encargar una obra |
-| `en-proceso` | En proceso | Seguir el proceso en Instagram |
-| `no-disponible` | Colección personal | Encargar una obra |
+| `available` | Disponible | Preguntar por esta obra |
+| `reserved` | Reservada | Avisarme si se libera |
+| `sold` | Vendida | Encargar algo parecido |
+| `delivered` | Encargo entregado | Encargar una obra |
+| `in-progress` | En proceso | Encargar una obra |
+| `private-collection` | Colección personal | Encargar una obra |
+| *(sin estado)* | Sin etiqueta | Encargar una obra |
 
-Las reglas del schema evitan incoherencias: `category: en-proceso` obliga a `status: en-proceso`; `category: comision` no admite `disponible`.
+**Validaciones del schema:** un encargo no puede tener precio, ni estar `available` o `reserved`. Al menos una imagen por obra. Si algo no cumple, `astro sync`/`astro build` falla con un mensaje claro.
 
-### 2.2 Datos del sitio · `src/content/site.json`
+**Certificados:** 4 obras tienen foto del certificado de autenticidad (`kind: certificate`). En la ficha se muestra como prueba ("Incluye certificado de autenticidad").
 
-Nombre, bio corta y larga, ciudad, WhatsApp, email, Instagram, textos de los CTA, mensajes prellenados de WhatsApp, menciones/exposiciones (p. ej. BIARCO, `PENDIENTE confirmar edición y año`), FAQ. Un solo archivo para todo lo que no es una obra.
+### 2.2 Datos del sitio · `src/data/site.ts`
+
+Nombre, rol, país, WhatsApp y mensajes prellenados, cita, bio y exposiciones (copiadas literalmente de la biografía oficial), y el helper `whatsappUrl()`. Pendiente: email, Instagram, ciudad.
 
 ### 2.3 Fase 2 opcional: editor visual
 
-Si Stephany va a editar sin tocar código: **Keystatic** (CMS sobre los mismos archivos del repo, gratis, sin base de datos). Se monta encima del schema de 2.1 sin cambiarlo. No entra en la fase 1.
+Si Stephany va a editar sin tocar código: **Keystatic** (CMS sobre los mismos archivos del repo, gratis, sin base de datos). Se monta sobre el schema actual sin cambiarlo.
 
 ---
 
@@ -74,12 +82,12 @@ Si Stephany va a editar sin tocar código: **Keystatic** (CMS sobre los mismos a
 
 | Ruta | Contenido |
 |---|---|
-| `/` | Scroll‑world (5 paradas) + resto de la landing (sección 4) |
-| `/obras` | Catálogo completo. Filtros por categoría y estado, en la URL (`?cat=personal&estado=disponible`) para poder compartir el enlace |
-| `/obras/[slug]` | Ficha: galería, ficha técnica, estado, descripción, CTA según estado, obras relacionadas de la misma categoría |
+| `/` | Scroll‑world (5 paradas) + resto de la landing (§4) |
+| `/obras` | Catálogo. Filtros por categoría y estado en la URL (`?cat=personal&estado=in-progress`) para poder compartir el enlace |
+| `/obras/[slug]` | Ficha: galería (principal, detalles, proceso, certificado), ficha técnica, estado, descripción, CTA según estado, obras relacionadas |
 | `/404` | Página propia con vuelta a `/obras` |
 
-El catálogo se genera solo desde `src/content/obras/`. Añadir una obra no requiere tocar ninguna página.
+Añadir una obra no requiere tocar ninguna página.
 
 ---
 
@@ -87,120 +95,145 @@ El catálogo se genera solo desde `src/content/obras/`. Añadir una obra no requ
 
 ### 4.1 Scroll‑world (arriba)
 
-Vídeo 16:9 a pantalla completa que avanza y retrocede con el scroll. Texto superpuesto en cada parada, con la cámara quieta.
+Vídeo 16:9 que avanza y retrocede con el scroll. Texto superpuesto en cada parada, con la cámara quieta.
 
 | Parada | Fotograma | Texto | Título HTML |
 |---|---|---|---|
-| 0 · `inicio` | F1 entrada al ático | h1 con su nombre + oficio, CTA principal | — |
-| 1 · `taller` | F2 caballete | Dónde y cómo pinta (1–2 frases suyas) | El taller |
-| 2 · `comision` | F3 pared del fondo | Qué encarga la gente, CTA Encargar | Obras por comisión |
-| 3 · `personales` | F4 pared lateral | Su obra propia | Obras personales |
-| 4 · `en-proceso` | F5 caballete | Lo que está pintando ahora | En proceso |
+| 0 · `inicio` | F1 entrada al ático | h1 con su nombre + "Artista plástica y pintora · Colombia", CTA principal | — |
+| 1 · `taller` | F2 caballete | "Desde su nuevo estudio…" (frase de la bio) | El taller |
+| 2 · `comision` | F3 pared del fondo | Encargos, CTA Encargar | Obras por comisión |
+| 3 · `personales` | F4 pared lateral | Su obra propia y exposiciones | Obras personales |
+| 4 · `en-proceso` | F5 caballete | Lo que pinta ahora | En proceso |
 
-- Clips 1–4 de `media/transitions/` como conectores entre paradas. Fotogramas de parada extraídos del propio vídeo (no de las PNG) para que las costuras encajen.
-- Móvil: el 16:9 se recorta a vertical. `object-position` horizontal por parada para mantener el sujeto a la vista. Encode 720p aparte para móvil.
+- Vídeos web en `public/video/clip-{1..4}-{1080,720}.{mp4,webm}`: H.264 y VP9, sin audio, un keyframe cada 0,25 s (GOP 6) para que el scrub sea fluido. 1080p para escritorio y 720p para móvil.
+- Fotogramas de parada extraídos del propio vídeo, no de las imágenes clave, para que las costuras encajen.
+- Móvil: el 16:9 se recorta a vertical con un `object-position` horizontal por parada.
 - `prefers-reduced-motion`: solo los fotogramas fijos.
-- Los títulos de pared son HTML, nunca texto dentro del vídeo.
 
 ### 4.2 Debajo del scroll‑world
 
-1. **Tagline reveal** (obligatorio del skill), en su voz. `PENDIENTE frase suya`.
-2. **Obras destacadas**: las `featured: true`, en tres grupos (Comisión, Personales, En proceso) con enlace a `/obras?cat=…`.
-3. **Cómo funciona un encargo**: 3 pasos (me escribes con tu foto e idea → acordamos tamaño, precio y plazo → pinto y te envío avances). `PENDIENTE validar con ella`.
-4. **Sobre Stephany**: foto `stephany/…BIARCO`, bio, menciones.
-5. **FAQ** (6–8): tiempos, tamaños, precios, envíos, pagos, retoques, si pinta desde una foto. Todas `PENDIENTE` hasta que responda.
-6. **Contacto / CTA final**: WhatsApp, email, Instagram, ciudad. Mismo CTA que arriba.
+1. **Tagline reveal** con su cita: *"Más que una técnica, mi trabajo es una invitación a la pausa y a la contemplación…"*.
+2. **Obras destacadas** (`featured: true`) en dos grupos, Comisión y Personales, con enlace a `/obras?cat=…`.
+3. **Cómo funciona un encargo**: 3 pasos. `PENDIENTE validar con ella`.
+4. **Sobre Stephany**: foto de BIARCO, bio y exposiciones (Bienal de Armenia 2024 y 2026, portada en FILBo 2025).
+5. **FAQ** (6–8): plazos, tamaños, envíos, pagos, certificado de autenticidad, si pinta desde una foto. `PENDIENTE` hasta que responda.
+6. **Contacto / CTA final**: WhatsApp. Mismo CTA que arriba.
 
 ---
 
 ## 5. Dirección de arte
 
-Sacada del vídeo (paredes blancas, vigas de nogal, suelo oscuro, luz de día) y de su paleta: turquesa del mar y los elefantes, ocre del velero.
+### 5.1 Tipografía · validación
 
-**Tema claro**, como las paredes de una sala: los cuadros se ven con su color real. Un fondo oscuro altera la lectura de obras luminosas como el colibrí.
+Qué usan el mundo del arte y los portafolios de pintores:
+- **Galerías** (Gagosian, Serpentine, Stephen Friedman): sans neutras y una display propia. Estética institucional y fría; pensada para la marca de la galería, no para la voz de un artista.
+- **Portafolios de artistas**: patrón dominante de **serif editorial para títulos + sans limpia para el texto**. Dos familias como máximo y que la obra sea lo protagonista.
+- **Su propia identidad**: la biografía oficial ya usa una serif clásica sobre fondo crema con un filete dorado. Es una pista de marca que conviene respetar.
+
+| Candidata (titulares) | Carácter | Encaje con Stephany |
+|---|---|---|
+| **Cormorant Garamond** | Garamond clásica y de alto contraste, lírica | **Alto.** Su obra es figurativa, introspectiva y con referencias místicas (*La noche oscura del alma*). Cuadra con su bio. Floja en tamaños pequeños, así que solo para titulares (≥ 30 px) |
+| Instrument Serif | Display condensada de moda (2024–2026), un solo peso | Medio. Suena más a estudio de diseño que a pintora |
+| Fraunces | Serif cálida y blanda, variable | Medio‑bajo. Más de marca de producto o gastronomía |
+
+**Recomendación:** **Cormorant Garamond** (500) para titulares y nombres de obra + **Manrope** (400/600) para texto, botones y fichas técnicas. Servidas en local y recortadas a latín, sin cursivas ni pesos 900.
+
+Cormorant es una excepción a la lista de fuentes del skill (`Geist, Manrope, Geist Mono, Poppins`) y necesita aprobación expresa. Si no se aprueba: solo **Manrope**.
+
+### 5.2 Color
+
+Sacado de su biografía (crema + dorado) y del vídeo (paredes blancas, nogal):
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--bg` | `#F6F3EE` | Yeso cálido, fondo general |
-| `--surface` | `#FFFFFF` | Tarjetas de obra |
-| `--ink` | `#1F1A16` | Texto, nogal casi negro |
+| `--bg` | `#FAF8F3` | Crema de la biografía, fondo general |
+| `--surface` | `#FFFFFF` | Tarjetas de obra (blanco de sala: el cuadro se ve con su color real) |
+| `--ink` | `#1F1A16` | Texto y botón principal (nogal casi negro, texto crema) |
 | `--ink-soft` | `#5E554D` | Texto secundario |
-| `--accent` | `#1E6B73` | Turquesa profundo: botones (texto blanco, contraste 6:1), enlaces, foco |
-| `--line` | `#E3DDD4` | Bordes completos de tarjetas |
+| `--gold` | `#B8912F` | Filetes, separadores, foco. **Nunca para texto pequeño** (contraste insuficiente sobre crema) |
+| `--line` | `#E6E0D5` | Bordes completos de tarjeta |
 
-Sin degradados de fondo. El scroll‑world pone el texto sobre un velo de color `--ink` al 40 % para que se lea encima del vídeo.
+Tema claro: un fondo oscuro altera la lectura de obras luminosas (colibrí, velero). Sin degradados de fondo. En el scroll‑world el texto va sobre un velo `--ink` al 40 %.
 
-**Tipografía** (decisión pendiente, ver §9):
-- **Opción A, la recomendada:** titulares en *Fraunces* (serif editorial, peso 400–500, sin cursivas) + texto en *Manrope*. Da carácter de galería. Es una excepción a la lista de fuentes del skill y, como en Arko, hay que pedirla expresamente.
-- **Opción B, la que marca el skill:** solo *Manrope* en todo.
+### 5.3 Formas y movimiento
 
-En ambos casos: servidas en local, recortadas a latín, sin cursivas ni pesos 900.
-
-**Formas:** sin marcos decorativos ni máscaras: el cuadro es el protagonista. Tarjetas con `rounded-lg` (8 px) y borde completo. Las obras siempre se ven enteras (`object-fit: contain`) dentro de una tarjeta de proporción fija; nunca se recortan.
-
-**Movimiento:** lento, `cubic-bezier(0.32,0.72,0,1)`. Las obras aparecen con IntersectionObserver.
-
-**Iconos:** Phosphor (WhatsApp, Instagram, correo, filtros).
+- El cuadro manda: tarjetas `rounded-lg` con borde completo, obra siempre entera (`object-fit: contain`) dentro de una proporción fija; nunca recortada.
+- Filete dorado fino como único ornamento, igual que en la biografía.
+- Movimiento lento, `cubic-bezier(0.32,0.72,0,1)`, apariciones con IntersectionObserver.
+- Iconos: Phosphor (WhatsApp, filtros, flechas).
 
 ---
 
 ## 6. Stack
 
-- Astro 7 (ya instalado) + Tailwind v4 + `astro:assets` (`<Picture>` con AVIF/WebP y `srcset` automáticos).
-- Las fotos de obras pasan de `public/photos/` a `src/assets/obras/<slug>/` para que Astro las optimice. **Hasta que lo autorices, `public/photos/` no se toca.**
+- Astro 7 + Tailwind v4 + `astro:assets` (`<Picture>`).
 - Motor scroll‑world del plugin `oso95/scroll-world` (marketplace añadido; falta `/plugin install`). Lenis solo si no choca con el suavizado del motor.
 - BiomeJS (2 espacios), TypeScript estricto, sin `any`.
-- Despliegue estático (Vercel/Netlify/Cloudflare Pages, `PENDIENTE elegir`).
+- Despliegue estático (Vercel, Netlify o Cloudflare Pages, `PENDIENTE elegir`).
 
 ---
 
-## 7. Inventario de fotos (borrador para validar)
+## 7. Inventario (21 obras, 70 fotos)
 
-| Carpeta | Archivo | Obra (descripción, no título) | Notas |
+Fuente: `~/Downloads/Stephany Londoño/`, convertidas a WebP (lado largo ≤ 2400 px, calidad 85, orientación EXIF aplicada).
+
+**Personales (6)**
+
+| slug | Título | Fotos | Nota |
 |---|---|---|---|
-| comision | `1.webp` | Colibrí sobre rama en flor | Baja resolución (963×1280) |
-| comision | `2.webp` | Velero al atardecer, dos figuras | |
-| comision | `IMG-20251014-WA0033(1)` y `IMG-20251111-WA0024(1)` | Pareja de guacamayas | **Duplicado**: misma obra, dos fotos |
-| comision | `IMG-20251014-WA0034(2)` | Detalle: canoa con dos figuras | ¿Detalle del velero o de otra obra? |
-| comision | `IMG-20260710-WA0030(1)` | Abstracto rojo y negro | Foto en ángulo |
-| comision | `IMG.webp` | Familia de elefantes | |
-| personales | `1.webp` | Mujer subiendo escalera sobre el mar | Foto en el taller |
-| personales | `2.webp` | Madre e hijo entre espejo roto y ojos | |
-| personales | `IMG_20250619_165207` | Paisaje de estanque con puente | |
-| personales | `IMG_20250707_115000` | Túnel de árbol con figura | Foto en ángulo |
-| personales | `IMG.webp` | Figura en círculo con textura | |
-| en-proceso | `1.0`, `1.2`, `IMG.webp` | Retrato de mujer sin terminar | Las tres son la misma obra en distintas fases. `IMG.webp` está girada 90° |
-| taller | `2.webp` | Retrato de pareja mayor en el caballete | ¿Es un encargo? Podría ir en Comisión |
-| stephany | `IMG-20261009-WA0034(1)` | Ella con el catálogo de BIARCO | Para "Sobre mí" |
+| `sea-stairs` | *Tránsito del alma* | 5 | Título **probable** (bio): confirmar |
+| `textured-figure` | *La noche oscura del alma* | 6 (+certificado) | Título **probable** (bio): confirmar |
+| `mother-and-child` | *Miradas que fragmentan* | 6 | Título **probable** (bio): confirmar |
+| `tree-tunnel` | Túnel del árbol | 3 | |
+| `pond-bridge` | Estanque con puente | 5 (+certificado) | |
+| `woman-portrait` | Retrato de mujer | 3 | `in-progress` |
 
-Resultado provisional: **6–7 obras por comisión, 5 personales, 1 en proceso**.
+**Por comisión (15)**
+
+| slug | Título provisional | Fotos | Nota |
+|---|---|---|---|
+| `hummingbird` | Colibrí | 4 (+certificado) | |
+| `sailboat` | Velero al atardecer | 3 (+certificado) | |
+| `mountain-lake` | Lago entre montañas | 3 | La "canoa" era un detalle de esta obra |
+| `macaws` | Guacamayas | 2 | |
+| `elephants` | Familia de elefantes | 2 | |
+| `golden-tree` | Árbol dorado | 2 | |
+| `red-black-abstract` | Abstracto en rojo y negro | 2 | |
+| `beige-abstract` | Abstracto en beige y negro | 2 | |
+| `ghostface` | Ghostface | 2 | |
+| `family-portrait` | Retrato familiar | 7 | `draft` hasta tener el permiso del cliente |
+| `elderly-couple-rose` | Pareja con rosa | 3 | `draft`, permiso |
+| `couple-garden` | Pareja en el jardín | 1 | `draft`, permiso |
+| `father-children` | Padre con sus hijos | 2 | `draft`, permiso |
+| `beach-couple` | Pareja en la playa | 2 | `draft`, permiso |
+| `kissing-couple` | Pareja | 2 | `draft`, permiso |
+
+Otras: `src/assets/studio/` (ático, caballete), `src/assets/artist/stephany-at-biarco.webp`.
+Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible material para "Sobre Stephany").
 
 ---
 
 ## 8. Plan por fases
 
-| Fase | Entregable | Bloqueado por |
+| Fase | Entregable | Estado |
 |---|---|---|
-| **0 · Datos** | Respuestas a §9, títulos y fichas de las obras | Stephany |
-| **1 · Base** | Tailwind, fuentes, tokens, layout, Header (píldora flotante), Footer, 404, SEO base | Decisión de tipografía |
-| **2 · Contenido** | Colección `obras` con schema y estados, `site.json`, migrar fotos a `src/assets/obras/` | Fase 0 y permiso para mover fotos |
-| **3 · Catálogo** | `/obras` con filtros en URL y `/obras/[slug]` con CTA por estado | Fase 2 |
-| **4 · Home** | Secciones 4.2 (tagline, destacadas, encargo, sobre mí, FAQ, contacto) | Fase 2 |
-| **5 · Scroll‑world** | Encodes web (desktop y 720p móvil), stills de parada, motor, textos, `object-position` móvil, reduced‑motion | Clips finales aprobados |
-| **6 · QA** | Costuras del vídeo, móvil 390×844, Lighthouse, accesibilidad, `astro build` sin errores | — |
-
-Se construye sección por sección; cada fase acaba en un commit revisable.
+| **0 · Datos** | Bio ✅, WhatsApp ✅, fotos ✅. Faltan títulos, fichas, estados y permisos (§9) | En curso |
+| **1 · Base** | Tailwind, fuentes, tokens, layout, Header (píldora flotante), Footer, 404, SEO base | Bloqueada por la tipografía |
+| **2 · Contenido** | Colección `artworks`, `site.ts`, imágenes en `src/assets` | ✅ |
+| **3 · Catálogo** | `/obras` con filtros y `/obras/[slug]` con CTA por estado | Lista para empezar |
+| **4 · Home** | Secciones §4.2 | Tras la fase 1 |
+| **5 · Scroll‑world** | Vídeos web ✅; falta: stills, motor, textos, `object-position` móvil, reduced‑motion | Falta instalar el plugin |
+| **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | — |
 
 ---
 
-## 9. Preguntas para Stephany (una sola tanda)
+## 9. Preguntas para Stephany
 
-1. **Contacto**: número de WhatsApp, email, Instagram y ciudad. ¿Envía a otras ciudades o países?
-2. **Encargos**: ¿qué acepta (personas, mascotas, paisajes, abstractos)? Rangos de tamaño, tiempo típico, cómo cobra (anticipo, total).
-3. **Precios**: ¿se muestran en la web, se muestra un "desde", o siempre "a consultar"?
-4. **Por cada obra**: título, año, técnica, medidas y estado (disponible / vendida / entregada / colección personal).
-5. **Dudas de las fotos**: ¿las guacamayas son una sola obra? ¿La canoa es un detalle del velero? ¿El retrato de la pareja del taller es un encargo?
-6. **BIARCO**: qué edición, año y qué obra expuso. ¿Hay otras exposiciones o premios?
-7. **Bio**: 3–5 frases en su voz, y una frase para el tagline.
-8. **Tipografía**: Opción A (Fraunces + Manrope) u Opción B (solo Manrope).
-9. **Dominio y hosting**.
+1. **Títulos**: ¿*Tránsito del alma*, *La noche oscura del alma* y *Miradas que fragmentan* son la escalera, la figura en espiral y la madre con el niño? ¿Títulos del resto?
+2. **Fichas**: año, técnica y medidas de cada obra.
+3. **Estado de las obras personales**: disponible, vendida o colección personal.
+4. **Permisos**: ¿los clientes de los 6 retratos autorizan publicarlos?
+5. **Encargos**: qué acepta, tamaños, plazos, cómo cobra, si envía a otras ciudades o países.
+6. **Contacto**: email, Instagram, ciudad.
+7. **Tipografía**: Cormorant Garamond + Manrope (recomendada) o solo Manrope.
+8. **Dominio y hosting**.
