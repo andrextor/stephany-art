@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+photos-originals/
+
+# derived from media/transitions via ffmpeg (see PROMPTS.md)
+media/recorrido-*.mp4
