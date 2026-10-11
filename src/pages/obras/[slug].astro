@@ -151,8 +151,8 @@ const details = [
               <Icon name="arrow-right" class="size-4" />
             </a>
           </div>
-          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((other) => <ArtworkCard artwork={other} />)}
+          <div class="grid items-end gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((other, index) => <ArtworkCard artwork={other} delay={(index % 3) * 120} />)}
           </div>
         </section>
       )

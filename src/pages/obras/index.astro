@@ -69,8 +69,8 @@ const filterHref = (cat: string, estado: string): string => {
       </ul>
     </nav>
 
-    <div data-artwork-grid class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {artworks.map((artwork, index) => <ArtworkCard artwork={artwork} eager={index < 3} headingLevel={2} />)}
+    <div data-artwork-grid class="grid items-end gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+      {artworks.map((artwork, index) => <ArtworkCard artwork={artwork} eager={index < 3} headingLevel={2} delay={(index % 3) * 120} />)}
     </div>
 
     <p data-empty hidden class="rounded-lg border border-line bg-surface p-8 text-center text-ink-soft">

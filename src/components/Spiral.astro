@@ -1,0 +1,28 @@
+---
+// One continuous hand-drawn spiral, the motif of "La noche oscura del alma" and the sky of
+// "Tránsito del alma". Generated at build time; it draws itself on scroll (global.css).
+interface Props {
+  class?: string;
+  turns?: number;
+}
+
+const { class: className = '', turns = 7 } = Astro.props;
+const size = 400;
+const c = size / 2;
+const maxRadius = c - 6;
+const steps = turns * 72;
+
+const points: string[] = [];
+for (let i = 0; i <= steps; i++) {
+  const t = i / steps;
+  const angle = t * turns * Math.PI * 2;
+  const wobble = 1 + Math.sin(angle * 3 + t * 9) * 0.018 + Math.cos(angle * 5) * 0.01;
+  const r = (6 + t * (maxRadius - 6)) * wobble;
+  points.push(`${(c + Math.cos(angle) * r).toFixed(1)} ${(c + Math.sin(angle) * r).toFixed(1)}`);
+}
+const d = `M${points.join('L')}`;
+---
+
+<svg viewBox={`0 0 ${size} ${size}`} fill="none" stroke="currentColor" class:list={['spiral', className]} aria-hidden="true">
+  <path d={d} pathLength="1" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+</svg>

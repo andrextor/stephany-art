@@ -3,7 +3,8 @@ import { Font } from 'astro:assets';
 import '../styles/global.css';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { site } from '../data/site';
+import Icon from '../components/Icon.astro';
+import { site, whatsappUrl } from '../data/site';
 import type { JsonLd } from '../lib/seo';
 
 interface Props {
@@ -70,5 +71,31 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
       <slot />
     </main>
     {!hideFooter && <Footer class="mt-24" />}
+    <nav
+      aria-label="Redes y contacto"
+      class="fixed right-0 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-50 flex flex-col gap-1 rounded-l-2xl border border-r-0 border-bg/15 bg-ink/90 px-1.5 py-2 text-bg shadow-lg backdrop-blur-md"
+    >
+      <a
+        href={site.instagram.url}
+        target="_blank"
+        rel="noopener"
+        aria-label={`Instagram de ${site.artistName} (${site.instagram.handle})`}
+        class="inline-flex size-11 items-center justify-center rounded-full transition-colors duration-700 ease-fluid hover:bg-bg/15"
+      >
+        <Icon name="instagram" class="size-6" />
+      </a>
+      <a
+        href={whatsappUrl(site.whatsapp.commissionMessage)}
+        target="_blank"
+        rel="noopener"
+        aria-label={`Escribir por WhatsApp a ${site.artistName}`}
+        class="inline-flex size-11 items-center justify-center rounded-full transition-colors duration-700 ease-fluid hover:bg-bg/15"
+      >
+        <Icon name="whatsapp" class="size-6" />
+      </a>
+    </nav>
+    <script>
+      import '../scripts/motion';
+    </script>
   </body>
 </html>

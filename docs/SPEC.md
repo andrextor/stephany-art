@@ -217,6 +217,121 @@ Fuera de alcance: transiciones del recorrido (clips fijos hasta tener créditos)
 
 Coste: 0 créditos. Archivos: `global.css`, `astro.config.mjs`, `Layout.astro` (`theme-color`), `favicon.svg`, `ArtworkCard.astro`, `obras/[slug].astro`, `Header.astro`, `TaglineReveal.astro`, `index.astro`, `reveal.ts`.
 
+### 5.5 Fase 8 "página normal" (rama `feat/pagina-normal`, aprobada e implementada el 11/10/2026)
+
+**Pedido (11/10/2026):** el recorrido se queda como está, pero todo lo que viene después tiene que comportarse como una página normal. No gustan ni las secciones apiladas de la fase 7 ni la salida actual del recorrido, donde el último fotograma se queda fijo y "Obras destacadas" se le sube por encima.
+
+**Qué se conserva:** la paleta Nogal y sus bandas (lino, nogal, bambú, tarjeta, nogal), la cursiva, las transiciones entre páginas, los textos del recorrido más altos y tempranos, y la ausencia de apariciones con desenfoque.
+
+#### Cambios
+
+1. **Sin secciones apiladas.** Se borran la regla `sticky` de `.after-world > :not(script)` en `global.css` y el `ResizeObserver` de `index.astro`. Cada sección sube y sale de pantalla con el scroll, como cualquier web.
+2. **El pie vuelve a su sitio.** Se quitan `hideFooter` en `Layout.astro` y el `<Footer />` dentro de `.after-world`. El pie lo pinta el layout en todas las páginas, igual que antes de la fase 7.
+3. **Salida del recorrido como página normal.** Al terminar la última parada, el último fotograma y su texto suben a la misma velocidad que el contenido. El borde inferior del fotograma queda pegado al borde superior de "Obras destacadas", sin hueco y sin solaparse: se ve igual que una imagen de cabecera que se va con el scroll.
+   - En el motor (`scroll-world.js`, cambio local nº 12): en `read()`, `exit = max(0, y − totalW·vh)` se publica como `--sw-exit` en `.sw-root`. `.sw-stage` y `.sw-copylayer` aplican `translateY(calc(-1 * var(--sw-exit)))`.
+   - Las cuentas cuadran sin tocar la altura reservada. `#world` mide `(totalW + 1)·vh`, así que "Obras destacadas" empieza a asomar justo en `y = totalW·vh`, el mismo punto en el que el fotograma empieza a subir.
+   - El raíl, la barra de progreso y la pista siguen desvaneciéndose con `.sw-leaving`. `.sw-past` sigue ocultando el mundo cuando ya ha salido de pantalla.
+   - `.after-world` deja de necesitar `z-index` porque ya no hay nada que tapar. Se queda solo con su fondo.
+   - Con reduced motion no cambia nada: ya se muestran solo los fotogramas fijos.
+
+#### Fuera de alcance
+
+Las paradas y las transiciones entre clips del recorrido, la paleta, `/obras` y las fichas.
+
+#### Verificación
+
+- En varios puntos de la salida, a 390×844 y 1440×900: el borde inferior del fotograma coincide con el superior de "Obras destacadas" (±1 px).
+- Al hacer scroll por la home, ninguna sección se queda fija.
+- El pie aparece una sola vez en la home, `/obras` y una ficha.
+- Lighthouse móvil sigue en 99–100 en la home y una ficha, con CLS 0.
+- Capturas a mitad de la salida y al final de la home, en móvil y escritorio.
+
+Resultado: hueco de 0 px entre fotograma y contenido en toda la salida (1 px en el primer punto en móvil, por redondeo); ninguna sección `sticky`; un solo pie en las tres páginas (en la home sin margen superior, para que no quede una franja de lino entre "Sobre mí" y el pie); Lighthouse móvil en la tabla de §9.
+
+Coste: 0 créditos. Archivos: `scroll-world.js`, `global.css`, `index.astro`, `Layout.astro`.
+
+### 5.6 Fase 9 "la obra y la artista" (rama `feat/obra-y-artista`, aprobada e implementada el 11/10/2026)
+
+**Pedido:** "Obras destacadas" se ve plana. Referencia del cliente: obra grande con la artista y su trayectoria al lado. Se presentaron tres opciones (artefacto "Obras destacadas Stephany") y se eligió **B · La obra y la artista**.
+
+**Por qué se veía plana:** todas las obras en cajas 4:5 iguales (franjas vacías cuando el cuadro no tiene esa proporción), todas con el mismo peso, y la artista muy abajo.
+
+#### Home después del recorrido
+
+1. **Obra insignia + artista** (sustituye a la cuadrícula y a la banda de la cita). Izquierda, sobre nogal: la primera obra destacada (hoy *Tránsito del alma*) a su proporción real con su cartela. Derecha: "Stephany Londoño · Artista plástica", la cita completa en cursiva, tres datos de trayectoria (`site.highlights`) y dos botones (encargar por WhatsApp, ver las obras). La cita deja de repetirse en una banda aparte: se borra `TaglineReveal`.
+2. **La artista y más obras** (`#sobre`). Izquierda, sobre tarjeta: solo la foto de la artista (la del taller se quitó a petición del cliente), una presentación corta (`site.intro`, resumida de la biografía oficial) y "Leer la biografía" como `<details>` nativo con los cuatro párrafos y las exposiciones. Derecha: hasta seis obras destacadas más, colgadas, y "Ver las N obras".
+3. Cómo funciona un encargo (bambú) y pie (nogal), sin cambios.
+
+#### Tarjeta de obra (home, `/obras`, relacionadas)
+
+- La obra a su proporción real, sin caja ni borde, con sombra de lienzo sobre la pared. Las filas de la cuadrícula se alinean por abajo, como cuadros colgados a la misma altura de mirada.
+- Cartela de museo: título en cursiva; debajo, tipo de obra en singular ("Obra personal", "Por encargo") y estado o año. La técnica aparece cuando Stephany la dé.
+- Se conservan `data-category`/`data-status` (filtros) y `view-transition-name` (transición a la ficha).
+
+#### Pendiente para Stephany
+
+Una o dos fotos suyas pintando en el taller: la actual es de un evento con logos de patrocinadores.
+
+#### Verificación
+
+Capturas de home y `/obras` en 390 y 1440 px; filtros de `/obras` siguen funcionando; Lighthouse móvil ≥ 99 y CLS 0; contraste AA de cartelas sobre lino y nogal.
+
+### 5.7 Fase 10 "movimiento y espirales" (rama `feat/movimiento`, aprobada e implementada el 11/10/2026)
+
+**Pedido (11/10/2026):** con el nuevo diseño de la fase 9, el cliente sí quiere el scroll que teníamos en las secciones, y pide tomar como referencia las mejoras de la landing de Arko (`midudev/mcp-higgsfield-landing`): scroll y figuras decorativas.
+
+**Lo que hace Arko después de su recorrido** (revisado en el código):
+- Scroll suave en toda la página con Lenis (`autoRaf`, anclas suaves), desactivado con reduced motion.
+- Apariciones escalonadas: cada bloque entra con un retraso propio (`--d: 0, 100, 200 ms`) en vez de todos a la vez.
+- La frase principal se enciende palabra a palabra según avanza el scroll, ligada a la posición y no a un disparo único.
+- Espirales de arena rastrillada (SVG de anillos irregulares hechos a mano) detrás de la frase y del CTA final, al 10 % de opacidad, que se trazan del centro hacia fuera al hacer scroll.
+- Fotos recortadas en arco (`mask-arch`) y óvalos en lugar de rectángulos.
+
+#### Propuesta para Stephany
+
+1. **Secciones apiladas de vuelta** (interpretación de "el scroll que teníamos"): "Obra insignia", "Sobre mí + más obras", "Cómo funciona un encargo" y el pie vuelven a deslizarse uno sobre otro, con el mismo código de la fase 7 (`sticky` + `--h` publicado por `ResizeObserver`, sin tapar texto sin leer). La salida del recorrido sigue como en la fase 8: el último fotograma sube con el contenido.
+2. **Scroll suave** con Lenis en toda la web (dependencia `lenis`, ~4 KB gzip, sin GSAP). Apagado con reduced motion. El recorrido ya suaviza el vídeo; se comprueba que no se sume un segundo retraso.
+3. **Espiral de Stephany como figura decorativa.** El motivo sale de su propia obra: el relieve de *La noche oscura del alma* y el cielo en remolino de *Tránsito del alma*. Una espiral continua trazada a mano (no anillos), SVG generado en el build, `currentColor` al 10–12 %:
+   - detrás de la cita, en la columna lino de "Obra insignia" (esquina inferior derecha, recortada);
+   - en la banda bambú del encargo (esquina superior derecha);
+   - en el pie nogal (esquina inferior derecha), igual que Arko en su CTA final.
+   Se traza al hacer scroll con animaciones CSS ligadas a la vista (`animation-timeline: view()`, `stroke-dashoffset`), sin JS. Donde no hay soporte (Firefox) se ve ya dibujada.
+4. **La cita se enciende palabra a palabra** en "Obra insignia", ligada al scroll como en Arko.
+5. **Apariciones escalonadas** solo para títulos, cartelas y botones (no para las obras), con retrasos de 0/100/200 ms, sin desenfoque, y siempre visibles en el primer pintado: lo que ya está en pantalla al cargar no se anima.
+6. **Foto de la artista en arco**: la parte superior redondeada como una ventana del ático. Además recorta los logos del fondo del evento.
+
+#### Fuera de alcance
+
+El recorrido (clips, paradas, textos), la paleta y el contenido.
+
+#### Verificación
+
+Secciones apiladas sin texto oculto en 390×844 y 1440×900; la espiral visible y trazada en Chrome y Safari, dibujada en Firefox; reduced motion sin Lenis, sin trazado y sin apariciones; Lighthouse móvil ≥ 99, CLS 0.
+
+Coste: 0 créditos. Archivos: `global.css`, `index.astro`, `Footer.astro`, `Layout.astro`, un componente `Spiral.astro` nuevo, `package.json` (lenis).
+
+Resultado: en 390×844 y 1440×900 cada sección apilada termina en el borde inferior de la pantalla antes de que la siguiente la cubra (ningún texto tapado sin leer) y ninguna aparición queda pendiente dentro de la vista; las palabras de la cita se encienden con el scroll; con reduced motion no hay Lenis, todo está visible y las espirales se ven ya dibujadas; sin errores de consola. Lighthouse móvil: `/` 99/100/100/100, `/obras` 99/100/100/100, ficha 100/100/100/100, CLS 0.
+
+### 5.8 Fase 11 "scroll como Arko" (rama `feat/scroll-arko`, 11/10/2026)
+
+- Las apariciones copian las de Arko: suben 4rem, pasan de desenfocadas a nítidas y aparecen en 1 s, escalonadas con `--d`. Ahora también las obras (tarjetas de la home, `/obras` y relacionadas, 0/120/240 ms por columna) y la obra insignia. Se mantienen las secciones apiladas y el scroll suave.
+- El observador de apariciones usa `threshold: 0` sin margen inferior: con el margen de −10 % el botón de WhatsApp del pie, en la última franja de la página, no llegaba a aparecer nunca.
+- Foto de la artista centrada en su columna y anclada arriba (`object-top`), para que la cara quede dentro del arco.
+- La foto ya no parece un parche. `stephany-portrait.webp` sale de la foto original del evento, que se conserva como fuente: recorte de retrato de la cabeza al catálogo, color natural un poco más cálido y luminoso con sharp (se probaron blanco y negro cálido y color desaturado: los dos la dejaban sin vida). Abajo se funde con la banda (`.fade-bottom`) y lleva un pie que da contexto: "En la 5.ª Bienal Internacional de Arte de Armenia, 2024". Sigue pendiente una foto de Stephany pintando en el taller.
+
+### 5.9 Instagram (11/10/2026)
+
+- Pestaña vertical pegada al borde derecho, abajo, en todas las páginas: Instagram y WhatsApp, solo iconos (sin "Contáctanos" ni "Conecta"), fondo nogal translúcido, `aria-label` en cada enlace y zona segura del móvil respetada. Va abajo y no a media altura para no chocar con los puntos de navegación del recorrido. Enlace limpio `https://www.instagram.com/stephanylondonoart/`, sin el parámetro de seguimiento que traía el enlace compartido.
+- También en el pie (`Instagram @stephanylondonoart`) y en el JSON-LD de la artista (`sameAs`).
+- Correo `stephanylondof@gmail.com` en `site.email`: pie (enlace `mailto:`) y JSON-LD (`email`).
+
+### 5.10 Menú como Arko (11/10/2026)
+
+- En pantallas grandes la píldora del menú va pegada a la izquierda (`lg:justify-start`) para dejar libre el centro de la imagen; en móvil sigue centrada.
+- Nuevo enlace "Recorrido" (`/#world`). Una píldora de fondo se desliza bajo el enlace de la sección visible (scroll-spy con `data-spy` en el recorrido, la obra insignia, "Sobre mí" y el pie; el pie usa su propio observador porque es más bajo que media pantalla). En `/obras` queda marcado "Obras".
+- "Encargar una obra" pasa a arcilla, como el botón de reservar de Arko.
+- Al hacer este cambio se detectó una regresión de la fase 11: la edición de las apariciones había borrado el final de `global.css` (tema del recorrido, textos de las paradas, preludio y transiciones entre páginas). Restaurado desde la fase 10 y comprobado: tipografía y colores del recorrido, preludio idéntico al motor y transiciones presentes.
+
 ---
 
 ## 6. Stack
@@ -290,6 +405,10 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (9 cambios documentados en su cabecera), 5 paradas, 4 clips MP4 (WebM solo si el MP4 no se puede reproducir), 720p y stills de 960 px en móvil, reduced‑motion | ✅ Revisado el 11/10: la salida del recorrido deja el último fotograma fijo y la página se desliza por encima; póster + altura reservada antes de que arranque el motor; copia de la primera parada renderizada en HTML (LCP ≈ primer pintado); stills bajo demanda. Textos (11/10, fase 7): centrados de verdad en escritorio (el parallax pisaba el centrado), más altos en móvil (≈ 18 dvh) y aparecen durante el final de la transición anterior, se mantienen durante toda la parada. Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
 | **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | ✅ Lighthouse 100/100/100/100 en `/`, `/obras` y una ficha (móvil y escritorio). Pendiente: prueba en iPhone real |
 | **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo` (paleta Nogal + secciones apiladas), pendiente de merge |
+| **8 · Página normal** | §5.5: sin secciones apiladas; el último fotograma del recorrido sube con el contenido | ✅ en rama `feat/pagina-normal`, pendiente de merge. Salida verificada: hueco 0 px entre fotograma y contenido en 390 y 1440 px |
+| **9 · La obra y la artista** | §5.6: obra insignia junto a la artista, tarjetas sin caja con cartela de museo | ✅ en rama `feat/obra-y-artista`, pendiente de merge |
+| **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | ✅ en rama `feat/movimiento`, pendiente de merge |
+| **11 · Scroll como Arko** | §5.8: apariciones con desenfoque escalonadas también en las obras, foto centrada | ✅ en rama `feat/scroll-arko`, pendiente de merge |
 
 ---
 

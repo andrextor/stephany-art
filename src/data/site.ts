@@ -11,6 +11,14 @@ export const site = {
   },
   quote:
     'Más que una técnica, mi trabajo es una invitación a la pausa y a la contemplación; un territorio suspendido donde el arte, la naturaleza y el latido humano convergen.',
+  // Short version of the official bio for the home page; the full text stays in `bio`.
+  intro:
+    'Artista colombiana y autodidacta. Pinta entre la luz y la sombra, con veladuras pacientes y texturas orgánicas, desde su nuevo estudio.',
+  highlights: [
+    { title: 'Bienal de Armenia', detail: '2024 · 2026' },
+    { title: 'Portada de revista', detail: 'FILBo 2025' },
+    { title: 'Óleo y acrílico', detail: 'Veladuras y texturas' },
+  ],
   bio: [
     'Artista colombiana. En el universo pictórico de Stephany Londoño, el lienzo se abre como un umbral donde respiran los recuerdos y la memoria halla un refugio tangible. Su obra nace de una profunda inquietud filosófica y una necesidad introspectiva, trazando un mapa íntimo donde la transformación humana transita constantemente entre luz y sombra.',
     'Su camino en las artes se ha construido de forma autodidacta, desde la intuición, un inquebrantable amor por la técnica y un gusto constante por el aprendizaje. A través del estudio riguroso de la obra de otros grandes pintores y de la experimentación personal, ha consolidado un lenguaje creativo muy propio, dominado por el uso paciente de las veladuras y una meticulosa atención a los detalles y a las texturas orgánicas. En sus manos, el óleo y el acrílico dejan de ser simples materiales para convertirse en vehículos de sinceridad, donde la fragilidad y la fuerza conviven en un delicado equilibrio.',
@@ -45,7 +53,12 @@ export const site = {
   // plazos de entrega, tamaños, envíos a otras ciudades o países, formas de pago,
   // retoques, si pinta a partir de una foto, certificado de autenticidad.
   faq: [] as ReadonlyArray<{ question: string; answer: string }>,
-  // PENDIENTE: email, Instagram, ciudad
+  instagram: {
+    handle: '@stephanylondonoart',
+    url: 'https://www.instagram.com/stephanylondonoart/',
+  },
+  email: 'stephanylondof@gmail.com',
+  // PENDIENTE: ciudad
 } as const;
 
 export const whatsappUrl = (message: string): string =>
