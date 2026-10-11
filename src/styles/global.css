@@ -67,6 +67,14 @@ body {
   object-fit: cover;
 }
 
+/* A painting hung on the wall: natural proportions, canvas-edge shadow, no frame or box. */
+.canvas {
+  height: auto;
+  box-shadow:
+    0 1px 2px rgb(30 23 17 / 0.18),
+    0 16px 32px -16px rgb(30 23 17 / 0.45);
+}
+
 /* Home ends on a full-bleed band, so the footer's top margin would leave a stray stripe. */
 main:has(.after-world) + footer {
   margin-top: 0;

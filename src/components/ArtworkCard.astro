@@ -1,14 +1,20 @@
 ---
 import { Picture } from 'astro:assets';
-import { type Artwork, categoryLabels, mainImage, statusLabels } from '../lib/artworks';
+import { type Artwork, categoryNames, mainImage, statusLabels } from '../lib/artworks';
 
 interface Props {
   artwork: Artwork;
   eager?: boolean;
   headingLevel?: 2 | 3;
+  sizes?: string;
 }
 
-const { artwork, eager = false, headingLevel = 3 } = Astro.props;
+const {
+  artwork,
+  eager = false,
+  headingLevel = 3,
+  sizes = '(min-width: 1152px) 352px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw',
+} = Astro.props;
 const Heading = headingLevel === 2 ? 'h2' : 'h3';
 const { title, category, status, year } = artwork.data;
 const image = mainImage(artwork);
@@ -16,36 +22,28 @@ const image = mainImage(artwork);
 
 <a
   href={`/obras/${artwork.id}`}
- 
   data-category={category}
   data-status={status ?? 'none'}
-  class="group flex flex-col gap-4 rounded-lg border border-line bg-surface p-3 transition-transform duration-700 ease-fluid hover:-translate-y-1 active:translate-y-px"
+  class="group flex flex-col gap-4"
 >
-  <div class="flex aspect-4/5 items-center justify-center overflow-hidden bg-bg" style={`view-transition-name: obra-${artwork.id}`}>
+  <div style={`view-transition-name: obra-${artwork.id}`}>
     <Picture
       src={image.src}
       alt={image.alt}
       formats={['avif', 'webp']}
       fallbackFormat="webp"
       widths={[400, 640, 960]}
-      sizes="(min-width: 1152px) 352px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+      sizes={sizes}
       loading={eager ? 'eager' : 'lazy'}
-      class="size-full object-contain transition-transform duration-700 ease-fluid group-hover:scale-[1.02]"
+      class="canvas w-full transition-transform duration-700 ease-fluid group-hover:-translate-y-1"
     />
   </div>
-  <div class="flex flex-col gap-1 px-1 pb-1">
-    <Heading class="text-2xl text-ink">{title}</Heading>
-    <p class="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
-      <span>{categoryLabels[category]}</span>
-      {year && <span aria-hidden="true">·</span>}
-      {year && <span>{year}</span>}
-      {
-        status && (
-          <span class="ml-auto rounded-full border border-line px-2 py-0.5 text-xs text-ink">
-            {statusLabels[status]}
-          </span>
-        )
-      }
+  <div class="flex flex-col gap-0.5">
+    <Heading class="text-2xl text-ink italic">{title}</Heading>
+    <p class="text-sm text-ink-soft">
+      {categoryNames[category]}
+      {status && <span class="font-semibold text-moss-deep"> · {statusLabels[status]}</span>}
+      {!status && year && <span> · {year}</span>}
     </p>
   </div>
 </a>

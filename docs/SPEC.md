@@ -250,7 +250,7 @@ Resultado: hueco de 0 px entre fotograma y contenido en toda la salida (1 px en 
 
 Coste: 0 créditos. Archivos: `scroll-world.js`, `global.css`, `index.astro`, `Layout.astro`.
 
-### 5.6 Fase 9 "la obra y la artista" (rama `feat/obra-y-artista`, aprobada el 11/10/2026)
+### 5.6 Fase 9 "la obra y la artista" (rama `feat/obra-y-artista`, aprobada e implementada el 11/10/2026)
 
 **Pedido:** "Obras destacadas" se ve plana. Referencia del cliente: obra grande con la artista y su trayectoria al lado. Se presentaron tres opciones (artefacto "Obras destacadas Stephany") y se eligió **B · La obra y la artista**.
 
@@ -259,7 +259,7 @@ Coste: 0 créditos. Archivos: `scroll-world.js`, `global.css`, `index.astro`, `L
 #### Home después del recorrido
 
 1. **Obra insignia + artista** (sustituye a la cuadrícula y a la banda de la cita). Izquierda, sobre nogal: la primera obra destacada (hoy *Tránsito del alma*) a su proporción real con su cartela. Derecha: "Stephany Londoño · Artista plástica", la cita completa en cursiva, tres datos de trayectoria (`site.highlights`) y dos botones (encargar por WhatsApp, ver las obras). La cita deja de repetirse en una banda aparte: se borra `TaglineReveal`.
-2. **La artista y más obras** (`#sobre`). Izquierda, sobre tarjeta: foto de la artista + foto del taller, una presentación corta (`site.intro`, resumida de la biografía oficial) y "Leer la biografía" como `<details>` nativo con los cuatro párrafos y las exposiciones. Derecha: hasta seis obras destacadas más, colgadas, y "Ver las N obras".
+2. **La artista y más obras** (`#sobre`). Izquierda, sobre tarjeta: solo la foto de la artista (la del taller se quitó a petición del cliente), una presentación corta (`site.intro`, resumida de la biografía oficial) y "Leer la biografía" como `<details>` nativo con los cuatro párrafos y las exposiciones. Derecha: hasta seis obras destacadas más, colgadas, y "Ver las N obras".
 3. Cómo funciona un encargo (bambú) y pie (nogal), sin cambios.
 
 #### Tarjeta de obra (home, `/obras`, relacionadas)
@@ -350,7 +350,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | ✅ Lighthouse 100/100/100/100 en `/`, `/obras` y una ficha (móvil y escritorio). Pendiente: prueba en iPhone real |
 | **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo` (paleta Nogal + secciones apiladas), pendiente de merge |
 | **8 · Página normal** | §5.5: sin secciones apiladas; el último fotograma del recorrido sube con el contenido | ✅ en rama `feat/pagina-normal`, pendiente de merge. Salida verificada: hueco 0 px entre fotograma y contenido en 390 y 1440 px |
-| **9 · La obra y la artista** | §5.6: obra insignia junto a la artista, tarjetas sin caja con cartela de museo | En curso en rama `feat/obra-y-artista` |
+| **9 · La obra y la artista** | §5.6: obra insignia junto a la artista, tarjetas sin caja con cartela de museo | ✅ en rama `feat/obra-y-artista`, pendiente de merge |
 
 ---
 

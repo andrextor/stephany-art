@@ -20,6 +20,11 @@ export const statusLabels: Record<ArtworkStatus, string> = {
   'private-collection': 'Colección personal',
 };
 
+export const categoryNames: Record<ArtworkCategory, string> = {
+  commission: 'Por encargo',
+  personal: 'Obra personal',
+};
+
 const categoryOrder: Record<ArtworkCategory, number> = { personal: 0, commission: 1 };
 
 export const getPublishedArtworks = async (): Promise<Artwork[]> => {
