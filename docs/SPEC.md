@@ -321,8 +321,15 @@ Resultado: en 390×844 y 1440×900 cada sección apilada termina en el borde inf
 
 ### 5.9 Instagram (11/10/2026)
 
-- Botón flotante redondo abajo a la derecha en todas las páginas, solo con el icono (sin texto "Contáctanos"), con `aria-label` y respetando la zona segura del móvil. Enlace limpio `https://www.instagram.com/stephanylondonoart/`, sin el parámetro de seguimiento que traía el enlace compartido.
+- Pestaña vertical pegada al borde derecho, abajo, en todas las páginas: Instagram y WhatsApp, solo iconos (sin "Contáctanos" ni "Conecta"), fondo nogal translúcido, `aria-label` en cada enlace y zona segura del móvil respetada. Va abajo y no a media altura para no chocar con los puntos de navegación del recorrido. Enlace limpio `https://www.instagram.com/stephanylondonoart/`, sin el parámetro de seguimiento que traía el enlace compartido.
 - También en el pie (`Instagram @stephanylondonoart`) y en el JSON-LD de la artista (`sameAs`).
+- Correo `stephanylondof@gmail.com` en `site.email`: pie (enlace `mailto:`) y JSON-LD (`email`).
+
+### 5.10 Menú como Arko (11/10/2026)
+
+- En pantallas grandes la píldora del menú va pegada a la izquierda (`lg:justify-start`) para dejar libre el centro de la imagen; en móvil sigue centrada.
+- Nuevo enlace "Recorrido" (`/#world`). Una píldora de fondo se desliza bajo el enlace de la sección visible (scroll-spy con `data-spy` en el recorrido, la obra insignia, "Sobre mí" y el pie; el pie usa su propio observador porque es más bajo que media pantalla). En `/obras` queda marcado "Obras".
+- "Encargar una obra" pasa a arcilla, como el botón de reservar de Arko.
 - Al hacer este cambio se detectó una regresión de la fase 11: la edición de las apariciones había borrado el final de `global.css` (tema del recorrido, textos de las paradas, preludio y transiciones entre páginas). Restaurado desde la fase 10 y comprobado: tipografía y colores del recorrido, preludio idéntico al motor y transiciones presentes.
 
 ---

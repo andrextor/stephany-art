@@ -57,7 +57,8 @@ export const site = {
     handle: '@stephanylondonoart',
     url: 'https://www.instagram.com/stephanylondonoart/',
   },
-  // PENDIENTE: email, ciudad
+  email: 'stephanylondof@gmail.com',
+  // PENDIENTE: ciudad
 } as const;
 
 export const whatsappUrl = (message: string): string =>

@@ -11,6 +11,7 @@ export const artistJsonLd = (origin: URL): JsonLd => ({
   nationality: { '@type': 'Country', name: site.country },
   url: new URL('/', origin).href,
   description: site.bio[0],
+  email: site.email,
   sameAs: [site.instagram.url],
 });
 
