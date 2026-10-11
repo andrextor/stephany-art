@@ -221,8 +221,8 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **1 · Base** | Tailwind, fuentes, tokens, layout, Header (píldora flotante), Footer, 404, SEO base | ✅ |
 | **2 · Contenido** | Colección `artworks`, `site.ts`, imágenes en `src/assets` | ✅ |
 | **3 · Catálogo** | `/obras` con filtros y `/obras/[slug]` con CTA por estado | ✅ |
-| **4 · Home** | Secciones §4.2 | Provisional: hero, destacadas, sobre mí, cita. Faltan tagline reveal, cómo funciona un encargo y FAQ |
-| **5 · Scroll‑world** | Vídeos web ✅; falta: stills, motor, textos, `object-position` móvil, reduced‑motion | Falta instalar el plugin |
+| **4 · Home** | Secciones §4.2 | ✅ Tagline reveal, encargo en 3 pasos (PENDIENTE validar), FAQ oculta hasta tener respuestas |
+| **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (cambios documentados en su cabecera), 5 paradas, 4 clips WebM/MP4, 720p en móvil con `position` por parada, reduced‑motion | ✅ Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
 | **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | — |
 
 ---

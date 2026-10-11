@@ -41,6 +41,57 @@
   }
 }
 
+/* Scroll world theme: unlayered, so it wins over the engine's @layer sw defaults. */
+body {
+  background-color: var(--color-bg);
+}
+
+.sw-root {
+  --sw-bg: var(--color-bg);
+  --sw-ink: var(--color-ink);
+  --sw-ink-soft: var(--color-ink-soft);
+  --sw-accent: var(--color-gold);
+  --sw-font-display: var(--font-display);
+  --sw-font-body: var(--font-sans);
+}
+
+.sw-copy__num,
+.sw-copy__eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+/* Gold fails contrast on light video frames; the accent stays on the rail and progress bar. */
+.sw-copy__eyebrow {
+  color: var(--color-ink-soft);
+}
+
+.sw-copy__title {
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.sw-copy__body {
+  text-wrap: pretty;
+}
+
+.sw-btn {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  transition: transform 700ms var(--ease-fluid);
+}
+
+.sw-btn--primary {
+  color: var(--color-bg);
+}
+
+.sw-copy__tags li {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
 /* Scroll reveal, driven by src/scripts/reveal.ts */
 [data-reveal] {
   transition:

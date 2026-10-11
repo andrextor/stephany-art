@@ -26,6 +26,25 @@ export const site = {
     },
     { year: 2026, artwork: 'Tránsito del alma', event: 'Bienal de Armenia' },
   ],
+  // PENDIENTE: validar los pasos con Stephany (plazos, anticipo, envío)
+  commissionSteps: [
+    {
+      title: 'Me escribes',
+      text: 'Cuéntame por WhatsApp qué quieres pintar y envíame las fotos de referencia.',
+    },
+    {
+      title: 'Lo definimos juntos',
+      text: 'Conversamos sobre el tamaño, la técnica y los tiempos para que la obra sea como la imaginas.',
+    },
+    {
+      title: 'Pinto tu obra',
+      text: 'La pinto a mano en mi estudio, con la misma paciencia y atención al detalle que mi obra personal.',
+    },
+  ],
+  // The FAQ section stays hidden until it has answers. PENDIENTE (preguntas para Stephany):
+  // plazos de entrega, tamaños, envíos a otras ciudades o países, formas de pago,
+  // retoques, si pinta a partir de una foto, certificado de autenticidad.
+  faq: [] as ReadonlyArray<{ question: string; answer: string }>,
   // PENDIENTE: email, Instagram, ciudad
 } as const;
 

@@ -1,0 +1,96 @@
+---
+import { site, whatsappUrl } from '../data/site';
+
+const commission = { label: 'Encargar una obra', href: whatsappUrl(site.whatsapp.commissionMessage), external: true };
+
+// Stops are still frames taken from the clips themselves (see docs/SPEC.md §4.1),
+// and clip-N is the walk between stop N-1 and stop N.
+const config = {
+  nav: false,
+  atmosphere: false,
+  hint: 'Desliza para entrar',
+  diveScroll: 0.9,
+  connScroll: 1.4,
+  crossfade: 0.07,
+  sections: [
+    {
+      id: 'inicio',
+      label: 'Inicio',
+      still: '/world/stop-0.webp',
+      position: '50% 44%',
+      scroll: 1.2,
+      titleTag: 'h1',
+      eyebrow: `${site.role} · ${site.country}`,
+      title: site.artistName,
+      body: 'Pinto entre la luz y la sombra: obra personal sobre la memoria y el alma, y obras por encargo hechas a mano al óleo y acrílico.',
+      cta: { primary: commission, secondary: { label: 'Ver las obras', href: '/obras' } },
+    },
+    {
+      id: 'taller',
+      label: 'El taller',
+      still: '/world/stop-1.webp',
+      position: '45% 44%',
+      eyebrow: 'El taller',
+      title: 'Donde nace cada obra',
+      body: 'Desde mi nuevo estudio doy vida a una etapa creativa conectada con la naturaleza y la introspección.',
+    },
+    {
+      id: 'comision',
+      label: 'Por comisión',
+      still: '/world/stop-2.webp',
+      position: '55% 44%',
+      eyebrow: 'Obras por comisión',
+      title: 'Tu historia, pintada a mano',
+      body: 'Retratos, paisajes, animales y abstractos por encargo, con la misma atención al detalle que mi obra personal.',
+      cta: { primary: commission, secondary: { label: 'Ver encargos', href: '/obras?cat=commission' } },
+    },
+    {
+      id: 'personales',
+      label: 'Personales',
+      still: '/world/stop-3.webp',
+      position: '75% 44%',
+      eyebrow: 'Obras personales',
+      title: 'Entre la luz y la sombra',
+      body: 'Obras sobre la memoria y la transformación humana, expuestas en la Bienal de Armenia en 2024 y 2026.',
+      tags: ['La noche oscura del alma', 'Tránsito del alma'],
+      cta: { secondary: { label: 'Ver obras personales', href: '/obras?cat=personal' } },
+    },
+    {
+      id: 'en-proceso',
+      label: 'En proceso',
+      still: '/world/stop-4.webp',
+      position: '85% 44%',
+      scroll: 1.4,
+      eyebrow: 'En proceso',
+      title: 'Capa a capa, en el caballete',
+      body: 'Veladuras pacientes y texturas orgánicas: así avanza el retrato que estoy pintando ahora.',
+      cta: { primary: commission, secondary: { label: 'Ver obras en proceso', href: '/obras?estado=in-progress' } },
+    },
+  ],
+};
+
+const configJson = JSON.stringify(config).replace(/</g, '\\u003c');
+---
+
+<div id="world" aria-label="Recorrido por el taller"></div>
+<script type="application/json" id="world-config" set:html={configJson} />
+
+<script>
+  import { mountScrollWorld } from '../scripts/scroll-world.js';
+
+  const configElement = document.getElementById('world-config');
+  const container = document.getElementById('world');
+
+  if (configElement && container) {
+    const config = JSON.parse(configElement.textContent ?? '{}');
+    const probe = document.createElement('video');
+    const extension = probe.canPlayType('video/webm; codecs="vp9"') ? 'webm' : 'mp4';
+    const clips = [1, 2, 3, 4];
+
+    mountScrollWorld(container, {
+      ...config,
+      connectors: clips.map((n) => `/video/clip-${n}-1080.${extension}`),
+      connectorsMobile: clips.map((n) => `/video/clip-${n}-720.${extension}`),
+    });
+  }
+</script>

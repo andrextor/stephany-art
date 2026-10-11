@@ -3,6 +3,8 @@ import { Picture } from 'astro:assets';
 import artistPhoto from '../assets/artist/stephany-at-biarco.webp';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import Icon from '../components/Icon.astro';
+import ScrollWorld from '../components/ScrollWorld.astro';
+import TaglineReveal from '../components/TaglineReveal.astro';
 import { site, whatsappUrl } from '../data/site';
 import Layout from '../layouts/Layout.astro';
 import { getPublishedArtworks } from '../lib/artworks';
@@ -11,31 +13,7 @@ const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data
 ---
 
 <Layout>
-  <section class="mx-auto flex min-h-[90vh] max-w-6xl flex-col justify-center gap-8 px-4 pt-32 md:px-8">
-    <p class="text-sm text-ink-soft" data-reveal>{site.role} · {site.country}</p>
-    <h1 class="max-w-[680px] text-6xl md:text-8xl" data-reveal>{site.artistName}</h1>
-    <p class="max-w-[680px] text-lg text-ink-soft md:text-xl" data-reveal>
-      Pinto entre la luz y la sombra: obra personal sobre la memoria y el alma, y retratos por encargo hechos a mano al óleo y acrílico.
-    </p>
-    <div class="flex flex-wrap gap-4" data-reveal>
-      <a
-        href={whatsappUrl(site.whatsapp.commissionMessage)}
-        target="_blank"
-        rel="noopener"
-        class="inline-flex items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
-      >
-        <Icon name="whatsapp" />
-        Encargar una obra
-      </a>
-      <a
-        href="/obras"
-        class="inline-flex items-center gap-2 rounded-full border border-line px-3 py-2 text-base font-semibold text-ink transition-colors duration-700 ease-fluid hover:border-ink"
-      >
-        Ver las obras
-        <Icon name="arrow-right" />
-      </a>
-    </div>
-  </section>
+  <ScrollWorld />
 
   <section aria-labelledby="destacadas" class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-24 md:px-8">
     <div class="flex items-end justify-between gap-4">
@@ -48,6 +26,36 @@ const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {featured.map((artwork) => <ArtworkCard artwork={artwork} />)}
     </div>
+  </section>
+
+  <TaglineReveal text={site.quote} author={site.artistName} />
+
+  <section aria-labelledby="encargo-titulo" class="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-24 md:px-8">
+    <div class="flex max-w-2xl flex-col gap-4" data-reveal>
+      <h2 id="encargo-titulo" class="text-4xl md:text-5xl">Cómo funciona un encargo</h2>
+      <p class="text-lg text-ink-soft">Una obra hecha a mano a partir de tu historia, en tres pasos.</p>
+    </div>
+    <ol class="grid gap-6 md:grid-cols-3">
+      {
+        site.commissionSteps.map((step, index) => (
+          <li class="flex flex-col gap-4 rounded-lg border border-line bg-surface p-6" data-reveal>
+            <span class="font-display text-5xl text-gold">{index + 1}</span>
+            <h3 class="text-2xl text-ink">{step.title}</h3>
+            <p class="text-base text-ink-soft">{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <a
+      href={whatsappUrl(site.whatsapp.commissionMessage)}
+      target="_blank"
+      rel="noopener"
+      class="inline-flex w-max items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+      data-reveal
+    >
+      <Icon name="whatsapp" />
+      Encargar una obra
+    </a>
   </section>
 
   <section id="sobre" aria-labelledby="sobre-titulo" class="mx-auto grid max-w-6xl gap-12 px-4 py-24 md:grid-cols-[2fr_3fr] md:px-8">
@@ -81,10 +89,26 @@ const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data
     </div>
   </section>
 
-  <section class="mx-auto max-w-4xl px-4 py-24 md:px-8" data-reveal>
-    <blockquote class="flex flex-col gap-6 border-l border-gold pl-8">
-      <p class="font-display text-4xl text-ink md:text-5xl">{site.quote}</p>
-      <footer class="text-sm text-ink-soft">{site.artistName}</footer>
-    </blockquote>
-  </section>
+  {
+    site.faq.length > 0 && (
+      <section aria-labelledby="faq-titulo" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-24 md:px-8">
+        <h2 id="faq-titulo" class="text-4xl md:text-5xl" data-reveal>
+          Preguntas frecuentes
+        </h2>
+        <div class="flex flex-col border-t border-line">
+          {site.faq.map((item) => (
+            <details class="group border-b border-line py-6" data-reveal>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg text-ink">
+                {item.question}
+                <span class="text-gold transition-transform duration-700 ease-fluid group-open:rotate-45" aria-hidden="true">
+                  +
+                </span>
+              </summary>
+              <p class="pt-4 text-base text-ink-soft">{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    )
+  }
 </Layout>
