@@ -146,15 +146,17 @@ Sacado del vídeo del taller (nogal de las vigas, pared encalada, bambú del bal
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--bg` | `#F5F2E8` | Lino, fondo general |
-| `--surface` | `#FCFBF6` | Tarjetas de obra (casi blanco: el cuadro se ve con su color real) |
-| `--ink` | `#221B14` | Texto y botón principal (nogal de las vigas, texto lino) |
-| `--ink-soft` | `#5A5146` | Texto secundario (tierra) |
-| `--moss` | `#5C7A46` | Bambú: filetes, subrayado del menú, raíl del recorrido, foco. **Nunca para texto pequeño** (4,3:1) |
-| `--moss-deep` | `#3F5A33` | Musgo: numerales, años, icono de certificado (6,9:1) |
-| `--line` | `#E2DCCB` | Bordes completos de tarjeta |
+| `--bg` | `#EFE8DA` | Lino tostado, fondo general y "Obras destacadas" |
+| `--surface` | `#F8F3E9` | Tarjetas de obra y banda "Sobre mí" |
+| `--ink` | `#1E1711` | Nogal: texto, botón principal y bandas oscuras (cita, pie) |
+| `--ink-soft` | `#5B5044` | Texto secundario sobre claro (6,4:1) |
+| `--ink-faint` | `#B9AE9C` | Texto secundario sobre nogal (8,1:1) |
+| `--moss` | `#4F6B3A` | Bambú: banda "Cómo funciona un encargo", filetes, raíl del recorrido, foco |
+| `--moss-deep` | `#3B5230` | Musgo: años, icono de certificado (7,1:1) |
+| `--clay` | `#A4502C` | Arcilla: solo el botón de WhatsApp del pie (texto `--surface`, 5,1:1) |
+| `--line` | `#DCD2BF` | Bordes de tarjeta |
 
-Tema claro: un fondo oscuro altera la lectura de obras luminosas (colibrí, velero). Sin degradados de fondo. En el scroll‑world el texto va sobre un velo `--ink` al 40 %.
+Las obras siempre sobre claro (un fondo oscuro altera la lectura del colibrí o el velero); las bandas oscuras llevan texto, no cuadros. Sin degradados de fondo. En el scroll‑world el texto va sobre un velo `--ink` al 40 %.
 
 ### 5.3 Formas y movimiento
 
@@ -163,7 +165,15 @@ Tema claro: un fondo oscuro altera la lectura de obras luminosas (colibrí, vele
 - Movimiento lento, `cubic-bezier(0.32,0.72,0,1)`, apariciones con IntersectionObserver.
 - Iconos: Phosphor (WhatsApp, filtros, flechas).
 
-### 5.4 Fase 7 "casa de campo" (aprobada e implementada el 11/10/2026, rama `feat/casa-de-campo`)
+### 5.4 Fase 7 "casa de campo" (rama `feat/casa-de-campo`)
+
+Segunda vuelta (11/10/2026): la primera versión (lino `#F5F2E8` + acento bambú, todo claro) se vio pálida y sin carácter. Se presentaron tres paletas con las obras reales (artefacto "Paletas casa de campo") y se eligió **A · Nogal**: bandas oscuras entre secciones claras y un solo acento. Valores finales en §5.2.
+
+**Ritmo de la home**: Obras destacadas (lino) → cita (nogal) → Cómo funciona un encargo (bambú, tarjetas oscurecidas con `bg-ink/15`) → Sobre mí (tarjeta) → pie (nogal, botón arcilla). El pie se renderiza dentro de `.after-world` en la home (`Layout hideFooter`) para que forme parte de la pila.
+
+**Scroll de las secciones (opción 3, "apiladas")**: cada sección es `position: sticky; top: min(0px, calc(100svh - var(--h)))` dentro de `.after-world`; la siguiente se desliza por encima igual que la página cubre el último fotograma del recorrido. `--h` lo publica un `ResizeObserver` en `index.astro`, de modo que una sección más alta que la pantalla se fija cuando su borde inferior entra en vista y nunca tapa texto sin leer (verificado en 390×844 y 1440×900). Sin JS no hay pila: scroll normal. Las apariciones con desenfoque (`data-reveal`, `reveal.ts`) se eliminaron en todas las páginas; solo queda la cita palabra a palabra.
+
+Texto original de la propuesta:
 
 El vídeo manda: ático de vigas oscuras, paredes encaladas, tablones, bambú en el balcón y luz nublada. La web de hoy sale de la biografía (crema + dorado) y queda más "galería" que "taller en el campo". Propuesta: mover el color hacia lo que se ve en el vídeo y reservar el oro para nada.
 
@@ -279,7 +289,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **4 · Home** | Secciones §4.2 | ✅ Tagline reveal, encargo en 3 pasos (PENDIENTE validar), FAQ oculta hasta tener respuestas |
 | **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (9 cambios documentados en su cabecera), 5 paradas, 4 clips MP4 (WebM solo si el MP4 no se puede reproducir), 720p y stills de 960 px en móvil, reduced‑motion | ✅ Revisado el 11/10: la salida del recorrido deja el último fotograma fijo y la página se desliza por encima; póster + altura reservada antes de que arranque el motor; copia de la primera parada renderizada en HTML (LCP ≈ primer pintado); stills bajo demanda. Textos (11/10, fase 7): centrados de verdad en escritorio (el parallax pisaba el centrado), más altos en móvil (≈ 18 dvh) y aparecen durante el final de la transición anterior, se mantienen durante toda la parada. Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
 | **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | ✅ Lighthouse 100/100/100/100 en `/`, `/obras` y una ficha (móvil y escritorio). Pendiente: prueba en iPhone real |
-| **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo`, pendiente de merge |
+| **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo` (paleta Nogal + secciones apiladas), pendiente de merge |
 
 ---
 

@@ -13,6 +13,7 @@ interface Props {
   imageAlt?: string;
   type?: 'website' | 'article';
   jsonLd?: JsonLd;
+  hideFooter?: boolean;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   imageAlt = `El taller de ${site.artistName}`,
   type = 'website',
   jsonLd,
+  hideFooter = false,
 } = Astro.props;
 
 const fullTitle = title ? `${title} · ${site.artistName}` : `${site.artistName} · ${site.role}`;
@@ -40,7 +42,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#f5f2e8" />
+    <meta name="theme-color" content="#efe8da" />
     <meta name="author" content={site.artistName} />
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.artistName} />
@@ -67,9 +69,6 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     <main id="contenido">
       <slot />
     </main>
-    <Footer />
-    <script>
-      import '../scripts/reveal';
-    </script>
+    {!hideFooter && <Footer class="mt-24" />}
   </body>
 </html>

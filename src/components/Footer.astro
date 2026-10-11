@@ -2,29 +2,34 @@
 import { site, whatsappUrl } from '../data/site';
 import Icon from './Icon.astro';
 
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer id="contacto" class="mt-24 border-t border-line bg-surface">
+<footer id="contacto" class:list={['bg-ink text-bg', className]}>
   <div class="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-20 md:flex-row md:items-end md:justify-between md:px-8">
     <div class="flex max-w-xl flex-col gap-6">
       <h2 class="text-4xl md:text-5xl">¿Tienes una idea para una obra?</h2>
-      <p class="text-lg text-ink-soft">
+      <p class="text-lg text-ink-faint">
         Escríbeme por WhatsApp con tu idea o tu foto y te cuento cómo podemos convertirla en una pintura.
       </p>
       <a
         href={whatsappUrl(site.whatsapp.commissionMessage)}
         target="_blank"
         rel="noopener"
-        class="inline-flex w-max items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+        class="inline-flex w-max items-center gap-2 rounded-full bg-clay px-3 py-2 text-base font-semibold text-surface transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
       >
         <Icon name="whatsapp" />
         Escribir por WhatsApp
       </a>
     </div>
 
-    <div class="flex flex-col gap-2 text-sm text-ink-soft md:text-right">
-      <p class="font-display text-2xl text-ink">{site.artistName}</p>
+    <div class="flex flex-col gap-2 text-sm text-ink-faint md:text-right">
+      <p class="font-display text-2xl text-bg">{site.artistName}</p>
       <p>{site.role} · {site.country}</p>
       <p>WhatsApp {site.whatsapp.display}</p>
       <p class="pt-4">© {year} {site.artistName}. Todas las obras son originales.</p>

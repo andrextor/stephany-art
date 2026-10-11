@@ -6,13 +6,15 @@
 }
 
 @theme {
-  --color-bg: #f5f2e8;
-  --color-surface: #fcfbf6;
-  --color-ink: #221b14;
-  --color-ink-soft: #5a5146;
-  --color-moss: #5c7a46;
-  --color-moss-deep: #3f5a33;
-  --color-line: #e2dccb;
+  --color-bg: #efe8da;
+  --color-surface: #f8f3e9;
+  --color-ink: #1e1711;
+  --color-ink-soft: #5b5044;
+  --color-moss: #4f6b3a;
+  --color-moss-deep: #3b5230;
+  --color-line: #dcd2bf;
+  --color-clay: #a4502c;
+  --color-ink-faint: #b9ae9c;
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -263,28 +265,10 @@ body {
   }
 }
 
-/* Scroll reveal, driven by src/scripts/reveal.ts */
-[data-reveal] {
-  transition:
-    opacity 900ms var(--ease-fluid),
-    transform 900ms var(--ease-fluid),
-    filter 900ms var(--ease-fluid);
-}
-
-.js [data-reveal]:not([data-revealed]) {
-  opacity: 0;
-  transform: translateY(4rem);
-  filter: blur(12px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
-    transition: none;
-  }
-
-  .js [data-reveal]:not([data-revealed]) {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
+/* Home: the sections after the flight stack. Each one pins while the next slides over
+   it; a section taller than the viewport pins once its bottom is in view (--h is set
+   by the script in index.astro). */
+.js .after-world > :not(script) {
+  position: sticky;
+  top: min(0px, calc(100svh - var(--h, 0px)));
 }

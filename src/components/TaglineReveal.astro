@@ -8,10 +8,10 @@ const { text, author } = Astro.props;
 const words = text.split(' ');
 ---
 
-<section class="mx-auto max-w-4xl px-4 py-24 md:px-8 md:py-36" aria-label="Cita de la artista">
-  <figure class="flex flex-col gap-8 border-l border-moss pl-8">
+<section class="bg-ink px-4 text-bg md:px-8" aria-label="Cita de la artista">
+  <figure class="mx-auto flex max-w-4xl flex-col gap-8 border-l border-moss py-24 pl-8 md:py-36">
     <blockquote>
-      <p data-tagline class="max-w-[680px] font-display text-4xl text-ink italic md:text-6xl">
+      <p data-tagline class="max-w-[680px] font-display text-4xl italic md:text-6xl">
         {
           words.map((word) => (
             <>
@@ -23,7 +23,7 @@ const words = text.split(' ');
         }
       </p>
     </blockquote>
-    <figcaption class="text-sm text-ink-soft">{author}</figcaption>
+    <figcaption class="text-sm text-ink-faint">{author}</figcaption>
   </figure>
 </section>
 

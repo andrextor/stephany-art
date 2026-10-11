@@ -71,7 +71,7 @@ const details = [
         />
       </figure>
 
-      <div class="flex flex-col gap-8 lg:sticky lg:top-32" data-reveal>
+      <div class="flex flex-col gap-8 lg:sticky lg:top-32">
         <header class="flex flex-col gap-2">
           <p class="text-sm text-ink-soft">{categoryLabels[category]}</p>
           <h1 class="text-5xl md:text-6xl">{title}</h1>
@@ -123,7 +123,7 @@ const details = [
           <h2 id="detalles" class="text-3xl">Detalles y proceso</h2>
           <div class="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {gallery.map((image) => (
-              <figure class="rounded-lg border border-line bg-surface p-3" data-reveal>
+              <figure class="rounded-lg border border-line bg-surface p-3">
                 <Picture
                   src={image.src}
                   alt={image.alt}

@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import artistPhoto from '../assets/artist/stephany-at-biarco.webp';
 import ArtworkCard from '../components/ArtworkCard.astro';
+import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import ScrollWorld from '../components/ScrollWorld.astro';
 import TaglineReveal from '../components/TaglineReveal.astro';
@@ -15,105 +16,128 @@ const origin = Astro.site ?? Astro.url;
 const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 ---
 
-<Layout jsonLd={jsonLd}>
+<Layout jsonLd={jsonLd} hideFooter>
   <ScrollWorld />
 
   <div class="after-world">
-  <section aria-labelledby="destacadas" class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-24 md:px-8">
-    <div class="flex items-end justify-between gap-4">
-      <h2 id="destacadas" class="text-4xl md:text-5xl">Obras destacadas</h2>
-      <a href="/obras" class="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
-        Ver todas
-        <Icon name="arrow-right" class="size-4" />
-      </a>
-    </div>
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {featured.map((artwork) => <ArtworkCard artwork={artwork} />)}
-    </div>
-  </section>
-
-  <TaglineReveal text={site.quote} author={site.artistName} />
-
-  <section aria-labelledby="encargo-titulo" class="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-24 md:px-8">
-    <div class="flex max-w-2xl flex-col gap-4" data-reveal>
-      <h2 id="encargo-titulo" class="text-4xl md:text-5xl">Cómo funciona un encargo</h2>
-      <p class="text-lg text-ink-soft">Una obra hecha a mano a partir de tu historia, en tres pasos.</p>
-    </div>
-    <ol class="grid gap-6 md:grid-cols-3">
-      {
-        site.commissionSteps.map((step, index) => (
-          <li class="flex flex-col gap-4 rounded-lg border border-line bg-surface p-6" data-reveal>
-            <span class="font-display text-5xl text-moss-deep italic">{index + 1}</span>
-            <h3 class="text-2xl text-ink">{step.title}</h3>
-            <p class="text-base text-ink-soft">{step.text}</p>
-          </li>
-        ))
-      }
-    </ol>
-    <a
-      href={whatsappUrl(site.whatsapp.commissionMessage)}
-      target="_blank"
-      rel="noopener"
-      class="inline-flex w-max items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
-      data-reveal
-    >
-      <Icon name="whatsapp" />
-      Encargar una obra
-    </a>
-  </section>
-
-  <section id="sobre" aria-labelledby="sobre-titulo" class="mx-auto grid max-w-6xl gap-12 px-4 py-24 md:grid-cols-[2fr_3fr] md:px-8">
-    <figure class="rounded-lg border border-line bg-surface p-3" data-reveal>
-      <Picture
-        src={artistPhoto}
-        alt="Stephany Londoño con el catálogo de la Bienal de Armenia"
-        formats={['avif', 'webp']}
-        fallbackFormat="webp"
-        widths={[400, 640, 960]}
-        sizes="(min-width: 768px) 40vw, 90vw"
-        class="w-full"
-      />
-    </figure>
-    <div class="flex flex-col gap-6" data-reveal>
-      <h2 id="sobre-titulo" class="text-4xl md:text-5xl">Sobre mí</h2>
-      {site.bio.map((paragraph) => <p class="text-base text-ink-soft">{paragraph}</p>)}
-      <ul class="flex flex-col gap-2 border-t border-line pt-6 text-sm">
-        {
-          site.exhibitions.map((exhibition) => (
-            <li class="grid grid-cols-[4rem_1fr] gap-4">
-              <span class="text-moss-deep">{exhibition.year}</span>
-              <span>
-                <span class="font-display text-lg text-ink italic">{exhibition.artwork}</span>
-                <span class="text-ink-soft"> · {exhibition.event}</span>
-              </span>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  {
-    site.faq.length > 0 && (
-      <section aria-labelledby="faq-titulo" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-24 md:px-8">
-        <h2 id="faq-titulo" class="text-4xl md:text-5xl" data-reveal>
-          Preguntas frecuentes
-        </h2>
-        <div class="flex flex-col border-t border-line">
-          {site.faq.map((item) => (
-            <details class="group border-b border-line py-6" data-reveal>
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg text-ink">
-                {item.question}
-                <span class="text-moss-deep transition-transform duration-700 ease-fluid group-open:rotate-45" aria-hidden="true">
-                  +
-                </span>
-              </summary>
-              <p class="pt-4 text-base text-ink-soft">{item.answer}</p>
-            </details>
-          ))}
+    <section aria-labelledby="destacadas" class="bg-bg">
+      <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-24 md:px-8">
+        <div class="flex items-end justify-between gap-4">
+          <h2 id="destacadas" class="text-4xl md:text-5xl">Obras destacadas</h2>
+          <a href="/obras" class="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
+            Ver todas
+            <Icon name="arrow-right" class="size-4" />
+          </a>
         </div>
-      </section>
-    )
-  }
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((artwork) => <ArtworkCard artwork={artwork} />)}
+        </div>
+      </div>
+    </section>
+
+    <TaglineReveal text={site.quote} author={site.artistName} />
+
+    <section aria-labelledby="encargo-titulo" class="bg-moss text-bg">
+      <div class="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-24 md:px-8">
+        <div class="flex max-w-2xl flex-col gap-4">
+          <h2 id="encargo-titulo" class="text-4xl md:text-5xl">Cómo funciona un encargo</h2>
+          <p class="text-lg text-bg">Una obra hecha a mano a partir de tu historia, en tres pasos.</p>
+        </div>
+        <ol class="grid gap-6 md:grid-cols-3">
+          {
+            site.commissionSteps.map((step, index) => (
+              <li class="flex flex-col gap-4 rounded-lg border border-ink/10 bg-ink/15 p-6">
+                <span class="font-display text-5xl text-bg italic">{index + 1}</span>
+                <h3 class="text-2xl">{step.title}</h3>
+                <p class="text-base text-bg">{step.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+        <a
+          href={whatsappUrl(site.whatsapp.commissionMessage)}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex w-max items-center gap-2 rounded-full bg-bg px-3 py-2 text-base font-semibold text-ink transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+        >
+          <Icon name="whatsapp" />
+          Encargar una obra
+        </a>
+      </div>
+    </section>
+
+    <section id="sobre" aria-labelledby="sobre-titulo" class="bg-surface">
+      <div class="mx-auto grid max-w-6xl gap-12 px-4 py-24 md:grid-cols-[2fr_3fr] md:px-8">
+        <figure class="rounded-lg border border-line bg-bg p-3">
+          <Picture
+            src={artistPhoto}
+            alt="Stephany Londoño con el catálogo de la Bienal de Armenia"
+            formats={['avif', 'webp']}
+            fallbackFormat="webp"
+            widths={[400, 640, 960]}
+            sizes="(min-width: 768px) 40vw, 90vw"
+            class="w-full"
+          />
+        </figure>
+        <div class="flex flex-col gap-6">
+          <h2 id="sobre-titulo" class="text-4xl md:text-5xl">Sobre mí</h2>
+          {site.bio.map((paragraph) => <p class="text-base text-ink-soft">{paragraph}</p>)}
+          <ul class="flex flex-col gap-2 border-t border-line pt-6 text-sm">
+            {
+              site.exhibitions.map((exhibition) => (
+                <li class="grid grid-cols-[4rem_1fr] gap-4">
+                  <span class="text-moss-deep">{exhibition.year}</span>
+                  <span>
+                    <span class="font-display text-lg text-ink italic">{exhibition.artwork}</span>
+                    <span class="text-ink-soft"> · {exhibition.event}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {
+      site.faq.length > 0 && (
+        <section aria-labelledby="faq-titulo" class="bg-bg">
+          <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-24 md:px-8">
+            <h2 id="faq-titulo" class="text-4xl md:text-5xl">
+              Preguntas frecuentes
+            </h2>
+            <div class="flex flex-col border-t border-line">
+              {site.faq.map((item) => (
+                <details class="group border-b border-line py-6">
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg text-ink">
+                    {item.question}
+                    <span class="text-moss-deep transition-transform duration-700 ease-fluid group-open:rotate-45" aria-hidden="true">
+                      +
+                    </span>
+                  </summary>
+                  <p class="pt-4 text-base text-ink-soft">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <Footer />
   </div>
+
+  <script>
+    // Stacked sections: a section taller than the viewport must pin once its bottom is
+    // in view, not its top, so each one publishes its height for the sticky offset.
+    const stack = document.querySelector<HTMLElement>('.after-world');
+    if (stack) {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          (entry.target as HTMLElement).style.setProperty('--h', `${entry.contentRect.height}px`);
+        }
+      });
+      for (const section of stack.children) observer.observe(section);
+    }
+  </script>
 </Layout>
