@@ -3,6 +3,7 @@ title: "Túnel del árbol" # PENDIENTE: título definitivo
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/tree-tunnel/tree-tunnel.webp
     alt: "Árbol que forma un túnel de luz verde y amarilla sobre un río con una figura al fondo"
@@ -14,4 +15,3 @@ images:
     kind: detail
 order: 40
 ---
-PENDIENTE: descripción de la obra.

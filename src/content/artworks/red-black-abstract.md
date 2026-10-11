@@ -3,6 +3,7 @@ title: "Abstracto en rojo y negro" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/red-black-abstract/red-black-abstract.webp
     alt: "Pintura abstracta horizontal con trazos rojos sobre fondo negro"
@@ -11,4 +12,3 @@ images:
     kind: studio
 order: 70
 ---
-PENDIENTE: descripción de la obra.

@@ -3,6 +3,7 @@ title: "Retrato familiar" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/family-portrait/family-portrait-five.webp
     alt: "Retrato familiar de cinco personas sentadas en un sofá blanco"
@@ -27,4 +28,3 @@ images:
 order: 100
 draft: true # PENDIENTE: confirmar que el cliente autoriza publicar su retrato
 ---
-PENDIENTE: descripción de la obra.

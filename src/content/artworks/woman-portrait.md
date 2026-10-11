@@ -3,6 +3,7 @@ title: "Retrato de mujer" # PENDIENTE: título definitivo
 category: personal
 status: in-progress
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/woman-portrait/woman-portrait-on-easel.webp
     alt: "Retrato a medio pintar de una mujer de cabello oscuro sobre fondo azul brumoso, en el caballete junto al balcón"
@@ -15,4 +16,3 @@ images:
 featured: true
 order: 60
 ---
-PENDIENTE: descripción de la obra.

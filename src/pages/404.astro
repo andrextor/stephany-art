@@ -1,0 +1,19 @@
+---
+import Icon from '../components/Icon.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada">
+  <section class="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-start justify-center gap-6 px-4 pt-32">
+    <p class="text-sm text-ink-soft">Error 404</p>
+    <h1 class="text-5xl md:text-6xl">Esta pared está vacía</h1>
+    <p class="text-lg text-ink-soft">La página que buscas no existe o la obra ya no está publicada.</p>
+    <a
+      href="/obras"
+      class="inline-flex items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+    >
+      Ver las obras
+      <Icon name="arrow-right" />
+    </a>
+  </section>
+</Layout>

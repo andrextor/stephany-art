@@ -59,8 +59,7 @@ const artworks = defineCollection({
       })
       .refine(
         (artwork) =>
-          artwork.category !== 'commission' ||
-          (artwork.status !== 'available' && artwork.status !== 'reserved'),
+          artwork.category !== 'commission' || (artwork.status !== 'available' && artwork.status !== 'reserved'),
         { message: 'A commission cannot be available or reserved', path: ['status'] },
       ),
 });

@@ -3,6 +3,7 @@ title: "Familia de elefantes" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/elephants/elephant-family-on-easel.webp
     alt: "Dos elefantes adultos y dos crías entrelazando las trompas sobre fondo turquesa"
@@ -11,4 +12,3 @@ images:
     kind: studio
 order: 50
 ---
-PENDIENTE: descripción de la obra.

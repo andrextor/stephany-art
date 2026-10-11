@@ -3,6 +3,7 @@ title: "Tránsito del alma"
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/sea-stairs/woman-climbing-sea-stairs.webp
     alt: "Mujer con vestido azul sube una escalera de piedra sobre el mar hacia una luz entre nubes en espiral"
@@ -21,4 +22,3 @@ images:
 featured: true
 order: 10
 ---
-PENDIENTE: descripción de la obra.

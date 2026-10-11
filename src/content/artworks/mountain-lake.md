@@ -3,6 +3,7 @@ title: "Lago entre montañas" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/mountain-lake/mountain-lake-framed.webp
     alt: "Paisaje de un lago en calma entre montañas nevadas y pinos dorados, con marco dorado"
@@ -15,4 +16,3 @@ images:
 featured: true
 order: 30
 ---
-PENDIENTE: descripción de la obra.

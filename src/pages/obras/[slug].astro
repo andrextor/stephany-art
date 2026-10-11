@@ -1,0 +1,156 @@
+---
+import { getImage, Picture } from 'astro:assets';
+import { render } from 'astro:content';
+import ArtworkCard from '../../components/ArtworkCard.astro';
+import Icon from '../../components/Icon.astro';
+import Layout from '../../layouts/Layout.astro';
+import {
+  type Artwork,
+  artworkCta,
+  categoryLabels,
+  getPublishedArtworks,
+  mainImage,
+  statusLabels,
+} from '../../lib/artworks';
+
+export const getStaticPaths = async () => {
+  const artworks = await getPublishedArtworks();
+  return artworks.map((artwork) => ({ params: { slug: artwork.id }, props: { artwork, artworks } }));
+};
+
+interface Props {
+  artwork: Artwork;
+  artworks: Artwork[];
+}
+
+const { artwork, artworks } = Astro.props;
+const { title, category, status, year, technique, dimensions } = artwork.data;
+const { Content } = await render(artwork);
+const hasDescription = Boolean(artwork.body?.trim());
+
+const main = mainImage(artwork);
+const gallery = artwork.data.images.filter((image) => image !== main && image.kind !== 'certificate');
+const hasCertificate = artwork.data.images.some((image) => image.kind === 'certificate');
+const cta = artworkCta(artwork);
+const related = artworks.filter((other) => other.data.category === category && other.id !== artwork.id).slice(0, 3);
+const ogImage = await getImage({ src: main.src, width: 1200, format: 'jpeg' });
+
+const details = [
+  { label: 'Categoría', value: categoryLabels[category] },
+  { label: 'Estado', value: status ? statusLabels[status] : undefined },
+  { label: 'Año', value: year?.toString() },
+  { label: 'Técnica', value: technique },
+  { label: 'Medidas', value: dimensions ? `${dimensions.width} × ${dimensions.height} ${dimensions.unit}` : undefined },
+].filter((detail): detail is { label: string; value: string } => detail.value !== undefined);
+---
+
+<Layout title={title} description={`${title}, obra de Stephany Londoño. ${categoryLabels[category]}.`} image={new URL(ogImage.src, Astro.url).href}>
+  <article class="mx-auto flex max-w-6xl flex-col gap-16 px-4 pt-32 md:px-8">
+    <a href="/obras" class="inline-flex w-max items-center gap-2 text-sm text-ink-soft transition-colors duration-700 ease-fluid hover:text-ink">
+      <Icon name="arrow-left" class="size-4" />
+      Todas las obras
+    </a>
+
+    <div class="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-start">
+      <figure class="flex items-center justify-center rounded-lg border border-line bg-surface p-3" data-reveal>
+        <Picture
+          src={main.src}
+          alt={main.alt}
+          formats={['avif', 'webp']}
+          fallbackFormat="webp"
+          widths={[640, 960, 1440, 1920]}
+          sizes="(min-width: 1024px) 60vw, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          class="max-h-[80vh] w-full object-contain"
+        />
+      </figure>
+
+      <div class="flex flex-col gap-8 lg:sticky lg:top-32" data-reveal>
+        <header class="flex flex-col gap-2">
+          <p class="text-sm text-ink-soft">{categoryLabels[category]}</p>
+          <h1 class="text-5xl md:text-6xl">{title}</h1>
+        </header>
+
+        <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-y border-line py-6 text-sm">
+          {
+            details.map((detail) => (
+              <>
+                <dt class="text-ink-soft">{detail.label}</dt>
+                <dd class="text-ink">{detail.value}</dd>
+              </>
+            ))
+          }
+        </dl>
+
+        {
+          hasCertificate && (
+            <p class="flex items-center gap-2 text-sm text-ink">
+              <Icon name="certificate" class="size-5 text-gold" />
+              Incluye certificado de autenticidad
+            </p>
+          )
+        }
+
+        {
+          hasDescription && (
+            <div class="flex flex-col gap-4 text-base text-ink-soft">
+              <Content />
+            </div>
+          )
+        }
+
+        <a
+          href={cta.href}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex w-max items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+        >
+          <Icon name="whatsapp" />
+          {cta.label}
+        </a>
+      </div>
+    </div>
+
+    {
+      gallery.length > 0 && (
+        <section aria-labelledby="detalles" class="flex flex-col gap-6">
+          <h2 id="detalles" class="text-3xl">Detalles y proceso</h2>
+          <div class="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {gallery.map((image) => (
+              <figure class="rounded-lg border border-line bg-surface p-3" data-reveal>
+                <Picture
+                  src={image.src}
+                  alt={image.alt}
+                  formats={['avif', 'webp']}
+                  fallbackFormat="webp"
+                  widths={[400, 640, 960]}
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                  class="w-full"
+                />
+                <figcaption class="pt-3 text-sm text-ink-soft">{image.alt}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <section aria-labelledby="relacionadas" class="flex flex-col gap-6">
+          <div class="flex items-end justify-between gap-4">
+            <h2 id="relacionadas" class="text-3xl">Más {categoryLabels[category].toLowerCase()}</h2>
+            <a href={`/obras?cat=${category}`} class="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
+              Ver todas
+              <Icon name="arrow-right" class="size-4" />
+            </a>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((other) => <ArtworkCard artwork={other} />)}
+          </div>
+        </section>
+      )
+    }
+  </article>
+</Layout>

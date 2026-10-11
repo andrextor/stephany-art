@@ -3,6 +3,7 @@ title: "Miradas que fragmentan"
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/mother-and-child/mother-and-child-broken-mirror.webp
     alt: "Mujer abraza a un niño de sudadera azul entre fragmentos de espejo roto y grandes ojos pintados"
@@ -24,4 +25,3 @@ images:
 featured: true
 order: 30
 ---
-PENDIENTE: descripción de la obra.

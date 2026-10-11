@@ -1,11 +1,90 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { Picture } from 'astro:assets';
+import artistPhoto from '../assets/artist/stephany-at-biarco.webp';
+import ArtworkCard from '../components/ArtworkCard.astro';
+import Icon from '../components/Icon.astro';
+import { site, whatsappUrl } from '../data/site';
 import Layout from '../layouts/Layout.astro';
+import { getPublishedArtworks } from '../lib/artworks';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data.featured);
 ---
 
 <Layout>
-	<Welcome />
+  <section class="mx-auto flex min-h-[90vh] max-w-6xl flex-col justify-center gap-8 px-4 pt-32 md:px-8">
+    <p class="text-sm text-ink-soft" data-reveal>{site.role} · {site.country}</p>
+    <h1 class="max-w-[680px] text-6xl md:text-8xl" data-reveal>{site.artistName}</h1>
+    <p class="max-w-[680px] text-lg text-ink-soft md:text-xl" data-reveal>
+      Pinto entre la luz y la sombra: obra personal sobre la memoria y el alma, y retratos por encargo hechos a mano al óleo y acrílico.
+    </p>
+    <div class="flex flex-wrap gap-4" data-reveal>
+      <a
+        href={whatsappUrl(site.whatsapp.commissionMessage)}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+      >
+        <Icon name="whatsapp" />
+        Encargar una obra
+      </a>
+      <a
+        href="/obras"
+        class="inline-flex items-center gap-2 rounded-full border border-line px-3 py-2 text-base font-semibold text-ink transition-colors duration-700 ease-fluid hover:border-ink"
+      >
+        Ver las obras
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+  </section>
+
+  <section aria-labelledby="destacadas" class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-24 md:px-8">
+    <div class="flex items-end justify-between gap-4">
+      <h2 id="destacadas" class="text-4xl md:text-5xl">Obras destacadas</h2>
+      <a href="/obras" class="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
+        Ver todas
+        <Icon name="arrow-right" class="size-4" />
+      </a>
+    </div>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {featured.map((artwork) => <ArtworkCard artwork={artwork} />)}
+    </div>
+  </section>
+
+  <section id="sobre" aria-labelledby="sobre-titulo" class="mx-auto grid max-w-6xl gap-12 px-4 py-24 md:grid-cols-[2fr_3fr] md:px-8">
+    <figure class="rounded-lg border border-line bg-surface p-3" data-reveal>
+      <Picture
+        src={artistPhoto}
+        alt="Stephany Londoño con el catálogo de la Bienal de Armenia"
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+        widths={[400, 640, 960]}
+        sizes="(min-width: 768px) 40vw, 90vw"
+        class="w-full"
+      />
+    </figure>
+    <div class="flex flex-col gap-6" data-reveal>
+      <h2 id="sobre-titulo" class="text-4xl md:text-5xl">Sobre mí</h2>
+      {site.bio.map((paragraph) => <p class="text-base text-ink-soft">{paragraph}</p>)}
+      <ul class="flex flex-col gap-2 border-t border-line pt-6 text-sm">
+        {
+          site.exhibitions.map((exhibition) => (
+            <li class="grid grid-cols-[4rem_1fr] gap-4">
+              <span class="text-gold">{exhibition.year}</span>
+              <span>
+                <span class="font-display text-lg text-ink">{exhibition.artwork}</span>
+                <span class="text-ink-soft"> · {exhibition.event}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-4 py-24 md:px-8" data-reveal>
+    <blockquote class="flex flex-col gap-6 border-l border-gold pl-8">
+      <p class="font-display text-4xl text-ink md:text-5xl">{site.quote}</p>
+      <footer class="text-sm text-ink-soft">{site.artistName}</footer>
+    </blockquote>
+  </section>
 </Layout>

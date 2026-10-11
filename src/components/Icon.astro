@@ -1,0 +1,22 @@
+---
+import arrowLeft from '@phosphor-icons/core/regular/arrow-left.svg?raw';
+import arrowRight from '@phosphor-icons/core/regular/arrow-right.svg?raw';
+import certificate from '@phosphor-icons/core/regular/certificate.svg?raw';
+import whatsapp from '@phosphor-icons/core/regular/whatsapp-logo.svg?raw';
+
+const icons = {
+  'arrow-left': arrowLeft,
+  'arrow-right': arrowRight,
+  certificate,
+  whatsapp,
+} as const;
+
+interface Props {
+  name: keyof typeof icons;
+  class?: string;
+}
+
+const { name, class: className = 'size-5' } = Astro.props;
+---
+
+<span class:list={['inline-flex shrink-0 [&>svg]:size-full', className]} aria-hidden="true" set:html={icons[name]} />

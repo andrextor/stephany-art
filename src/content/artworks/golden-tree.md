@@ -3,6 +3,7 @@ title: "Árbol dorado" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/golden-tree/golden-tree-on-easel.webp
     alt: "Árbol de hojas doradas en relieve sobre un paisaje de tonos rosados y crema"
@@ -11,4 +12,3 @@ images:
     kind: detail
 order: 60
 ---
-PENDIENTE: descripción de la obra.

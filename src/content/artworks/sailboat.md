@@ -3,6 +3,7 @@ title: "Velero al atardecer" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/sailboat/sailboat-at-sunset.webp
     alt: "Velero de madera con dos figuras navegando sobre un mar dorado al atardecer"
@@ -15,4 +16,3 @@ images:
 featured: true
 order: 20
 ---
-PENDIENTE: descripción de la obra.

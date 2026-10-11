@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-manrope);
+}
+
+@theme {
+  --color-bg: #faf8f3;
+  --color-surface: #ffffff;
+  --color-ink: #1f1a16;
+  --color-ink-soft: #5e554d;
+  --color-gold: #b8912f;
+  --color-line: #e6e0d5;
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+}
+
+/* Scroll reveal, driven by src/scripts/reveal.ts */
+[data-reveal] {
+  transition:
+    opacity 900ms var(--ease-fluid),
+    transform 900ms var(--ease-fluid),
+    filter 900ms var(--ease-fluid);
+}
+
+.js [data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(4rem);
+  filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none;
+  }
+
+  .js [data-reveal]:not([data-revealed]) {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}

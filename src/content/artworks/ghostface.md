@@ -3,6 +3,7 @@ title: "Ghostface" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/ghostface/ghostface-portrait.webp
     alt: "Figura encapuchada con la máscara de Ghostface sosteniendo un cuchillo ante una ciudad nocturna"
@@ -11,4 +12,3 @@ images:
     kind: detail
 order: 90
 ---
-PENDIENTE: descripción de la obra.

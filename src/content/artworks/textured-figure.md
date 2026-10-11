@@ -3,6 +3,7 @@ title: "La noche oscura del alma"
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/textured-figure/figure-in-textured-circle.webp
     alt: "Figura humana encogida en blanco y negro en el centro de una espiral oscura en relieve"
@@ -24,4 +25,3 @@ images:
 featured: true
 order: 20
 ---
-PENDIENTE: descripción de la obra.

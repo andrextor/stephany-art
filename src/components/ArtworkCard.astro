@@ -1,0 +1,49 @@
+---
+import { Picture } from 'astro:assets';
+import { type Artwork, categoryLabels, mainImage, statusLabels } from '../lib/artworks';
+
+interface Props {
+  artwork: Artwork;
+  eager?: boolean;
+}
+
+const { artwork, eager = false } = Astro.props;
+const { title, category, status, year } = artwork.data;
+const image = mainImage(artwork);
+---
+
+<a
+  href={`/obras/${artwork.id}`}
+  data-reveal
+  data-category={category}
+  data-status={status ?? 'none'}
+  class="group flex flex-col gap-4 rounded-lg border border-line bg-surface p-3 transition-transform duration-700 ease-fluid hover:-translate-y-1 active:translate-y-px"
+>
+  <div class="flex aspect-4/5 items-center justify-center overflow-hidden bg-bg">
+    <Picture
+      src={image.src}
+      alt={image.alt}
+      formats={['avif', 'webp']}
+      fallbackFormat="webp"
+      widths={[400, 640, 960]}
+      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+      loading={eager ? 'eager' : 'lazy'}
+      class="size-full object-contain transition-transform duration-700 ease-fluid group-hover:scale-[1.02]"
+    />
+  </div>
+  <div class="flex flex-col gap-1 px-1 pb-1">
+    <h3 class="text-2xl text-ink">{title}</h3>
+    <p class="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+      <span>{categoryLabels[category]}</span>
+      {year && <span aria-hidden="true">·</span>}
+      {year && <span>{year}</span>}
+      {
+        status && (
+          <span class="ml-auto rounded-full border border-line px-2 py-0.5 text-xs text-ink">
+            {statusLabels[status]}
+          </span>
+        )
+      }
+    </p>
+  </div>
+</a>

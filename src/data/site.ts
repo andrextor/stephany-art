@@ -7,8 +7,7 @@ export const site = {
     display: '+57 313 793 7797',
     number: '573137937797',
     commissionMessage: 'Hola Stephany, me gustaría encargarte una obra.',
-    artworkMessage: (title: string): string =>
-      `Hola Stephany, me interesa la obra "${title}". ¿Me cuentas más?`,
+    artworkMessage: (title: string): string => `Hola Stephany, me interesa la obra "${title}". ¿Me cuentas más?`,
   },
   quote:
     'Más que una técnica, mi trabajo es una invitación a la pausa y a la contemplación; un territorio suspendido donde el arte, la naturaleza y el latido humano convergen.',

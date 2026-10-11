@@ -3,6 +3,7 @@ title: "Guacamayas" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/macaws/macaws-on-easel.webp
     alt: "Pareja de guacamayas rojas posadas en una rama sobre fondo azul"
@@ -12,4 +13,3 @@ images:
 featured: true
 order: 40
 ---
-PENDIENTE: descripción de la obra.

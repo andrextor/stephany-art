@@ -3,6 +3,7 @@ title: "Estanque con puente" # PENDIENTE: título definitivo
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/pond-bridge/pond-with-bridge-on-easel.webp
     alt: "Paisaje de un estanque turquesa con un puente y árboles otoñales, en el caballete del taller"
@@ -20,4 +21,3 @@ images:
     kind: certificate
 order: 50
 ---
-PENDIENTE: descripción de la obra.

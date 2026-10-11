@@ -1,0 +1,86 @@
+---
+import ArtworkCard from '../../components/ArtworkCard.astro';
+import Layout from '../../layouts/Layout.astro';
+import { categoryLabels, getPublishedArtworks, statusLabels } from '../../lib/artworks';
+
+const artworks = await getPublishedArtworks();
+
+const filters = [
+  { label: 'Todas', cat: '', estado: '' },
+  { label: categoryLabels.personal, cat: 'personal', estado: '' },
+  { label: categoryLabels.commission, cat: 'commission', estado: '' },
+  { label: statusLabels['in-progress'], cat: '', estado: 'in-progress' },
+];
+
+const filterHref = (cat: string, estado: string): string => {
+  const params = new URLSearchParams();
+  if (cat) params.set('cat', cat);
+  if (estado) params.set('estado', estado);
+  const query = params.toString();
+  return query ? `/obras?${query}` : '/obras';
+};
+---
+
+<Layout title="Obras" description="Catálogo de obras de Stephany Londoño: obras personales, encargos entregados y obras en proceso.">
+  <section class="mx-auto flex max-w-6xl flex-col gap-12 px-4 pt-40 md:px-8">
+    <header class="flex max-w-2xl flex-col gap-4" data-reveal>
+      <h1 class="text-5xl md:text-6xl">Obras</h1>
+      <p class="text-lg text-ink-soft">
+        Obra personal y encargos pintados al óleo y acrílico, con veladuras pacientes y texturas orgánicas.
+      </p>
+    </header>
+
+    <nav aria-label="Filtrar obras">
+      <ul class="flex flex-wrap gap-2">
+        {
+          filters.map((filter) => (
+            <li>
+              <a
+                href={filterHref(filter.cat, filter.estado)}
+                data-filter-cat={filter.cat}
+                data-filter-estado={filter.estado}
+                class="inline-flex rounded-full border border-line px-3 py-2 text-sm font-semibold text-ink-soft transition-colors duration-700 ease-fluid hover:border-ink hover:text-ink aria-[current=true]:border-ink aria-[current=true]:bg-ink aria-[current=true]:text-bg"
+              >
+                {filter.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div data-artwork-grid class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {artworks.map((artwork, index) => <ArtworkCard artwork={artwork} eager={index < 3} />)}
+    </div>
+
+    <p data-empty hidden class="rounded-lg border border-line bg-surface p-8 text-center text-ink-soft">
+      No hay obras con este filtro por ahora. <a href="/obras" class="text-ink underline decoration-gold underline-offset-4">Ver todas las obras</a>
+    </p>
+  </section>
+</Layout>
+
+<script>
+  // Static build: the query string is read on the client to filter the already rendered cards.
+  const applyFilter = (): void => {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat') ?? '';
+    const estado = params.get('estado') ?? '';
+    let visible = 0;
+
+    for (const card of document.querySelectorAll<HTMLElement>('[data-artwork-grid] > [data-category]')) {
+      const matches = (!cat || card.dataset.category === cat) && (!estado || card.dataset.status === estado);
+      card.hidden = !matches;
+      if (matches) visible += 1;
+    }
+
+    for (const link of document.querySelectorAll<HTMLElement>('[data-filter-cat]')) {
+      const active = link.dataset.filterCat === cat && link.dataset.filterEstado === estado;
+      link.setAttribute('aria-current', String(active));
+    }
+
+    const empty = document.querySelector<HTMLElement>('[data-empty]');
+    if (empty) empty.hidden = visible > 0;
+  };
+
+  applyFilter();
+</script>

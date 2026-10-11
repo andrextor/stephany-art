@@ -3,6 +3,7 @@ title: "Abstracto en beige y negro" # PENDIENTE: título definitivo
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
+# PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/beige-abstract/beige-black-abstract-on-easel.webp
     alt: "Pintura abstracta de capas beige y una franja negra, en el caballete del taller"
@@ -11,4 +12,3 @@ images:
     kind: studio
 order: 80
 ---
-PENDIENTE: descripción de la obra.
