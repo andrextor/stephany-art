@@ -232,7 +232,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **2 · Contenido** | Colección `artworks`, `site.ts`, imágenes en `src/assets` | ✅ |
 | **3 · Catálogo** | `/obras` con filtros y `/obras/[slug]` con CTA por estado | ✅ |
 | **4 · Home** | Secciones §4.2 | ✅ Tagline reveal, encargo en 3 pasos (PENDIENTE validar), FAQ oculta hasta tener respuestas |
-| **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (cambios documentados en su cabecera), 5 paradas, 4 clips WebM/MP4, 720p en móvil con `position` por parada, reduced‑motion | ✅ Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
+| **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (9 cambios documentados en su cabecera), 5 paradas, 4 clips MP4 (WebM solo si el MP4 no se puede reproducir), 720p y stills de 960 px en móvil, reduced‑motion | ✅ Revisado el 11/10: la salida del recorrido deja el último fotograma fijo y la página se desliza por encima; póster + altura reservada antes de que arranque el motor; copia de la primera parada renderizada en HTML (LCP ≈ primer pintado); stills bajo demanda. Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
 | **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | ✅ Lighthouse 100/100/100/100 en `/`, `/obras` y una ficha (móvil y escritorio). Pendiente: prueba en iPhone real |
 
 ---

@@ -18,6 +18,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 <Layout jsonLd={jsonLd}>
   <ScrollWorld />
 
+  <div class="after-world">
   <section aria-labelledby="destacadas" class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-24 md:px-8">
     <div class="flex items-end justify-between gap-4">
       <h2 id="destacadas" class="text-4xl md:text-5xl">Obras destacadas</h2>
@@ -114,4 +115,5 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
       </section>
     )
   }
+  </div>
 </Layout>

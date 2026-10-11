@@ -47,6 +47,31 @@ body {
   background-color: var(--color-bg);
 }
 
+/* Before the engine mounts: reserve its scroll track and show the first frame. */
+.sw-poster {
+  display: none;
+}
+
+.js #world {
+  min-height: calc(var(--sw-total, 1) * 100svh);
+}
+
+.js .sw-poster {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The page after the flight slides over the frozen last frame. */
+.js .after-world {
+  position: relative;
+  z-index: 25;
+  background-color: var(--color-bg);
+}
+
 .sw-root {
   --sw-bg: var(--color-bg);
   --sw-ink: var(--color-ink);
@@ -91,6 +116,131 @@ body {
   font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 500;
+}
+
+/* First stop's copy, server rendered so the LCP does not wait for the engine. It mirrors
+   the engine's .sw-copy layout (scrub-engine.js injectCSS) and is removed on mount. */
+.sw-prelude {
+  display: none;
+}
+
+.js .sw-prelude {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.js .sw-prelude::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: min(58vw, 780px);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg) 0%,
+    color-mix(in srgb, var(--color-bg) 82%, transparent) 34%,
+    color-mix(in srgb, var(--color-bg) 40%, transparent) 62%,
+    transparent 100%
+  );
+}
+
+.sw-prelude .sw-copy {
+  position: absolute;
+  left: clamp(18px, 5vw, 64px);
+  top: 50%;
+  /* The engine drives .sw-copy's transform inline (2vh parallax at scroll 0), which
+     replaces its own -50% centering; mirror that so the swap does not jump. */
+  transform: translateY(2vh);
+  width: min(42vw, 460px);
+}
+
+.sw-prelude .sw-copy__num {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-soft);
+}
+
+.sw-prelude .sw-copy__eyebrow {
+  display: block;
+  margin-top: 18px;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sw-prelude .sw-copy__title {
+  margin: 12px 0 0;
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  line-height: 1.03;
+  letter-spacing: -0.01em;
+}
+
+.sw-prelude .sw-copy__body {
+  margin-top: 18px;
+  max-width: 40ch;
+  font-size: clamp(1rem, 1.25vw, 1.14rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--color-ink) 78%, var(--color-ink-soft));
+}
+
+.sw-prelude .sw-copy__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  pointer-events: auto;
+}
+
+.sw-prelude .sw-btn {
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.sw-prelude .sw-btn--primary {
+  background: var(--color-ink);
+}
+
+.sw-prelude .sw-btn--ghost {
+  color: var(--color-ink);
+  border: 1.5px solid color-mix(in srgb, var(--color-ink) 25%, transparent);
+}
+
+@media (max-width: 860px) {
+  .js .sw-prelude::before {
+    width: 100%;
+    height: 60%;
+    top: auto;
+    bottom: 0;
+    background: linear-gradient(
+      0deg,
+      var(--color-bg) 8%,
+      color-mix(in srgb, var(--color-bg) 70%, transparent) 46%,
+      transparent 100%
+    );
+  }
+
+  .sw-prelude .sw-copy {
+    left: clamp(18px, 5vw, 64px);
+    right: clamp(18px, 5vw, 64px);
+    top: auto;
+    bottom: calc(clamp(56px, 12dvh, 110px) + env(safe-area-inset-bottom));
+    transform: translateY(2vh);
+    width: auto;
+    max-width: 560px;
+  }
+
+  .sw-prelude .sw-copy__title {
+    font-size: clamp(1.9rem, 7.5vw, 2.7rem);
+  }
+
+  .sw-prelude .sw-copy__body {
+    max-width: none;
+    font-size: clamp(0.98rem, 3.6vw, 1.1rem);
+  }
 }
 
 /* Scroll reveal, driven by src/scripts/reveal.ts */

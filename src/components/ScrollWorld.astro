@@ -11,12 +11,13 @@ const config = {
   hint: 'Desliza para entrar',
   diveScroll: 0.9,
   connScroll: 1.4,
-  crossfade: 0.07,
+  crossfade: 0.12,
   sections: [
     {
       id: 'inicio',
       label: 'Inicio',
       still: '/world/stop-0.webp',
+      stillMobile: '/world/stop-0-960.webp',
       position: '50% 44%',
       scroll: 1.2,
       titleTag: 'h1',
@@ -29,6 +30,7 @@ const config = {
       id: 'taller',
       label: 'El taller',
       still: '/world/stop-1.webp',
+      stillMobile: '/world/stop-1-960.webp',
       position: '45% 44%',
       eyebrow: 'El taller',
       title: 'Donde nace cada obra',
@@ -38,6 +40,7 @@ const config = {
       id: 'comision',
       label: 'Por comisión',
       still: '/world/stop-2.webp',
+      stillMobile: '/world/stop-2-960.webp',
       position: '55% 44%',
       eyebrow: 'Obras por comisión',
       title: 'Tu historia, pintada a mano',
@@ -48,6 +51,7 @@ const config = {
       id: 'personales',
       label: 'Personales',
       still: '/world/stop-3.webp',
+      stillMobile: '/world/stop-3-960.webp',
       position: '75% 44%',
       eyebrow: 'Obras personales',
       title: 'Entre la luz y la sombra',
@@ -59,6 +63,7 @@ const config = {
       id: 'en-proceso',
       label: 'En proceso',
       still: '/world/stop-4.webp',
+      stillMobile: '/world/stop-4-960.webp',
       position: '85% 44%',
       scroll: 1.4,
       eyebrow: 'En proceso',
@@ -70,9 +75,44 @@ const config = {
 };
 
 const configJson = JSON.stringify(config).replace(/</g, '\\u003c');
+
+// Same height the engine gives its track (segments + 1vh of hand-off), reserved before
+// the script runs so the page below does not flash and then jump.
+const totalViewportHeights =
+  config.sections.reduce((sum, section) => sum + (section.scroll ?? config.diveScroll), 0) +
+  config.connScroll * (config.sections.length - 1) +
+  1;
+const firstStop = config.sections[0];
 ---
 
-<div id="world" aria-label="Recorrido por el taller"></div>
+<div id="world" aria-label="Recorrido por el taller" style={`--sw-total: ${totalViewportHeights}`}>
+  <img
+    class="sw-poster"
+    src={firstStop.still}
+    srcset={`${firstStop.still.replace('.webp', '-960.webp')} 960w, ${firstStop.still} 1920w`}
+    sizes="100vw"
+    alt=""
+    width="1920"
+    height="1080"
+    fetchpriority="high"
+    decoding="async"
+    style={`object-position: ${firstStop.position}`}
+  />
+  <div class="sw-prelude" aria-hidden="true">
+    <article class="sw-copy">
+      <span class="sw-copy__num">01 / {String(config.sections.length).padStart(2, '0')}</span>
+      <span class="sw-copy__eyebrow">{firstStop.eyebrow}</span>
+      <h1 class="sw-copy__title">{firstStop.title}</h1>
+      <p class="sw-copy__body">{firstStop.body}</p>
+      <div class="sw-copy__cta">
+        <a class="sw-btn sw-btn--primary" href={firstStop.cta.primary.href} target="_blank" rel="noopener">
+          {firstStop.cta.primary.label}
+        </a>
+        <a class="sw-btn sw-btn--ghost" href={firstStop.cta.secondary.href}>{firstStop.cta.secondary.label}</a>
+      </div>
+    </article>
+  </div>
+</div>
 <script type="application/json" id="world-config" set:html={configJson} />
 
 <script>
@@ -83,8 +123,9 @@ const configJson = JSON.stringify(config).replace(/</g, '\\u003c');
 
   if (configElement && container) {
     const config = JSON.parse(configElement.textContent ?? '{}');
+    // H.264 first: hardware decoding and reliable seeking everywhere; VP9 only as a fallback.
     const probe = document.createElement('video');
-    const extension = probe.canPlayType('video/webm; codecs="vp9"') ? 'webm' : 'mp4';
+    const extension = probe.canPlayType('video/mp4; codecs="avc1.64001F"') ? 'mp4' : 'webm';
     const clips = [1, 2, 3, 4];
 
     mountScrollWorld(container, {
@@ -92,5 +133,7 @@ const configJson = JSON.stringify(config).replace(/</g, '\\u003c');
       connectors: clips.map((n) => `/video/clip-${n}-1080.${extension}`),
       connectorsMobile: clips.map((n) => `/video/clip-${n}-720.${extension}`),
     });
+    // The engine now renders the first stop's copy itself; drop the static prelude.
+    container.querySelector('.sw-prelude')?.remove();
   }
 </script>

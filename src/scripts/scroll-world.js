@@ -66,13 +66,18 @@
         covered the site header and blocked its clicks).
      2. Sections without a `clip` are static stops: their still is not zoomed, so it
         matches the neighbouring connectors' frames exactly.
-     3. `.sw-past` is toggled on the container once the flight ends, so the fixed
-        layers hide and the rest of the page reads normally.
+     3. Hand-off to the page: the last scene holds at full opacity after its end,
+        `.sw-leaving` fades the rail/hint/progress bar while the page content (which
+        the page stacks above the stage) slides over the frozen frame, and `.sw-past`
+        hides every fixed layer once the content covers the viewport.
      4. Per section `titleTag` (h1 for the first stop: one h1 per page).
      5. Per section `position` (object-position on phones), exposed as --sw-pos.
      6. CTA links accept `external: true` (target=_blank, rel=noopener).
      7. ES module export instead of CommonJS/global.
      8. Route dots get an aria-label (their visible label is hidden on phones).
+     9. Scene stills load on demand: only the first scene's poster has a src at mount;
+        the others get theirs when their segment comes within range (the scenes are
+        fixed and stacked, so `loading="lazy"` alone never defers them).
    ========================================================================== */
 
 export function mountScrollWorld(container, config) {
@@ -153,9 +158,10 @@ export function mountScrollWorld(container, config) {
   SEGMENTS.forEach(s => {
     const scene = el('div', 'sw-scene'); scene.style.setProperty('--sw-accent', s.accent || '');
     if (s.pos) scene.style.setProperty('--sw-pos', s.pos);
-    const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async'; img.loading = 'lazy';
+    const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async';
     const poster = (isMobile() && s.stillM) ? s.stillM : s.still;
-    if (poster) img.src = poster;
+    s.poster = poster;
+    if (poster && SEGMENTS.indexOf(s) === 0) img.src = poster;
     scene.appendChild(img); stage.appendChild(scene);
     s.el = scene; s.img = img; s.video = null; s.hasClip = false;
     s.loading = false; s.ready = false; s.cur = 0; s.target = 0; s.visible = false;
@@ -243,11 +249,15 @@ export function mountScrollWorld(container, config) {
 
     for (let i = 0; i < NSEG; i++) {
       const s = SEGMENTS[i];
-      if (y > s.start - 1.6 * vh && y < s.end + 1.6 * vh) loadClip(s);
+      if (y > s.start - 1.6 * vh && y < s.end + 1.6 * vh) {
+        if (s.poster && !s.img.src) s.img.src = s.poster;
+        loadClip(s);
+      }
       const local = clamp((y - s.start) / (s.end - s.start), 0, 1);
       s.target = s.linger ? lingerEase(local, s.linger) : local;
       let outside = 0;
-      if (y < s.start) outside = s.start - y; else if (y > s.end) outside = y - s.end;
+      if (y < s.start) outside = s.start - y;
+      else if (y > s.end && i < NSEG - 1) outside = y - s.end;   // last scene holds for the hand-off
       const op = smooth(1 - outside / fade);
       s.el.style.opacity = op; s.visible = op > 0.001;
       s.el.style.zIndex = (i === ci) ? '120' : String(100 + Math.round(op * 10));
@@ -283,7 +293,8 @@ export function mountScrollWorld(container, config) {
       container.style.setProperty('--sw-accent', SECTIONS[near].accent || '');
     }
     scrollbarFill.style.transform = `scaleX(${clamp(y / (totalW * vh))})`;
-    container.classList.toggle('sw-past', y > totalW * vh + CROSSFADE * vh);
+    container.classList.toggle('sw-leaving', y > totalW * vh);
+    container.classList.toggle('sw-past', y >= totalW * vh + vh);
     hint.style.opacity = clamp(1 - y / (0.5 * vh));
     if (particles) particles.style.transform = `translate3d(0, ${-y * 0.05}px, 0)`;
     ticking = false;
@@ -456,6 +467,8 @@ function injectCSS() {
   }
   @media (prefers-reduced-motion:reduce){ .sw-hint i::after{animation:none;} .sw-pt{display:none;} }
   @media (max-width:860px){ .sw-scene__video,.sw-scene__still{object-position:var(--sw-pos,center 44%);} }
+  .sw-route,.sw-scrollbar,.sw-hint{transition:opacity .4s;}
+  .sw-root.sw-leaving .sw-route,.sw-root.sw-leaving .sw-scrollbar,.sw-root.sw-leaving .sw-hint{opacity:0;}
   .sw-root.sw-past>:not(.sw-track){visibility:hidden;}
   `;
   // Wrap in a cascade layer so the page's own theme tokens (unlayered
