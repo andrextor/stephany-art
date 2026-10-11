@@ -1,5 +1,5 @@
 ---
-title: "La noche oscura del alma" # PROBABLE según la biografía (Bienal de Armenia 2024, portada en FILBo 2025): confirmar
+title: "La noche oscura del alma"
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions

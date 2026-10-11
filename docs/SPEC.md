@@ -136,9 +136,9 @@ Qué usan el mundo del arte y los portafolios de pintores:
 | Instrument Serif | Display condensada de moda (2024–2026), un solo peso | Medio. Suena más a estudio de diseño que a pintora |
 | Fraunces | Serif cálida y blanda, variable | Medio‑bajo. Más de marca de producto o gastronomía |
 
-**Recomendación:** **Cormorant Garamond** (500) para titulares y nombres de obra + **Manrope** (400/600) para texto, botones y fichas técnicas. Servidas en local y recortadas a latín, sin cursivas ni pesos 900.
+**Decisión (aprobada 11/10/2026):** **Cormorant Garamond** (500) para titulares y nombres de obra + **Manrope** (400/600) para texto, botones y fichas técnicas. Servidas en local y recortadas a latín, sin cursivas ni pesos 900.
 
-Cormorant es una excepción a la lista de fuentes del skill (`Geist, Manrope, Geist Mono, Poppins`) y necesita aprobación expresa. Si no se aprueba: solo **Manrope**.
+Cormorant es una excepción a la lista de fuentes del skill (`Geist, Manrope, Geist Mono, Poppins`), aprobada expresamente.
 
 ### 5.2 Color
 
@@ -181,9 +181,9 @@ Fuente: `~/Downloads/Stephany Londoño/`, convertidas a WebP (lado largo ≤ 240
 
 | slug | Título | Fotos | Nota |
 |---|---|---|---|
-| `sea-stairs` | *Tránsito del alma* | 5 | Título **probable** (bio): confirmar |
-| `textured-figure` | *La noche oscura del alma* | 6 (+certificado) | Título **probable** (bio): confirmar |
-| `mother-and-child` | *Miradas que fragmentan* | 6 | Título **probable** (bio): confirmar |
+| `sea-stairs` | *Tránsito del alma* ✅ | 5 | Título confirmado |
+| `textured-figure` | *La noche oscura del alma* ✅ | 6 (+certificado) | Título confirmado |
+| `mother-and-child` | *Miradas que fragmentan* ✅ | 6 | Título confirmado |
 | `tree-tunnel` | Túnel del árbol | 3 | |
 | `pond-bridge` | Estanque con puente | 5 (+certificado) | |
 | `woman-portrait` | Retrato de mujer | 3 | `in-progress` |
@@ -218,7 +218,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | Fase | Entregable | Estado |
 |---|---|---|
 | **0 · Datos** | Bio ✅, WhatsApp ✅, fotos ✅. Faltan títulos, fichas, estados y permisos (§9) | En curso |
-| **1 · Base** | Tailwind, fuentes, tokens, layout, Header (píldora flotante), Footer, 404, SEO base | Bloqueada por la tipografía |
+| **1 · Base** | Tailwind, fuentes, tokens, layout, Header (píldora flotante), Footer, 404, SEO base | Lista para empezar |
 | **2 · Contenido** | Colección `artworks`, `site.ts`, imágenes en `src/assets` | ✅ |
 | **3 · Catálogo** | `/obras` con filtros y `/obras/[slug]` con CTA por estado | Lista para empezar |
 | **4 · Home** | Secciones §4.2 | Tras la fase 1 |
@@ -229,11 +229,10 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 
 ## 9. Preguntas para Stephany
 
-1. **Títulos**: ¿*Tránsito del alma*, *La noche oscura del alma* y *Miradas que fragmentan* son la escalera, la figura en espiral y la madre con el niño? ¿Títulos del resto?
+1. **Títulos** del resto de obras (los tres de la bio ya están confirmados).
 2. **Fichas**: año, técnica y medidas de cada obra.
 3. **Estado de las obras personales**: disponible, vendida o colección personal.
 4. **Permisos**: ¿los clientes de los 6 retratos autorizan publicarlos?
 5. **Encargos**: qué acepta, tamaños, plazos, cómo cobra, si envía a otras ciudades o países.
 6. **Contacto**: email, Instagram, ciudad.
-7. **Tipografía**: Cormorant Garamond + Manrope (recomendada) o solo Manrope.
-8. **Dominio y hosting**.
+7. **Dominio y hosting**.

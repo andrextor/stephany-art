@@ -1,5 +1,5 @@
 ---
-title: "Miradas que fragmentan" # PROBABLE según la biografía: confirmar
+title: "Miradas que fragmentan"
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions
