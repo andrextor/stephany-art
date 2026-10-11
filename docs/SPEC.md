@@ -217,6 +217,37 @@ Fuera de alcance: transiciones del recorrido (clips fijos hasta tener créditos)
 
 Coste: 0 créditos. Archivos: `global.css`, `astro.config.mjs`, `Layout.astro` (`theme-color`), `favicon.svg`, `ArtworkCard.astro`, `obras/[slug].astro`, `Header.astro`, `TaglineReveal.astro`, `index.astro`, `reveal.ts`.
 
+### 5.5 Fase 8 "página normal" (rama `feat/pagina-normal`, pendiente de aprobación)
+
+**Pedido (11/10/2026):** el recorrido se queda como está, pero todo lo que viene después tiene que comportarse como una página normal. No gustan ni las secciones apiladas de la fase 7 ni la salida actual del recorrido, donde el último fotograma se queda fijo y "Obras destacadas" se le sube por encima.
+
+**Qué se conserva:** la paleta Nogal y sus bandas (lino, nogal, bambú, tarjeta, nogal), la cursiva, las transiciones entre páginas, los textos del recorrido más altos y tempranos, y la ausencia de apariciones con desenfoque.
+
+#### Cambios
+
+1. **Sin secciones apiladas.** Se borran la regla `sticky` de `.after-world > :not(script)` en `global.css` y el `ResizeObserver` de `index.astro`. Cada sección sube y sale de pantalla con el scroll, como cualquier web.
+2. **El pie vuelve a su sitio.** Se quitan `hideFooter` en `Layout.astro` y el `<Footer />` dentro de `.after-world`. El pie lo pinta el layout en todas las páginas, igual que antes de la fase 7.
+3. **Salida del recorrido como página normal.** Al terminar la última parada, el último fotograma y su texto suben a la misma velocidad que el contenido. El borde inferior del fotograma queda pegado al borde superior de "Obras destacadas", sin hueco y sin solaparse: se ve igual que una imagen de cabecera que se va con el scroll.
+   - En el motor (`scroll-world.js`, cambio local nº 12): en `read()`, `exit = max(0, y − totalW·vh)` se publica como `--sw-exit` en `.sw-root`. `.sw-stage` y `.sw-copylayer` aplican `translateY(calc(-1 * var(--sw-exit)))`.
+   - Las cuentas cuadran sin tocar la altura reservada. `#world` mide `(totalW + 1)·vh`, así que "Obras destacadas" empieza a asomar justo en `y = totalW·vh`, el mismo punto en el que el fotograma empieza a subir.
+   - El raíl, la barra de progreso y la pista siguen desvaneciéndose con `.sw-leaving`. `.sw-past` sigue ocultando el mundo cuando ya ha salido de pantalla.
+   - `.after-world` deja de necesitar `z-index` porque ya no hay nada que tapar. Se queda solo con su fondo.
+   - Con reduced motion no cambia nada: ya se muestran solo los fotogramas fijos.
+
+#### Fuera de alcance
+
+Las paradas y las transiciones entre clips del recorrido, la paleta, `/obras` y las fichas.
+
+#### Verificación
+
+- En varios puntos de la salida, a 390×844 y 1440×900: el borde inferior del fotograma coincide con el superior de "Obras destacadas" (±1 px).
+- Al hacer scroll por la home, ninguna sección se queda fija.
+- El pie aparece una sola vez en la home, `/obras` y una ficha.
+- Lighthouse móvil sigue en 99–100 en la home y una ficha, con CLS 0.
+- Capturas a mitad de la salida y al final de la home, en móvil y escritorio.
+
+Coste: 0 créditos. Archivos: `scroll-world.js`, `global.css`, `index.astro`, `Layout.astro`.
+
 ---
 
 ## 6. Stack
@@ -290,6 +321,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (9 cambios documentados en su cabecera), 5 paradas, 4 clips MP4 (WebM solo si el MP4 no se puede reproducir), 720p y stills de 960 px en móvil, reduced‑motion | ✅ Revisado el 11/10: la salida del recorrido deja el último fotograma fijo y la página se desliza por encima; póster + altura reservada antes de que arranque el motor; copia de la primera parada renderizada en HTML (LCP ≈ primer pintado); stills bajo demanda. Textos (11/10, fase 7): centrados de verdad en escritorio (el parallax pisaba el centrado), más altos en móvil (≈ 18 dvh) y aparecen durante el final de la transición anterior, se mantienen durante toda la parada. Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
 | **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | ✅ Lighthouse 100/100/100/100 en `/`, `/obras` y una ficha (móvil y escritorio). Pendiente: prueba en iPhone real |
 | **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo` (paleta Nogal + secciones apiladas), pendiente de merge |
+| **8 · Página normal** | §5.5: sin secciones apiladas; el último fotograma del recorrido sube con el contenido | Propuesta (11/10), pendiente de aprobación |
 
 ---
 
