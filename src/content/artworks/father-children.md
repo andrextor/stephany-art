@@ -1,5 +1,6 @@
 ---
 title: "Padre con sus hijos" # PENDIENTE: título definitivo
+slug: padre-con-sus-hijos
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

@@ -1,5 +1,6 @@
 ---
 title: "Tránsito del alma"
+slug: transito-del-alma
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions

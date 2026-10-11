@@ -4,21 +4,31 @@ import '../styles/global.css';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { site } from '../data/site';
+import type { JsonLd } from '../lib/seo';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  jsonLd?: JsonLd;
 }
 
 const {
   title,
   description = `${site.artistName}, ${site.role.toLowerCase()} en ${site.country}. Obras personales y retratos por encargo pintados al óleo y acrílico.`,
-  image,
+  image = '/og-default.jpg',
+  imageAlt = `El taller de ${site.artistName}`,
+  type = 'website',
+  jsonLd,
 } = Astro.props;
 
 const fullTitle = title ? `${title} · ${site.artistName}` : `${site.artistName} · ${site.role}`;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const origin = Astro.site ?? Astro.url;
+const imageUrl = new URL(image, origin).href;
+const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : undefined;
 ---
 
 <!doctype html>
@@ -30,12 +40,18 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#faf8f3" />
+    <meta name="author" content={site.artistName} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.artistName} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="es_CO" />
-    {image && <meta property="og:image" content={image} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    {jsonLdHtml && <script type="application/ld+json" set:html={jsonLdHtml} />}
     <Font cssVariable="--font-cormorant" preload />
     <Font cssVariable="--font-manrope" preload />
     <script is:inline>document.documentElement.classList.add('js');</script>

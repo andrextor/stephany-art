@@ -213,7 +213,17 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 
 ---
 
-## 8. Plan por fases
+## 8. SEO
+
+- **Dominio:** se define al desplegar con `SITE_URL=https://dominio pnpm build`. Con él se generan las URL canónicas, `og:url` y `sitemap-index.xml`; sin él el build funciona igual, pero sin sitemap.
+- `robots.txt` dinámico (`src/pages/robots.txt.ts`) que apunta al sitemap si hay dominio.
+- **URLs en español** desde el frontmatter (`slug:`), por ejemplo `/obras/transito-del-alma/`. Cuando lleguen los títulos definitivos hay que actualizar el `slug` **antes del lanzamiento**; después, cambiarlo rompe enlaces.
+- **Datos estructurados (JSON‑LD):** `WebSite` + `Person` en la home, `CollectionPage` + `ItemList` en `/obras`, `VisualArtwork` en cada ficha (con año, técnica y medidas cuando existan). Falta `sameAs` con Instagram.
+- **Open Graph / Twitter:** título, descripción, imagen (1200 px de la propia obra en cada ficha, `og-default.jpg` en el resto), `og:image:alt`, `og:locale es_CO`.
+- Descripción única por ficha con técnica y año cuando existen. `theme-color`, `author`, `lang="es"`.
+- Las 6 obras en `draft` no aparecen ni en el sitemap ni en el catálogo.
+
+## 9. Plan por fases
 
 | Fase | Entregable | Estado |
 |---|---|---|
@@ -223,11 +233,11 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **3 · Catálogo** | `/obras` con filtros y `/obras/[slug]` con CTA por estado | ✅ |
 | **4 · Home** | Secciones §4.2 | ✅ Tagline reveal, encargo en 3 pasos (PENDIENTE validar), FAQ oculta hasta tener respuestas |
 | **5 · Scroll‑world** | Motor vendorizado en `src/scripts/scroll-world.js` (cambios documentados en su cabecera), 5 paradas, 4 clips WebM/MP4, 720p en móvil con `position` por parada, reduced‑motion | ✅ Móvil = recorte del 16:9 (no hay cadena 9:16 nativa) |
-| **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | — |
+| **6 · QA** | Costuras, móvil 390×844, Lighthouse, accesibilidad, `astro build` | ✅ Lighthouse 100/100/100/100 en `/`, `/obras` y una ficha (móvil y escritorio). Pendiente: prueba en iPhone real |
 
 ---
 
-## 9. Preguntas para Stephany
+## 10. Preguntas para Stephany
 
 1. **Títulos** del resto de obras (los tres de la bio ya están confirmados).
 2. **Fichas**: año, técnica y medidas de cada obra.

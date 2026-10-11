@@ -1,5 +1,6 @@
 ---
 title: "La noche oscura del alma"
+slug: la-noche-oscura-del-alma
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions

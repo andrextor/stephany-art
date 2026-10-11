@@ -1,5 +1,6 @@
 ---
 title: "Árbol dorado" # PENDIENTE: título definitivo
+slug: arbol-dorado
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

@@ -1,5 +1,6 @@
 ---
 title: "Lago entre montañas" # PENDIENTE: título definitivo
+slug: lago-entre-montanas
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

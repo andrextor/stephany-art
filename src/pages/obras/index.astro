@@ -2,8 +2,24 @@
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import Layout from '../../layouts/Layout.astro';
 import { categoryLabels, getPublishedArtworks, statusLabels } from '../../lib/artworks';
+import { graph } from '../../lib/seo';
 
 const artworks = await getPublishedArtworks();
+const origin = Astro.site ?? Astro.url;
+const jsonLd = graph({
+  '@type': 'CollectionPage',
+  name: 'Obras de Stephany Londoño',
+  url: new URL('/obras/', origin).href,
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: artworks.map((artwork, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: artwork.data.title,
+      url: new URL(`/obras/${artwork.id}/`, origin).href,
+    })),
+  },
+});
 
 const filters = [
   { label: 'Todas', cat: '', estado: '' },
@@ -21,7 +37,11 @@ const filterHref = (cat: string, estado: string): string => {
 };
 ---
 
-<Layout title="Obras" description="Catálogo de obras de Stephany Londoño: obras personales, encargos entregados y obras en proceso.">
+<Layout
+  title="Obras"
+  description="Catálogo de obras de Stephany Londoño: obras personales, encargos entregados y obras en proceso."
+  jsonLd={jsonLd}
+>
   <section class="mx-auto flex max-w-6xl flex-col gap-12 px-4 pt-40 md:px-8">
     <header class="flex max-w-2xl flex-col gap-4" data-reveal>
       <h1 class="text-5xl md:text-6xl">Obras</h1>
@@ -50,7 +70,7 @@ const filterHref = (cat: string, estado: string): string => {
     </nav>
 
     <div data-artwork-grid class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {artworks.map((artwork, index) => <ArtworkCard artwork={artwork} eager={index < 3} />)}
+      {artworks.map((artwork, index) => <ArtworkCard artwork={artwork} eager={index < 3} headingLevel={2} />)}
     </div>
 
     <p data-empty hidden class="rounded-lg border border-line bg-surface p-8 text-center text-ink-soft">

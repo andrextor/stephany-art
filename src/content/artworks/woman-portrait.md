@@ -1,5 +1,6 @@
 ---
 title: "Retrato de mujer" # PENDIENTE: título definitivo
+slug: retrato-de-mujer
 category: personal
 status: in-progress
 # PENDIENTE: year, technique, dimensions

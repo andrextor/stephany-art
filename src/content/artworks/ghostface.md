@@ -1,5 +1,6 @@
 ---
 title: "Ghostface" # PENDIENTE: título definitivo
+slug: ghostface
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

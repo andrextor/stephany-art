@@ -1,5 +1,6 @@
 ---
 title: "Pareja en el jardín" # PENDIENTE: título definitivo
+slug: pareja-en-el-jardin
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

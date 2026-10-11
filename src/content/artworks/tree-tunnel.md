@@ -1,5 +1,6 @@
 ---
 title: "Túnel del árbol" # PENDIENTE: título definitivo
+slug: tunel-del-arbol
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions

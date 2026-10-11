@@ -1,5 +1,6 @@
 ---
 title: "Pareja" # PENDIENTE: título definitivo
+slug: pareja
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

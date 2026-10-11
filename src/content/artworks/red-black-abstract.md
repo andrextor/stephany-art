@@ -1,5 +1,6 @@
 ---
 title: "Abstracto en rojo y negro" # PENDIENTE: título definitivo
+slug: abstracto-en-rojo-y-negro
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

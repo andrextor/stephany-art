@@ -1,5 +1,6 @@
 ---
 title: "Pareja con rosa" # PENDIENTE: título definitivo
+slug: pareja-con-rosa
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

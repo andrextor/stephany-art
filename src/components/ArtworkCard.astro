@@ -5,9 +5,11 @@ import { type Artwork, categoryLabels, mainImage, statusLabels } from '../lib/ar
 interface Props {
   artwork: Artwork;
   eager?: boolean;
+  headingLevel?: 2 | 3;
 }
 
-const { artwork, eager = false } = Astro.props;
+const { artwork, eager = false, headingLevel = 3 } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
 const { title, category, status, year } = artwork.data;
 const image = mainImage(artwork);
 ---
@@ -26,13 +28,13 @@ const image = mainImage(artwork);
       formats={['avif', 'webp']}
       fallbackFormat="webp"
       widths={[400, 640, 960]}
-      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+      sizes="(min-width: 1152px) 352px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
       loading={eager ? 'eager' : 'lazy'}
       class="size-full object-contain transition-transform duration-700 ease-fluid group-hover:scale-[1.02]"
     />
   </div>
   <div class="flex flex-col gap-1 px-1 pb-1">
-    <h3 class="text-2xl text-ink">{title}</h3>
+    <Heading class="text-2xl text-ink">{title}</Heading>
     <p class="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
       <span>{categoryLabels[category]}</span>
       {year && <span aria-hidden="true">·</span>}

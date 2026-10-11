@@ -1,5 +1,6 @@
 ---
 title: "Retrato familiar" # PENDIENTE: título definitivo
+slug: retrato-familiar
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

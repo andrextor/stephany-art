@@ -1,5 +1,6 @@
 ---
 title: "Velero al atardecer" # PENDIENTE: título definitivo
+slug: velero-al-atardecer
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

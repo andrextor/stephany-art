@@ -1,5 +1,6 @@
 ---
 title: "Estanque con puente" # PENDIENTE: título definitivo
+slug: estanque-con-puente
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions

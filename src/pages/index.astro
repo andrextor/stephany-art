@@ -8,11 +8,14 @@ import TaglineReveal from '../components/TaglineReveal.astro';
 import { site, whatsappUrl } from '../data/site';
 import Layout from '../layouts/Layout.astro';
 import { getPublishedArtworks } from '../lib/artworks';
+import { artistJsonLd, graph, websiteJsonLd } from '../lib/seo';
 
 const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data.featured);
+const origin = Astro.site ?? Astro.url;
+const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 ---
 
-<Layout>
+<Layout jsonLd={jsonLd}>
   <ScrollWorld />
 
   <section aria-labelledby="destacadas" class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-24 md:px-8">
@@ -39,7 +42,7 @@ const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data
       {
         site.commissionSteps.map((step, index) => (
           <li class="flex flex-col gap-4 rounded-lg border border-line bg-surface p-6" data-reveal>
-            <span class="font-display text-5xl text-gold">{index + 1}</span>
+            <span class="font-display text-5xl text-gold-deep">{index + 1}</span>
             <h3 class="text-2xl text-ink">{step.title}</h3>
             <p class="text-base text-ink-soft">{step.text}</p>
           </li>
@@ -77,7 +80,7 @@ const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data
         {
           site.exhibitions.map((exhibition) => (
             <li class="grid grid-cols-[4rem_1fr] gap-4">
-              <span class="text-gold">{exhibition.year}</span>
+              <span class="text-gold-deep">{exhibition.year}</span>
               <span>
                 <span class="font-display text-lg text-ink">{exhibition.artwork}</span>
                 <span class="text-ink-soft"> · {exhibition.event}</span>
@@ -100,7 +103,7 @@ const featured = (await getPublishedArtworks()).filter((artwork) => artwork.data
             <details class="group border-b border-line py-6" data-reveal>
               <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg text-ink">
                 {item.question}
-                <span class="text-gold transition-transform duration-700 ease-fluid group-open:rotate-45" aria-hidden="true">
+                <span class="text-gold-deep transition-transform duration-700 ease-fluid group-open:rotate-45" aria-hidden="true">
                   +
                 </span>
               </summary>

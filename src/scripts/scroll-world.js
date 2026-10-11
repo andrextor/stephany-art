@@ -72,6 +72,7 @@
      5. Per section `position` (object-position on phones), exposed as --sw-pos.
      6. CTA links accept `external: true` (target=_blank, rel=noopener).
      7. ES module export instead of CommonJS/global.
+     8. Route dots get an aria-label (their visible label is hidden on phones).
    ========================================================================== */
 
 export function mountScrollWorld(container, config) {
@@ -174,6 +175,7 @@ export function mountScrollWorld(container, config) {
     copylayer.appendChild(c); copies.push(c);
 
     const dot = el('button', 'sw-route__dot'); dot.style.setProperty('--sw-accent', s.accent || '');
+    dot.setAttribute('aria-label', s.label || `Escena ${i + 1}`);
     dot.innerHTML = `<span class="sw-route__label">${esc(s.label || '')}</span><i></i>`;
     dot.addEventListener('click', () => jumpTo(i)); route.appendChild(dot); dots.push(dot);
 

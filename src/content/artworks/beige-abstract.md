@@ -1,5 +1,6 @@
 ---
 title: "Abstracto en beige y negro" # PENDIENTE: título definitivo
+slug: abstracto-en-beige-y-negro
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

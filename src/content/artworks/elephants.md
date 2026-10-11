@@ -1,5 +1,6 @@
 ---
 title: "Familia de elefantes" # PENDIENTE: título definitivo
+slug: familia-de-elefantes
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

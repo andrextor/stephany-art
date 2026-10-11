@@ -1,5 +1,6 @@
 ---
 title: "Miradas que fragmentan"
+slug: miradas-que-fragmentan
 category: personal
 # PENDIENTE: status (available, sold, private-collection)
 # PENDIENTE: year, technique, dimensions

@@ -1,5 +1,6 @@
 ---
 title: "Colibrí" # PENDIENTE: título definitivo
+slug: colibri
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

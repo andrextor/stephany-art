@@ -12,6 +12,7 @@ import {
   mainImage,
   statusLabels,
 } from '../../lib/artworks';
+import { artworkJsonLd, graph } from '../../lib/seo';
 
 export const getStaticPaths = async () => {
   const artworks = await getPublishedArtworks();
@@ -34,6 +35,10 @@ const hasCertificate = artwork.data.images.some((image) => image.kind === 'certi
 const cta = artworkCta(artwork);
 const related = artworks.filter((other) => other.data.category === category && other.id !== artwork.id).slice(0, 3);
 const ogImage = await getImage({ src: main.src, width: 1200, format: 'jpeg' });
+const origin = Astro.site ?? Astro.url;
+const jsonLd = graph(artworkJsonLd(artwork, origin, new URL(ogImage.src, origin).href));
+const facts = [technique, year?.toString()].filter(Boolean).join(', ');
+const description = `${title}${facts ? ` (${facts})` : ''}, obra de Stephany Londoño, artista plástica colombiana. ${categoryLabels[category]}.`;
 
 const details = [
   { label: 'Categoría', value: categoryLabels[category] },
@@ -44,7 +49,7 @@ const details = [
 ].filter((detail): detail is { label: string; value: string } => detail.value !== undefined);
 ---
 
-<Layout title={title} description={`${title}, obra de Stephany Londoño. ${categoryLabels[category]}.`} image={new URL(ogImage.src, Astro.url).href}>
+<Layout title={title} description={description} image={ogImage.src} imageAlt={main.alt} type="article" jsonLd={jsonLd}>
   <article class="mx-auto flex max-w-6xl flex-col gap-16 px-4 pt-32 md:px-8">
     <a href="/obras" class="inline-flex w-max items-center gap-2 text-sm text-ink-soft transition-colors duration-700 ease-fluid hover:text-ink">
       <Icon name="arrow-left" class="size-4" />
@@ -59,7 +64,7 @@ const details = [
           formats={['avif', 'webp']}
           fallbackFormat="webp"
           widths={[640, 960, 1440, 1920]}
-          sizes="(min-width: 1024px) 60vw, 100vw"
+          sizes="(min-width: 1152px) 640px, (min-width: 1024px) 56vw, 100vw"
           loading="eager"
           fetchpriority="high"
           class="max-h-[80vh] w-full object-contain"
@@ -86,7 +91,7 @@ const details = [
         {
           hasCertificate && (
             <p class="flex items-center gap-2 text-sm text-ink">
-              <Icon name="certificate" class="size-5 text-gold" />
+              <Icon name="certificate" class="size-5 text-gold-deep" />
               Incluye certificado de autenticidad
             </p>
           )
@@ -125,7 +130,7 @@ const details = [
                   formats={['avif', 'webp']}
                   fallbackFormat="webp"
                   widths={[400, 640, 960]}
-                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                  sizes="(min-width: 1152px) 352px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
                   class="w-full"
                 />
                 <figcaption class="pt-3 text-sm text-ink-soft">{image.alt}</figcaption>

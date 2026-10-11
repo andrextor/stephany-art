@@ -1,5 +1,6 @@
 ---
 title: "Guacamayas" # PENDIENTE: título definitivo
+slug: guacamayas
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions

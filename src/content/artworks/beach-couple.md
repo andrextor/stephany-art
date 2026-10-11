@@ -1,5 +1,6 @@
 ---
 title: "Pareja en la playa" # PENDIENTE: título definitivo
+slug: pareja-en-la-playa
 category: commission
 status: delivered
 # PENDIENTE: year, technique, dimensions
