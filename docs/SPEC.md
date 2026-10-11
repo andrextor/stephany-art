@@ -276,7 +276,7 @@ Una o dos fotos suyas pintando en el taller: la actual es de un evento con logos
 
 Capturas de home y `/obras` en 390 y 1440 px; filtros de `/obras` siguen funcionando; Lighthouse móvil ≥ 99 y CLS 0; contraste AA de cartelas sobre lino y nogal.
 
-### 5.7 Fase 10 "movimiento y espirales" (rama `feat/movimiento`, pendiente de aprobación)
+### 5.7 Fase 10 "movimiento y espirales" (rama `feat/movimiento`, aprobada e implementada el 11/10/2026)
 
 **Pedido (11/10/2026):** con el nuevo diseño de la fase 9, el cliente sí quiere el scroll que teníamos en las secciones, y pide tomar como referencia las mejoras de la landing de Arko (`midudev/mcp-higgsfield-landing`): scroll y figuras decorativas.
 
@@ -309,6 +309,8 @@ El recorrido (clips, paradas, textos), la paleta y el contenido.
 Secciones apiladas sin texto oculto en 390×844 y 1440×900; la espiral visible y trazada en Chrome y Safari, dibujada en Firefox; reduced motion sin Lenis, sin trazado y sin apariciones; Lighthouse móvil ≥ 99, CLS 0.
 
 Coste: 0 créditos. Archivos: `global.css`, `index.astro`, `Footer.astro`, `Layout.astro`, un componente `Spiral.astro` nuevo, `package.json` (lenis).
+
+Resultado: en 390×844 y 1440×900 cada sección apilada termina en el borde inferior de la pantalla antes de que la siguiente la cubra (ningún texto tapado sin leer) y ninguna aparición queda pendiente dentro de la vista; las palabras de la cita se encienden con el scroll; con reduced motion no hay Lenis, todo está visible y las espirales se ven ya dibujadas; sin errores de consola. Lighthouse móvil: `/` 99/100/100/100, `/obras` 99/100/100/100, ficha 100/100/100/100, CLS 0.
 
 ---
 
@@ -385,7 +387,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **7 · Casa de campo** | §5.4: paleta nogal/bambú, cursiva de Cormorant, transiciones de página | ✅ en rama `feat/casa-de-campo` (paleta Nogal + secciones apiladas), pendiente de merge |
 | **8 · Página normal** | §5.5: sin secciones apiladas; el último fotograma del recorrido sube con el contenido | ✅ en rama `feat/pagina-normal`, pendiente de merge. Salida verificada: hueco 0 px entre fotograma y contenido en 390 y 1440 px |
 | **9 · La obra y la artista** | §5.6: obra insignia junto a la artista, tarjetas sin caja con cartela de museo | ✅ en rama `feat/obra-y-artista`, pendiente de merge |
-| **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | Propuesta (11/10), pendiente de aprobación |
+| **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | ✅ en rama `feat/movimiento`, pendiente de merge |
 
 ---
 

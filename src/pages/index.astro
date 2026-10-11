@@ -2,8 +2,10 @@
 import { Picture } from 'astro:assets';
 import artistPhoto from '../assets/artist/stephany-at-biarco.webp';
 import ArtworkCard from '../components/ArtworkCard.astro';
+import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import ScrollWorld from '../components/ScrollWorld.astro';
+import Spiral from '../components/Spiral.astro';
 import { site, whatsappUrl } from '../data/site';
 import Layout from '../layouts/Layout.astro';
 import { categoryNames, getPublishedArtworks, mainImage, statusLabels } from '../lib/artworks';
@@ -12,6 +14,7 @@ import { artistJsonLd, graph, websiteJsonLd } from '../lib/seo';
 const published = await getPublishedArtworks();
 const [hero, ...rest] = published.filter((artwork) => artwork.data.featured);
 const more = rest.slice(0, 6);
+const quoteWords = `“${site.quote}”`.split(' ');
 const heroImage = mainImage(hero);
 const heroExhibition = site.exhibitions.findLast((exhibition) => exhibition.artwork === hero.data.title);
 const heroCaption = [
@@ -26,7 +29,7 @@ const origin = Astro.site ?? Astro.url;
 const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 ---
 
-<Layout jsonLd={jsonLd}>
+<Layout jsonLd={jsonLd} hideFooter>
   <ScrollWorld />
 
   <div class="after-world">
@@ -47,19 +50,22 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
           />
         </div>
         <div class="flex w-full max-w-xl flex-col gap-0.5">
-          <h2 id="obra-insignia" class="text-3xl text-bg italic">{hero.data.title}</h2>
+          <h2 id="obra-insignia" data-reveal class="text-3xl text-bg italic">{hero.data.title}</h2>
           <p class="text-sm text-ink-faint">{heroCaption}</p>
         </div>
       </a>
 
-      <div class="flex flex-col justify-center gap-8 bg-bg px-4 py-16 md:px-12 md:py-20">
-        <p class="text-xs font-semibold tracking-[0.16em] text-moss-deep uppercase">
+      <div class="relative flex flex-col justify-center gap-8 overflow-hidden bg-bg px-4 py-16 md:px-12 md:py-20">
+        <Spiral class="pointer-events-none absolute right-0 bottom-0 w-[min(110vw,560px)] translate-x-1/3 translate-y-1/3 text-moss/40" />
+        <p data-reveal class="relative text-xs font-semibold tracking-[0.16em] text-moss-deep uppercase">
           {site.artistName} · {site.role}
         </p>
-        <blockquote class="max-w-xl">
-          <p class="font-display text-3xl text-ink italic md:text-4xl">“{site.quote}”</p>
+        <blockquote class="relative max-w-xl">
+          <p data-words class="font-display text-3xl text-ink italic md:text-4xl">
+            {quoteWords.map((word) => <><span data-word>{word}</span>{' '}</>)}
+          </p>
         </blockquote>
-        <ul class="flex flex-wrap gap-2">
+        <ul data-reveal style="--d: 100ms" class="relative flex flex-wrap gap-2">
           {
             site.highlights.map((highlight) => (
               <li class="flex flex-col rounded-full border border-line bg-surface px-4 py-1.5 text-xs leading-snug">
@@ -69,7 +75,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
             ))
           }
         </ul>
-        <div class="flex flex-wrap gap-3">
+        <div data-reveal style="--d: 200ms" class="relative flex flex-wrap gap-3">
           <a
             href={whatsappUrl(site.whatsapp.commissionMessage)}
             target="_blank"
@@ -99,12 +105,12 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
             fallbackFormat="webp"
             widths={[320, 480, 640]}
             sizes="(min-width: 768px) 24rem, 90vw"
-            class="aspect-4/5 w-full object-cover"
+            class="arch aspect-4/5 w-full object-cover"
           />
         </div>
-        <h2 id="sobre-titulo" class="text-4xl">Sobre mí</h2>
-        <p class="text-base text-ink-soft">{site.intro}</p>
-        <details class="group">
+        <h2 id="sobre-titulo" data-reveal class="text-4xl">Sobre mí</h2>
+        <p data-reveal style="--d: 100ms" class="text-base text-ink-soft">{site.intro}</p>
+        <details data-reveal style="--d: 200ms" class="group">
           <summary class="inline-flex cursor-pointer list-none items-center gap-2 border-b border-line pb-0.5 text-sm font-semibold text-ink">
             <span class="group-open:hidden">Leer la biografía</span>
             <span class="hidden group-open:inline">Cerrar la biografía</span>
@@ -130,7 +136,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 
       <div class="flex flex-col gap-10 bg-bg px-4 py-16 md:px-10 md:py-20">
         <div class="flex items-end justify-between gap-4">
-          <h2 class="text-4xl">Más obras</h2>
+          <h2 data-reveal class="text-4xl">Más obras</h2>
           <a href="/obras" class="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
             Ver las {published.length} obras
             <Icon name="arrow-right" class="size-4" />
@@ -146,16 +152,17 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
       </div>
     </section>
 
-    <section aria-labelledby="encargo-titulo" class="bg-moss text-bg">
-      <div class="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-24 md:px-8">
-        <div class="flex max-w-2xl flex-col gap-4">
+    <section aria-labelledby="encargo-titulo" class="relative overflow-hidden bg-moss text-bg">
+      <Spiral class="pointer-events-none absolute top-0 right-0 w-[min(110vw,620px)] translate-x-1/3 -translate-y-1/3 text-bg/25" />
+      <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 py-24 md:px-8">
+        <div data-reveal class="flex max-w-2xl flex-col gap-4">
           <h2 id="encargo-titulo" class="text-4xl md:text-5xl">Cómo funciona un encargo</h2>
           <p class="text-lg text-bg">Una obra hecha a mano a partir de tu historia, en tres pasos.</p>
         </div>
         <ol class="grid gap-6 md:grid-cols-3">
           {
             site.commissionSteps.map((step, index) => (
-              <li class="flex flex-col gap-4 rounded-lg border border-ink/10 bg-ink/15 p-6">
+              <li data-reveal style={`--d: ${index * 100}ms`} class="flex flex-col gap-4 rounded-lg border border-ink/10 bg-ink/15 p-6">
                 <span class="font-display text-5xl text-bg italic">{index + 1}</span>
                 <h3 class="text-2xl">{step.title}</h3>
                 <p class="text-base text-bg">{step.text}</p>
@@ -200,5 +207,21 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
         </section>
       )
     }
+
+    <Footer />
   </div>
+
+  <script>
+    // Stacked sections: a section taller than the viewport must pin once its bottom is
+    // in view, not its top, so each one publishes its height for the sticky offset.
+    const stack = document.querySelector<HTMLElement>('.after-world');
+    if (stack) {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          (entry.target as HTMLElement).style.setProperty('--h', `${entry.contentRect.height}px`);
+        }
+      });
+      for (const section of stack.children) observer.observe(section);
+    }
+  </script>
 </Layout>

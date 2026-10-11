@@ -1,6 +1,7 @@
 ---
 import { site, whatsappUrl } from '../data/site';
 import Icon from './Icon.astro';
+import Spiral from './Spiral.astro';
 
 interface Props {
   class?: string;
@@ -10,13 +11,15 @@ const { class: className } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer id="contacto" class:list={['bg-ink text-bg', className]}>
-  <div class="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-20 md:flex-row md:items-end md:justify-between md:px-8">
+<footer id="contacto" class:list={['relative overflow-hidden bg-ink text-bg', className]}>
+  <Spiral class="pointer-events-none absolute right-0 bottom-0 w-[min(120vw,640px)] translate-x-1/3 translate-y-1/3 text-bg/15" />
+  <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 py-20 md:flex-row md:items-end md:justify-between md:px-8">
     <div class="flex max-w-xl flex-col gap-6">
-      <h2 class="text-4xl md:text-5xl">¿Tienes una idea para una obra?</h2>
-      <p class="text-lg text-ink-faint">
+      <h2 data-reveal class="text-4xl md:text-5xl">¿Tienes una idea para una obra?</h2>
+      <p data-reveal style="--d: 100ms" class="text-lg text-ink-faint">
         Escríbeme por WhatsApp con tu idea o tu foto y te cuento cómo podemos convertirla en una pintura.
       </p>
+      <div data-reveal style="--d: 200ms">
       <a
         href={whatsappUrl(site.whatsapp.commissionMessage)}
         target="_blank"
@@ -26,6 +29,7 @@ const year = new Date().getFullYear();
         <Icon name="whatsapp" />
         Escribir por WhatsApp
       </a>
+      </div>
     </div>
 
     <div class="flex flex-col gap-2 text-sm text-ink-faint md:text-right">
