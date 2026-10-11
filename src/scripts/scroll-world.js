@@ -75,6 +75,11 @@
      6. CTA links accept `external: true` (target=_blank, rel=noopener).
      7. ES module export instead of CommonJS/global.
      8. Route dots get an aria-label (their visible label is hidden on phones).
+    10. Copy timing: stops after the first fade in during the last `copyLead` vh of the
+        incoming connector and hold at full opacity through the scene (was a single peak
+        at mid-scene). On phones the copy sits higher (bottom ≈ 18dvh) under a taller veil.
+    11. Copy parallax goes through `--sw-py` instead of an inline transform, which used to
+        overwrite the desktop `translateY(-50%)` centering and left the copy in the lower half.
      9. Scene stills load on demand: only the first scene's poster has a src at mount;
         the others get theirs when their segment comes within range (the scenes are
         fixed and stacked, so `loading="lazy"` alone never defers them).
@@ -94,6 +99,7 @@ export function mountScrollWorld(container, config) {
   const DIVE_W = config.diveScroll || 1.3;
   const CONN_W = config.connScroll || 0.9;
   const CROSSFADE = (config.crossfade != null) ? config.crossfade : 0.12;  // seam dissolve width (vh)
+  const COPY_LEAD = (config.copyLead != null) ? config.copyLead : 0.45;   // vh of connector during which the next copy fades in
   const N = SECTIONS.length;
   if (!N) return;
 
@@ -269,17 +275,21 @@ export function mountScrollWorld(container, config) {
       }
     }
 
+    const lead = COPY_LEAD * vh;
     for (let i = 0; i < N; i++) {
       const seg = SECTIONS[i]._seg;
-      const pr = clamp((y - seg.start) / (seg.end - seg.start), 0, 1);
-      const before = y < seg.start, after = y > seg.end;
+      // Copy for stops after the first starts rising `lead` before its scene, i.e. during
+      // the end of the incoming connector, and holds at full opacity through the scene.
+      const start = i === 0 ? seg.start : seg.start - lead;
+      const pr = clamp((y - start) / (seg.end - start), 0, 1);
+      const before = y < start, after = y > seg.end;
       let cop;
       if (i === 0) cop = after ? 0 : smooth(1 - pr / 0.62);            // greets on landing
-      else if (i === N - 1) cop = before ? 0 : smooth(pr / 0.4);       // holds CTA at the end
-      else cop = (before || after) ? 0 : smooth(1 - Math.abs(pr - 0.5) / 0.5);
+      else if (i === N - 1) cop = before ? 0 : smooth(pr / 0.3);       // holds CTA at the end
+      else cop = (before || after) ? 0 : smooth(Math.min(pr / 0.3, (1 - pr) / 0.22));
       const c = copies[i];
       c.style.opacity = cop;
-      c.style.transform = reduce ? 'none' : `translateY(${(0.5 - pr) * 4}vh)`;
+      c.style.setProperty('--sw-py', reduce ? '0vh' : `${(0.5 - pr) * 4}vh`);
       c.style.pointerEvents = cop > 0.5 ? 'auto' : 'none';
     }
 
@@ -418,7 +428,7 @@ function injectCSS() {
   .sw-scene__still{will-change:transform;} .sw-scene.has-clip .sw-scene__still{opacity:0;} .sw-scene__video{z-index:1;}
   .sw-copylayer{position:fixed;inset:0;z-index:20;pointer-events:none;}
   .sw-copylayer::before{content:"";position:absolute;inset:0;width:min(58vw,780px);background:linear-gradient(90deg,var(--sw-bg) 0%,color-mix(in srgb,var(--sw-bg) 82%,transparent) 34%,color-mix(in srgb,var(--sw-bg) 40%,transparent) 62%,transparent 100%);}
-  .sw-copy{position:absolute;left:clamp(18px,5vw,64px);top:50%;transform:translateY(-50%);width:min(42vw,460px);opacity:0;will-change:opacity,transform;}
+  .sw-copy{position:absolute;left:clamp(18px,5vw,64px);top:50%;transform:translateY(calc(-50% + var(--sw-py,0vh)));width:min(42vw,460px);opacity:0;will-change:opacity,transform;}
   .sw-copy__num{font-family:ui-monospace,Menlo,monospace;font-size:.74rem;letter-spacing:.12em;color:var(--sw-ink-soft);}
   .sw-copy__eyebrow{display:block;margin-top:18px;font-family:var(--sw-font-display);font-weight:700;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sw-accent);}
   .sw-copy__title{font-family:var(--sw-font-display);font-weight:700;color:var(--sw-ink);font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.03;margin:12px 0 0;letter-spacing:-.01em;text-shadow:0 2px 20px color-mix(in srgb,var(--sw-bg) 70%,transparent);}
@@ -444,11 +454,11 @@ function injectCSS() {
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
   @media (max-width:860px){
     .sw-nav{display:none;}
-    .sw-copylayer::before{width:100%;height:60%;top:auto;bottom:0;background:linear-gradient(0deg,var(--sw-bg) 8%,color-mix(in srgb,var(--sw-bg) 70%,transparent) 46%,transparent 100%);}
+    .sw-copylayer::before{width:100%;height:72%;top:auto;bottom:0;background:linear-gradient(0deg,var(--sw-bg) 8%,color-mix(in srgb,var(--sw-bg) 70%,transparent) 46%,transparent 100%);}
     /* Anchor copy to the bottom, clear of the home indicator / collapsing URL bar.
        dvh + env() are progressive: browsers that lack them keep the vh fallback line. */
-    .sw-copy{left:clamp(18px,5vw,64px);right:clamp(18px,5vw,64px);top:auto;bottom:clamp(64px,14vh,120px);transform:none;width:auto;max-width:560px;}
-    .sw-copy{bottom:calc(clamp(56px,12dvh,110px) + env(safe-area-inset-bottom));}
+    .sw-copy{left:clamp(18px,5vw,64px);right:clamp(18px,5vw,64px);top:auto;bottom:clamp(96px,20vh,170px);transform:translateY(var(--sw-py,0vh));width:auto;max-width:560px;}
+    .sw-copy{bottom:calc(clamp(88px,18dvh,160px) + env(safe-area-inset-bottom));}
     .sw-copy__title{font-size:clamp(1.9rem,7.5vw,2.7rem);}
     .sw-copy__body{max-width:none;font-size:clamp(.98rem,3.6vw,1.1rem);} .sw-scene__video,.sw-scene__still{object-position:center 46%;}
     .sw-hint{bottom:calc(20px + env(safe-area-inset-bottom));}
