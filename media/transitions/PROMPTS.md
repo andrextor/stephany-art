@@ -23,6 +23,7 @@ F3 ─clip 3 (gira der. en el sitio)─▶ F4 pared lateral PERSONALES ─clip 4
 9. **Misma lente, altura y velocidad** en todos los clips: eye level, 24mm, slow constant pace.
 10. **Títulos fuera del vídeo**: *Obras por comisión / Obras personales / En proceso* como HTML sobre el vídeo.
 11. **El fondo hacia el que avanzas tiene que ser el mismo en los dos fotogramas.** Si F4 mira hacia la pared de Comisión y F5 pone el caballete en ese mismo fondo, Kling funde una cosa en otra. Fallo real: clip 4 v3. Solución: colocar el rincón En proceso junto a la ventana/balcón que ya existe a la izquierda de la pared de Comisión (visible en F3) y llegar a él girando a la izquierda.
+12. **Para un avance recto, el fotograma inicial es el final alejado (outpaint).** Generar F1 como imagen nueva "desde más atrás" inventa detalles distintos a F2 (paneles, muebles) y Kling los transforma mientras avanza. Con `outpaint_image` (F2 → lienzo más grande, 2 créditos) todo lo de F2 ya existe en F1.
 
 ## Ajustes
 
@@ -123,15 +124,15 @@ cut, scene change, fade, dissolve, crossfade, morphing, warping beams, bending w
 
 | Archivo | Estado |
 |---|---|
-| `keyframes/F1-atico.png` | ✅ (v1 `-caballete-vacio` descartada, regla 2) |
+| `keyframes/F1-atico.png` | ✅ v3: **outpaint de F2** (F2 intacta en el centro). Las versiones reinventadas hacían que la pared de paneles de la izquierda se "construyera" durante el avance (regla 12) |
 | `keyframes/F2-caballete.png` | ✅ |
 | `keyframes/F3-comision.png` | ✅ |
 | `keyframes/F4-personales.png` | ✅ v3 (v1 `-frontal` descartada por la regla 1, v2 `-con-puerta` por la regla 3) |
-| `keyframes/F5-en-proceso.png` | v3: pared lateral a la derecha (regla 6 cumplida) |
-| `transitions/clip1-entrada-atico.mp4` | ✅ |
+| `keyframes/F5-en-proceso.png` | ✅ v4: giro de 45° más a la derecha por la misma pared lateral; el caballete está más adelante en esa pared |
+| `transitions/clip1-entrada-atico.mp4` | ✅ v2: avance recto, la pared izquierda ya existe desde el primer fotograma. Sale a 1928×1076: normalizar a 1920×1080 al concatenar |
 | `transitions/clip2-taller-comision.mp4` | ✅ |
 | `transitions/clip3-comision-personales.mp4` | ✅ v3: giro en el sitio, pared del fondo rígida, sin puerta |
-| `transitions/clip4-personales-en-proceso.mp4` | ⚠️ v3: pared a la derecha y sin barrido, pero a mitad de clip la pared de Comisión (fondo de F4) se funde con el rincón del caballete (fondo de F5). Ver regla 11. |
+| `transitions/clip4-personales-en-proceso.mp4` | ✅ v4: giro en el sitio hacia la derecha, sin fundidos. El cuadro de la escalera se deforma un poco a mitad del giro |
 | `recorrido-preview.mp4` / `recorrido-scroll.mp4` | ✅ rehechos con los clips nuevos |
 
-Coste acumulado: 80 créditos (quedan ~21).
+Coste acumulado: ~100 créditos (quedan 0,75).
