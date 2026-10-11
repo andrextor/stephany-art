@@ -43,7 +43,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
       {
         site.commissionSteps.map((step, index) => (
           <li class="flex flex-col gap-4 rounded-lg border border-line bg-surface p-6" data-reveal>
-            <span class="font-display text-5xl text-gold-deep">{index + 1}</span>
+            <span class="font-display text-5xl text-moss-deep italic">{index + 1}</span>
             <h3 class="text-2xl text-ink">{step.title}</h3>
             <p class="text-base text-ink-soft">{step.text}</p>
           </li>
@@ -81,9 +81,9 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
         {
           site.exhibitions.map((exhibition) => (
             <li class="grid grid-cols-[4rem_1fr] gap-4">
-              <span class="text-gold-deep">{exhibition.year}</span>
+              <span class="text-moss-deep">{exhibition.year}</span>
               <span>
-                <span class="font-display text-lg text-ink">{exhibition.artwork}</span>
+                <span class="font-display text-lg text-ink italic">{exhibition.artwork}</span>
                 <span class="text-ink-soft"> · {exhibition.event}</span>
               </span>
             </li>
@@ -104,7 +104,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
             <details class="group border-b border-line py-6" data-reveal>
               <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg text-ink">
                 {item.question}
-                <span class="text-gold-deep transition-transform duration-700 ease-fluid group-open:rotate-45" aria-hidden="true">
+                <span class="text-moss-deep transition-transform duration-700 ease-fluid group-open:rotate-45" aria-hidden="true">
                   +
                 </span>
               </summary>

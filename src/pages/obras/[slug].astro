@@ -57,7 +57,7 @@ const details = [
     </a>
 
     <div class="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-start">
-      <figure class="flex items-center justify-center rounded-lg border border-line bg-surface p-3" data-reveal>
+      <figure class="flex items-center justify-center rounded-lg border border-line bg-surface p-3" style={`view-transition-name: obra-${artwork.id}`}>
         <Picture
           src={main.src}
           alt={main.alt}
@@ -91,7 +91,7 @@ const details = [
         {
           hasCertificate && (
             <p class="flex items-center gap-2 text-sm text-ink">
-              <Icon name="certificate" class="size-5 text-gold-deep" />
+              <Icon name="certificate" class="size-5 text-moss-deep" />
               Incluye certificado de autenticidad
             </p>
           )

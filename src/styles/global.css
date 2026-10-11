@@ -6,13 +6,13 @@
 }
 
 @theme {
-  --color-bg: #faf8f3;
-  --color-surface: #ffffff;
-  --color-ink: #1f1a16;
-  --color-ink-soft: #5e554d;
-  --color-gold: #b8912f;
-  --color-gold-deep: #8a6a1f;
-  --color-line: #e6e0d5;
+  --color-bg: #f5f2e8;
+  --color-surface: #fcfbf6;
+  --color-ink: #221b14;
+  --color-ink-soft: #5a5146;
+  --color-moss: #5c7a46;
+  --color-moss-deep: #3f5a33;
+  --color-line: #e2dccb;
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -37,7 +37,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-gold);
+    outline: 2px solid var(--color-moss);
     outline-offset: 2px;
   }
 }
@@ -76,7 +76,7 @@ body {
   --sw-bg: var(--color-bg);
   --sw-ink: var(--color-ink);
   --sw-ink-soft: var(--color-ink-soft);
-  --sw-accent: var(--color-gold);
+  --sw-accent: var(--color-moss);
   --sw-font-display: var(--font-display);
   --sw-font-body: var(--font-sans);
 }
@@ -150,9 +150,8 @@ body {
   position: absolute;
   left: clamp(18px, 5vw, 64px);
   top: 50%;
-  /* The engine drives .sw-copy's transform inline (2vh parallax at scroll 0), which
-     replaces its own -50% centering; mirror that so the swap does not jump. */
-  transform: translateY(2vh);
+  /* Same as the engine's centering plus its 2vh parallax at scroll 0, so the swap does not jump. */
+  transform: translateY(calc(-50% + 2vh));
   width: min(42vw, 460px);
 }
 
@@ -212,7 +211,7 @@ body {
 @media (max-width: 860px) {
   .js .sw-prelude::before {
     width: 100%;
-    height: 60%;
+    height: 72%;
     top: auto;
     bottom: 0;
     background: linear-gradient(
@@ -227,7 +226,7 @@ body {
     left: clamp(18px, 5vw, 64px);
     right: clamp(18px, 5vw, 64px);
     top: auto;
-    bottom: calc(clamp(56px, 12dvh, 110px) + env(safe-area-inset-bottom));
+    bottom: calc(clamp(88px, 18dvh, 160px) + env(safe-area-inset-bottom));
     transform: translateY(2vh);
     width: auto;
     max-width: 560px;
@@ -240,6 +239,27 @@ body {
   .sw-prelude .sw-copy__body {
     max-width: none;
     font-size: clamp(0.98rem, 3.6vw, 1.1rem);
+  }
+}
+
+/* Cross-document view transitions: a soft fade between pages, the artwork image travels
+   from card to detail page (view-transition-name: obra-<slug>) and the header stays put. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(*),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 450ms;
+  animation-timing-function: var(--ease-fluid);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
   }
 }
 

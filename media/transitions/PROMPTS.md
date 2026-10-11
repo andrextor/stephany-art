@@ -136,3 +136,77 @@ cut, scene change, fade, dissolve, crossfade, morphing, warping beams, bending w
 | `recorrido-preview.mp4` / `recorrido-scroll.mp4` | ✅ rehechos con los clips nuevos |
 
 Coste acumulado: ~100 créditos (quedan 0,75).
+
+---
+
+## 5 · Cambios v2 (pendientes: hacen falta créditos)
+
+### 5.1 · Cuadro del caballete en la entrada: *La noche oscura del alma* (espiral)
+
+El retrato de la pareja mayor del caballete (F1/F2) es un encargo de cliente, pendiente de consentimiento. Se sustituye por la espiral texturizada (`artworks/textured-figure/figure-in-textured-circle.webp`): obra personal, formato cuadrado, negro sobre blanco, se lee desde lejos y no se repite en las paredes de Comisión/Personales.
+
+Orden: **F2' (edición) → F1' (outpaint de F2', regla 12) → clip 1 → clip 2**. Los clips 3 y 4 no cambian.
+
+| Paso | Modelo | Coste |
+|---|---|---|
+| F2' | `gpt_image_2_5` edición, refs: F2 + espiral, `quality medium` | 1 |
+| F1' | `outpaint_image` de F2' (mismo encuadre que F1 v3) | 2 |
+| Clip 1 v3 | `kling3_0` pro, F1' → F2' | 8,75 |
+| Clip 2 v2 | `kling3_0` pro, F2' → F3 | 8,75 |
+| **Total** | | **20,5** |
+
+#### F2' · caballete con la espiral (refs: `F2-caballete.webp`, `textured-figure/figure-in-textured-circle.webp`)
+
+```
+Edit the first reference image (the attic studio) changing only one thing: the painting standing on the wooden easel. Replace the portrait of the elderly couple with the painting from the second reference: a square canvas, about 80 by 80 cm, covered in a thick black textured relief forming a spiral, with a small figure of a woman in a white dress curled up at its dark center. The new canvas rests on the same easel ledge, in the same place, facing the camera at the same slight angle as the original painting. Reproduce the painting exactly as in the reference: same relief, same spiral, same figure, same black and grey tones. Everything else stays exactly identical to the first reference: the easel, the leather pouf with the palette, the blank canvas on the plastic sheet on the floor, the open wooden door and the balcony with green bamboo, the white folding table with printer and baskets, the dark wooden A-frame beams, slanted white walls, dark polished floorboards and the soft overcast daylight. Photorealistic photograph, 16:9, eye level, 24mm lens, no people, no hands, no mug, no text, no signs, no watermark.
+```
+
+#### F1' · entrada
+
+Sin prompt de imagen: `outpaint_image` de F2' al mismo lienzo que F1 v3 (F2' intacta en el centro, más ático alrededor). Si el outpaint pide prompt:
+
+```
+Continue the same attic studio outward: more dark wooden A-frame beams, slanted white walls, dark wooden panelled knee walls and wide dark polished floorboards in the foreground, as seen from the entrance of the attic. Nothing inside the original image changes. Same light, no people, no text.
+```
+
+#### Clip 1 v3 · F1' → F2'
+
+```
+The camera walks slowly forward down the middle of the attic studio toward the open balcony door, the easel with the dark textured spiral painting growing closer, and stops a few steps in front of the blank canvas lying on the plastic sheet on the floor. One continuous shot on a steady gimbal at eye level, 24mm, slow constant walking pace with natural parallax, gentle ease-in and ease-out, landing exactly on the final frame. The painting is a static artwork: its relief and the small figure at its center do not move or change. Keep the house structure, beams, walls, floor, furniture and daylight unchanged. No cuts, no fades, no dissolves, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
+```
+
+#### Clip 2 v2 · F2' → F3
+
+```
+The camera turns gently to the left, away from the easel with the dark textured spiral painting, and walks a few steps along the attic, passing under a dark wooden beam, then settles facing a white wall where two canvases hang side by side: a colorful hummingbird and a sailboat at sunset. One continuous shot on a steady gimbal at eye level, 24mm, slow constant walking pace with subtle natural parallax, gentle ease-in and ease-out, landing exactly on the final frame. The paintings are static artworks: nothing inside them moves. Keep the house structure, beams, walls, floor and daylight unchanged. No cuts, no fades, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
+```
+
+### 5.2 · Cierre: volver a la puerta y al cuadro del principio
+
+Dos formas de terminar en F2' (caballete con la espiral y puerta del balcón) después de F5:
+
+**A · Rebobinar (0 créditos, recomendado para probar primero).** El recorrido F3 → F4 → F5 son giros en el sitio, así que reproducidos al revés son el mismo giro hacia la izquierda; y clip 2 al revés devuelve al caballete. Un solo conector largo, sin paradas, a doble velocidad:
+
+```
+ffmpeg -i clip4.mp4 -vf "reverse,setpts=0.5*PTS" -an c4r.mp4
+ffmpeg -i clip3.mp4 -vf "reverse,setpts=0.5*PTS" -an c3r.mp4
+ffmpeg -i clip2.mp4 -vf "reverse,setpts=0.5*PTS" -an c2r.mp4
+printf "file 'c4r.mp4'\nfile 'c3r.mp4'\nfile 'c2r.mp4'\n" > vuelta.txt
+ffmpeg -f concat -safe 0 -i vuelta.txt -an -c:v libx264 -crf 20 -pix_fmt yuv420p clip5-vuelta.mp4
+```
+
+En un vídeo scrubeado por scroll no se nota que es un reverse: solo son fotogramas.
+
+**B · Clip nuevo F5 → F1' (8,75 créditos por intento).** Giro de 180° en el sitio en 5 s. Es el movimiento más ambicioso de todos (regla 4 llevada al límite); contar con un segundo intento. Si sale bien, el cierre es clip 5 + clip 1 v3 reutilizado (F1' → F2', 0 créditos).
+
+#### Clip 5 · F5 → F1' · media vuelta en el sitio
+
+```
+Pure camera pan: the camera stays in exactly the same spot and slowly turns around 180 degrees to the left, like a person turning to look back the way they came. It does not walk, does not move forward or backward. The working corner with the easel and the unfinished portrait slides out of the frame to the right, the long side wall with the two large paintings passes across the frame rigid and unchanged, and then the other end of the attic comes into view: it already exists outside the frame. It is the full length of the attic seen from its entrance: dark wooden A-frame beams, slanted white walls, dark panelled knee walls, wide dark polished floorboards, and at the far end the wooden easel with the dark textured spiral painting, the leather pouf, the white folding table and the open wooden door to the balcony with green bamboo. The room keeps its shape: walls and beams do not move or bend, no new doors, no new windows, no openings appear. Steady gimbal at eye level, 24mm, slow constant rotation speed, gentle ease-in and ease-out, landing exactly on the final frame. The paintings are static artworks: nothing inside them moves. No cuts, no fades, no dissolves, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
+```
+
+Si en 5 s el giro sale brusco, pedir el clip de 10 s (precio doble) con el mismo prompt.
+
+### En la web
+
+Una sexta parada en `ScrollWorld.astro` sobre F2' con el CTA de contacto ("Hablemos de tu obra" → WhatsApp): el recorrido termina donde empezó y con la invitación a escribir.

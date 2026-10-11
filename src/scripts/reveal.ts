@@ -9,6 +9,14 @@ const observer = new IntersectionObserver(
   { rootMargin: '0px 0px -10% 0px' },
 );
 
-for (const element of document.querySelectorAll('[data-reveal]')) {
-  observer.observe(element);
+// Elements already on screen show at once, so the first paint (and a view transition
+// landing on them) is never blank; only what scrolls in later animates.
+for (const element of document.querySelectorAll<HTMLElement>('[data-reveal]')) {
+  if (element.getBoundingClientRect().top < window.innerHeight) {
+    element.style.transition = 'none';
+    element.setAttribute('data-revealed', '');
+    requestAnimationFrame(() => element.style.removeProperty('transition'));
+  } else {
+    observer.observe(element);
+  }
 }
