@@ -1,6 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
-import artistPhoto from '../assets/artist/stephany-at-biarco.webp';
+import artistPhoto from '../assets/artist/stephany-portrait-biarco.webp';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
@@ -97,17 +97,18 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 
     <section id="sobre" aria-labelledby="sobre-titulo" class="grid border-t border-line md:grid-cols-[1fr_1.6fr]">
       <div class="flex flex-col gap-6 bg-surface px-4 py-16 md:px-10 md:py-20">
-        <div data-reveal class="mx-auto w-full max-w-sm">
+        <figure data-reveal class="mx-auto flex w-full max-w-sm flex-col gap-3">
           <Picture
             src={artistPhoto}
-            alt="Stephany Londoño con el catálogo de la Bienal de Armenia"
+            alt="Retrato de Stephany Londoño con el catálogo de la 5.ª Bienal Internacional de Arte de Armenia"
             formats={['avif', 'webp']}
             fallbackFormat="webp"
-            widths={[320, 480, 640]}
+            widths={[320, 480, 640, 768]}
             sizes="(min-width: 768px) 24rem, 90vw"
-            class="arch aspect-4/5 w-full object-cover object-top"
+            class="arch fade-bottom aspect-4/5 w-full object-cover"
           />
-        </div>
+          <figcaption class="text-center text-xs text-ink-soft">En la 5.ª Bienal Internacional de Arte de Armenia, 2024</figcaption>
+        </figure>
         <h2 id="sobre-titulo" data-reveal class="text-4xl">Sobre mí</h2>
         <p data-reveal style="--d: 100ms" class="text-base text-ink-soft">{site.intro}</p>
         <details data-reveal style="--d: 200ms" class="group">

@@ -88,6 +88,11 @@ body {
   border-radius: 50% 50% 0 0 / 40% 40% 0 0;
 }
 
+/* Lets a photo dissolve into the band behind it instead of ending on a hard edge. */
+.fade-bottom {
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}
+
 /* Decorative spiral: drawn from the centre outwards as it scrolls into view where
    scroll-driven animations exist; elsewhere it is simply there. */
 @supports (animation-timeline: view()) {
