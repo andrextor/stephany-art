@@ -317,7 +317,7 @@ Resultado: en 390×844 y 1440×900 cada sección apilada termina en el borde inf
 - Las apariciones copian las de Arko: suben 4rem, pasan de desenfocadas a nítidas y aparecen en 1 s, escalonadas con `--d`. Ahora también las obras (tarjetas de la home, `/obras` y relacionadas, 0/120/240 ms por columna) y la obra insignia. Se mantienen las secciones apiladas y el scroll suave.
 - El observador de apariciones usa `threshold: 0` sin margen inferior: con el margen de −10 % el botón de WhatsApp del pie, en la última franja de la página, no llegaba a aparecer nunca.
 - Foto de la artista centrada en su columna y anclada arriba (`object-top`), para que la cara quede dentro del arco.
-- La foto ya no parece un parche. `stephany-portrait-biarco.webp` sale de la foto original del evento, que se conserva como fuente: recorte de retrato de la cabeza al catálogo, color natural con la saturación al 72 % con sharp, para que los logos del photocall no compitan con las obras (se probó blanco y negro cálido y se descartó: la dejaba "como de otra época"). Abajo se funde con la banda (`.fade-bottom`) y lleva un pie que da contexto: "En la 5.ª Bienal Internacional de Arte de Armenia, 2024". Sigue pendiente una foto de Stephany pintando en el taller.
+- La foto ya no parece un parche. `stephany-portrait.webp` sale de la foto original del evento, que se conserva como fuente: recorte de retrato de la cabeza al catálogo, color natural un poco más cálido y luminoso con sharp (se probaron blanco y negro cálido y color desaturado: los dos la dejaban sin vida). Abajo se funde con la banda (`.fade-bottom`) y lleva un pie que da contexto: "En la 5.ª Bienal Internacional de Arte de Armenia, 2024". Sigue pendiente una foto de Stephany pintando en el taller.
 
 ---
 
