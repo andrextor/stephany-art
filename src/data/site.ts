@@ -32,7 +32,7 @@ export const site = {
       artwork: 'La noche oscura del alma',
       event: 'Portada de revista presentada en la Feria Internacional del Libro de Bogotá (FILBo)',
     },
-    { year: 2026, artwork: 'Tránsito del alma', event: 'Bienal de Armenia' },
+    { year: 2026, artwork: 'Tránsito de luz eterna', event: 'Bienal de Armenia' },
   ],
   // PENDIENTE: validar los pasos con Stephany (plazos, anticipo, envío)
   commissionSteps: [

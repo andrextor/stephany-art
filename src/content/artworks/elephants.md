@@ -1,9 +1,13 @@
 ---
-title: "Familia de elefantes" # PENDIENTE: título definitivo
+title: "Munay"
 slug: familia-de-elefantes
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2024
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 100
+  height: 70
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/elephants/elephant-family-on-easel.webp

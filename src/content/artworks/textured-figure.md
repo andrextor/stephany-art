@@ -2,9 +2,12 @@
 title: "La noche oscura del alma"
 slug: la-noche-oscura-del-alma
 category: personal
-# PENDIENTE: status (available, sold, private-collection)
-# PENDIENTE: year, technique, dimensions
-# PENDIENTE: descripción de la obra (va debajo del frontmatter)
+status: sold
+year: 2024
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 70
+  height: 70
 images:
   - src: ../../assets/artworks/textured-figure/figure-in-textured-circle.webp
     alt: "Figura humana encogida en blanco y negro en el centro de una espiral oscura en relieve"
@@ -26,3 +29,5 @@ images:
 featured: true
 order: 20
 ---
+
+Sumergida en la profunda oscuridad de un espiral ascendente reposa el alma herida que ha decidido abrirle la puerta a la muerte, siendo consciente de que su llegada trae la manifestación más pura de sus miedos más grandes, entrando en un estado de sufrimiento absolutamente insoportable en donde existen solo dos caminos: la psicosis o la iluminación.

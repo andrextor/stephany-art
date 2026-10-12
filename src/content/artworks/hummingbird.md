@@ -1,9 +1,13 @@
 ---
-title: "Colibrí" # PENDIENTE: título definitivo
+title: "Mensajero alado"
 slug: colibri
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2025
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 70
+  height: 50
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/hummingbird/hummingbird-on-blossom-branch.webp

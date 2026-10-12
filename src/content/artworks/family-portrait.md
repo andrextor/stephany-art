@@ -1,10 +1,13 @@
 ---
-title: "Retrato familiar" # PENDIENTE: título definitivo
-slug: retrato-familiar
+title: "Latido de hogar"
+slug: latido-de-hogar
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
-# PENDIENTE: descripción de la obra (va debajo del frontmatter)
+year: 2026
+technique: "Óleo sobre lienzo"
+dimensions:
+  width: 200
+  height: 120
 images:
   - src: ../../assets/artworks/family-portrait/family-portrait-five.webp
     alt: "Retrato familiar de cinco personas sentadas en un sofá blanco"
@@ -27,5 +30,10 @@ images:
     alt: "Detalle vertical del retrato"
     kind: detail
 order: 100
-draft: true # PENDIENTE: confirmar que el cliente autoriza publicar su retrato
 ---
+
+Bajo el cuidado constante de dos padres amorosos,\
+florece la calma de sus hijos.\
+Un espacio habitado por lazos firmes,\
+donde la protección es un abrazo\
+y la familia se vuelve eterno refugio.

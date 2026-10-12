@@ -1,9 +1,13 @@
 ---
-title: "Guacamayas" # PENDIENTE: título definitivo
+title: "Susurro escarlata"
 slug: guacamayas
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2025
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 100
+  height: 70
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/macaws/macaws-on-easel.webp

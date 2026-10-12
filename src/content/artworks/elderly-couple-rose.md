@@ -1,10 +1,13 @@
 ---
-title: "Pareja con rosa" # PENDIENTE: título definitivo
-slug: pareja-con-rosa
+title: "Miradas de un amor eterno"
+slug: miradas-de-un-amor-eterno
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
-# PENDIENTE: descripción de la obra (va debajo del frontmatter)
+year: 2025
+technique: "Óleo sobre lienzo"
+dimensions:
+  width: 50
+  height: 70
 images:
   - src: ../../assets/artworks/elderly-couple-rose/elderly-couple-with-rose.webp
     alt: "Retrato de una pareja mayor sonriente; él sostiene una rosa roja"
@@ -15,5 +18,10 @@ images:
     alt: "Detalle de las manos y la rosa roja"
     kind: detail
 order: 110
-draft: true # PENDIENTE: confirmar que el cliente autoriza publicar su retrato
 ---
+
+Entre rosas y miradas\
+Sonrisas y recuerdos\
+Tomados siempre de la mano\
+Ahora siendo estrellas en el firmamento\
+Una promesa de amor eterno

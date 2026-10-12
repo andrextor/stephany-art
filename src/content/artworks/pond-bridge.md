@@ -1,10 +1,13 @@
 ---
-title: "Estanque con puente" # PENDIENTE: título definitivo
+title: "La última morada del alma"
 slug: estanque-con-puente
 category: personal
-# PENDIENTE: status (available, sold, private-collection)
-# PENDIENTE: year, technique, dimensions
-# PENDIENTE: descripción de la obra (va debajo del frontmatter)
+status: sold
+year: 2025
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 70
+  height: 50
 images:
   - src: ../../assets/artworks/pond-bridge/pond-with-bridge-on-easel.webp
     alt: "Paisaje de un estanque turquesa con un puente y árboles otoñales, en el caballete del taller"
@@ -22,3 +25,5 @@ images:
     kind: certificate
 order: 50
 ---
+
+Un manto verde donde la vida se aferra llevando sueños al río, un campo, un lienzo de colores vibrantes de flores silvestres, aromas constantes. Un regalo, un tesoro escondido. En cada sendero la paz se respira, un refugio tranquilo, donde el alma suspira.
