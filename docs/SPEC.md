@@ -460,6 +460,14 @@ Detalle completo, prompts y costes en `media/transitions/PROMPTS.md` §5. Resume
 - *Sobrante:* fuera 2 fotos sin uso de `src/assets/studio`. La foto original de la Bienal pasa a `media/`. En `media/` solo quedan los másteres 2K y los fotogramas finales: de 391 a 134 MB en el checkout.
 - *Lighthouse móvil en Chrome real (H.264):* home 98–99 (LCP 2,3 s, TBT 0), `/obras` 92, ficha 97; accesibilidad, buenas prácticas y SEO 100, CLS 0.
 
+### 5.14 "Sobre mí" y "Más obras" (rama `feat/sobre-mi`, 11/10/2026)
+
+El bloque desentonaba: la foto con el muro de logos de la Bienal detrás parecía un parche y las obras, alineadas por abajo con proporciones distintas, quedaban a alturas distintas. Se eligió la opción A del artefacto "Sobre mí: opciones":
+- **Retrato recortado** (`remove_background` de Higgsfield, `src/assets/artist/stephany-cutout.webp`) sobre un arco de arena. La cabeza sobresale un poco del arco. Se retira `stephany-portrait.webp` y la clase `.fade-bottom`.
+- **Obras en paspartú:** `ArtworkCard` pone cada cuadro entero (`object-contain`) dentro de un marco 4:5 igual para todos, con sombra `drop-shadow` que sigue la pintura. Afecta a la home, a `/obras` y a las relacionadas de cada ficha, cuyas cuadrículas dejan `items-end`.
+- **"Ver las N obras"** pasa a botón oscuro.
+- **Pincelada** grande en arena bajo la biografía para llenar el hueco de la columna, que se estira hasta la altura de la cuadrícula.
+
 ## 6. Stack
 
 - Astro 7 + Tailwind v4 + `astro:assets` (`<Picture>`).

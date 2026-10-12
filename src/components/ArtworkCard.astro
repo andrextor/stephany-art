@@ -31,7 +31,10 @@ const image = mainImage(artwork);
   style={`--d: ${delay}ms`}
   class="group flex flex-col gap-4"
 >
-  <div style={`view-transition-name: obra-${artwork.id}`}>
+  <div
+    style={`view-transition-name: obra-${artwork.id}`}
+    class="grid aspect-4/5 min-h-0 place-items-center overflow-hidden border border-line bg-surface p-[9%] transition-transform duration-700 ease-fluid group-hover:-translate-y-1"
+  >
     <Picture
       src={image.src}
       alt={image.alt}
@@ -40,7 +43,8 @@ const image = mainImage(artwork);
       widths={[400, 640, 960]}
       sizes={sizes}
       loading={eager ? 'eager' : 'lazy'}
-      class="canvas w-full transition-transform duration-700 ease-fluid group-hover:-translate-y-1"
+      pictureAttributes={{ class: 'contents' }}
+      class="canvas-drop size-full object-contain"
     />
   </div>
   <div class="flex flex-col gap-0.5">
