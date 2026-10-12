@@ -37,16 +37,16 @@ export const site = {
   // PENDIENTE: validar los pasos con Stephany (plazos, anticipo, envío)
   commissionSteps: [
     {
-      title: 'Me escribes',
-      text: 'Cuéntame por WhatsApp qué quieres pintar y envíame las fotos de referencia.',
+      title: 'Escríbeme',
+      text: 'Cuéntame tu proyecto por WhatsApp, envíame las referencias visuales y hablemos sobre lo que te gustaría plasmar en el lienzo.',
     },
     {
-      title: 'Lo definimos juntos',
-      text: 'Conversamos sobre el tamaño, la técnica y los tiempos para que la obra sea como la imaginas.',
+      title: 'Conceptualización y diseño',
+      text: 'Definimos juntos las dimensiones, la paleta cromática, los plazos y cada detalle técnico para asegurar que la pieza materialice tu visión.',
     },
     {
-      title: 'Pinto tu obra',
-      text: 'La pinto a mano en mi estudio, con la misma paciencia y atención al detalle que mi obra personal.',
+      title: 'Creación',
+      text: 'Doy vida a la pieza en mi taller, dedicándole el tiempo necesario y aplicando técnicas de óleo y acrílico con un riguroso cuidado en cada detalle.',
     },
   ],
   // The FAQ section stays hidden until it has answers. PENDIENTE (preguntas para Stephany):

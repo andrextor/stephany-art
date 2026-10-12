@@ -15,7 +15,7 @@
   --color-line: #d6d0c8;
   --color-clay: #e0b88f;
   --color-sand: #b08e7a;
-  --color-ink-faint: #7f8a89;
+  --color-ink-faint: #9ca6a5;
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -239,12 +239,12 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  width: min(58vw, 780px);
+  width: min(64vw, 880px);
   background: linear-gradient(
     90deg,
     var(--color-bg) 0%,
-    color-mix(in srgb, var(--color-bg) 82%, transparent) 34%,
-    color-mix(in srgb, var(--color-bg) 40%, transparent) 62%,
+    color-mix(in srgb, var(--color-bg) 92%, transparent) 44%,
+    color-mix(in srgb, var(--color-bg) 60%, transparent) 70%,
     transparent 100%
   );
 }
@@ -285,7 +285,7 @@ body {
   max-width: 40ch;
   font-size: clamp(1rem, 1.25vw, 1.14rem);
   line-height: 1.55;
-  color: color-mix(in srgb, var(--color-ink) 78%, var(--color-ink-soft));
+  color: var(--color-ink);
 }
 
 .sw-prelude .sw-copy__cta {
@@ -314,13 +314,14 @@ body {
 @media (max-width: 860px) {
   .js .sw-prelude::before {
     width: 100%;
-    height: 72%;
+    height: 82%;
     top: auto;
     bottom: 0;
     background: linear-gradient(
       0deg,
-      var(--color-bg) 8%,
-      color-mix(in srgb, var(--color-bg) 70%, transparent) 46%,
+      var(--color-bg) 10%,
+      color-mix(in srgb, var(--color-bg) 92%, transparent) 52%,
+      color-mix(in srgb, var(--color-bg) 60%, transparent) 76%,
       transparent 100%
     );
   }

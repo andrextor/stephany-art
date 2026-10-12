@@ -445,6 +445,8 @@ Detalle completo, prompts y costes en `media/transitions/PROMPTS.md` §5. Resume
 
 **Ejecutado (11/10/2026).** Decisiones del cliente: caballete A; *Tránsito del alma* se queda también en la pared de Personales; marcos finos de madera y tamaños ligeramente distintos en los cuatro cuadros colgados; **cierre nuevo**: el recorrido termina donde empezó, en el caballete junto a la puerta, ahora con el retrato en proceso real (F5v3, mismo encuadre que F2v3), en lugar del rincón generado. Detalle, aprendizajes y archivos en `media/transitions/PROMPTS.md` §5 y "Archivos".
 
+**Legibilidad y textos (11/10/2026, misma rama).** Con los fotogramas reales (paredes blancas, suelo oscuro) el texto del recorrido perdía contraste a mitad de transición. Cambio local 14 del motor y su espejo en `.sw-prelude`: velo bajo la copia más denso y ancho (92 % de `--bg` donde está el texto, 60 % en la cola; en móvil 82 % de alto), cuerpo en `--ink` pleno y la pista "Desliza para entrar" sobre una píldora translúcida. `--ink-faint` sube a `#9CA6A5` (6,8:1 sobre nogal; antes 4,7:1) para la cartela de la obra insignia y el pie. Pasos del encargo con el texto definitivo de la artista (Escríbeme · Conceptualización y diseño · Creación). Ortografía revisada en todos los textos de interfaz; sin cambios. Lighthouse móvil 99 / 100 / 100 / 100, CLS 0.
+
 ## 6. Stack
 
 - Astro 7 + Tailwind v4 + `astro:assets` (`<Picture>`).
