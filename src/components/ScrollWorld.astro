@@ -84,7 +84,17 @@ const firstStop = config.sections[0];
 <div id="world" data-spy="/#world" aria-label="Recorrido por el taller" style={`--sw-total: ${totalViewportHeights}`}>
   <picture>
     <source media="(max-width: 860px)" srcset={firstStop.stillMobile} width="480" height="1040" />
-    <img class="sw-poster" src={firstStop.still} alt="" width="1920" height="1080" fetchpriority="high" decoding="async" />
+    <img
+      class="sw-poster"
+      src={firstStop.still}
+      srcset={`${firstStop.still} 1920w, ${firstStop.still.replace('.webp', '-1440.webp')} 2560w`}
+      sizes="100vw"
+      alt=""
+      width="1920"
+      height="1080"
+      fetchpriority="high"
+      decoding="async"
+    />
   </picture>
   <div class="sw-prelude" aria-hidden="true">
     <article class="sw-copy">
@@ -115,10 +125,18 @@ const firstStop = config.sections[0];
     const probe = document.createElement('video');
     const extension = probe.canPlayType('video/mp4; codecs="avc1.64001F"') ? 'mp4' : 'webm';
     const clips = [1, 2, 3, 4];
+    // Wide or hi-DPI desktops get the 2560x1440 tier; the rest the 1080 one (the phone
+    // path ignores both and takes connectorsMobile).
+    const wide = window.matchMedia('(min-width: 1800px), (min-width: 1200px) and (min-resolution: 1.5dppx)').matches;
+    const tier = wide ? '1440' : '1080';
+    const sections = wide
+      ? config.sections.map((section: { still: string }) => ({ ...section, still: section.still.replace('.webp', '-1440.webp') }))
+      : config.sections;
 
     mountScrollWorld(container, {
       ...config,
-      connectors: clips.map((n) => `/video/clip-${n}-1080.${extension}`),
+      sections,
+      connectors: clips.map((n) => `/video/clip-${n}-${tier}.${extension}`),
       connectorsMobile: clips.map((n) => `/video/clip-${n}-portrait.${extension}`),
     });
     // The engine now renders the first stop's copy itself; drop the static prelude.

@@ -447,6 +447,11 @@ Detalle completo, prompts y costes en `media/transitions/PROMPTS.md` §5. Resume
 
 **Legibilidad y textos (11/10/2026, misma rama).** Con los fotogramas reales (paredes blancas, suelo oscuro) el texto del recorrido perdía contraste a mitad de transición. Cambio local 14 del motor y su espejo en `.sw-prelude`: velo bajo la copia más denso y ancho (92 % de `--bg` donde está el texto, 60 % en la cola; en móvil 82 % de alto), cuerpo en `--ink` pleno y la pista "Desliza para entrar" sobre una píldora translúcida. `--ink-faint` sube a `#9CA6A5` (6,8:1 sobre nogal; antes 4,7:1) para la cartela de la obra insignia y el pie. Pasos del encargo con el texto definitivo de la artista (Escríbeme · Conceptualización y diseño · Creación). Ortografía revisada en todos los textos de interfaz; sin cambios. Lighthouse móvil 99 / 100 / 100 / 100, CLS 0.
 
+**Segunda vuelta (11/10/2026, misma rama).** Tres observaciones del cliente sobre la pantalla grande:
+- *El velo blanco quedó enorme.* La columna a toda altura se sustituye por una **elipse suave** detrás de la copia (`radial-gradient` 34 % × 60 % centrada en el texto, 90 % de `--bg` en el centro, 50 % a tres cuartos); en móvil sigue el degradado inferior. Mismo contraste, mucha menos mancha.
+- *"Desliza para entrar" feo.* Fuera la píldora: texto con un halo de `--bg` (`text-shadow`).
+- *Baja calidad en pantallas grandes.* Kling entrega 1080p y el navegador lo estira. Comprobado que la codificación web no pierde nada respecto al máster (misma nitidez), así que la solución es más resolución de origen: **los 5 clips (4a y 4b aparte) se escalan a 2560×1440 con el upscaler de ByteDance en Higgsfield** (preset `aigc`, ≈ 4 créditos por 10 s; 24,5 en total). Comparado con un reescalado Lanczos del máster, el upscale recupera bordes de marcos, cordaje del velero y veta de las vigas. `scripts/encode-world.mjs` parte ahora de los másteres `-2k` y genera tres niveles: **1440** (2560×1440, para `(min-width: 1800px)` o escritorios con `min-resolution: 1.5dppx`), **1080** y **portrait**; los pósteres tienen variante `-1440` y el póster de la copia previa lleva `srcset`. Pesos: 1440 MP4 11,7 + 11 + 10,5 + 24,7 MB; 1080 MP4 7,7 + 7,3 + 6,6 + 16,2 MB; portrait MP4 5,1 + 3,6 + 3,2 + 8,8 MB.
+
 ## 6. Stack
 
 - Astro 7 + Tailwind v4 + `astro:assets` (`<Picture>`).

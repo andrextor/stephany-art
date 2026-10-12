@@ -89,8 +89,9 @@
     13. Phone seeks (fase 13): one-frame step (1/24), the next seek waits for the previous
         frame to be painted (requestVideoFrameCallback, 150 ms safety timer), fastSeek on
         the all-intra phone clips, softer lerp (0.14).
-    14. Legibility: denser and wider veil under the copy (92 % of --sw-bg where the text
-        sits), body text in full --sw-ink, and the scroll hint on a translucent pill.
+    14. Legibility: a soft elliptical veil behind the copy on desktop (90 % of --sw-bg where
+        the text sits, instead of a full-height column), a denser bottom gradient on phones,
+        body text in full --sw-ink, and a bg glow behind the scroll hint.
    ========================================================================== */
 
 export function mountScrollWorld(container, config) {
@@ -458,7 +459,7 @@ function injectCSS() {
   .sw-scene__video,.sw-scene__still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;}
   .sw-scene__still{will-change:transform;} .sw-scene.has-clip .sw-scene__still{opacity:0;} .sw-scene__video{z-index:1;}
   .sw-copylayer{position:fixed;inset:0;z-index:20;pointer-events:none;transform:translateY(calc(-1 * var(--sw-exit,0px)));}
-  .sw-copylayer::before{content:"";position:absolute;inset:0;width:min(64vw,880px);background:linear-gradient(90deg,var(--sw-bg) 0%,color-mix(in srgb,var(--sw-bg) 92%,transparent) 44%,color-mix(in srgb,var(--sw-bg) 60%,transparent) 70%,transparent 100%);}
+  .sw-copylayer::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 34% 60% at 14% 52%,var(--sw-bg) 0%,color-mix(in srgb,var(--sw-bg) 90%,transparent) 42%,color-mix(in srgb,var(--sw-bg) 50%,transparent) 76%,transparent 100%);}
   .sw-copy{position:absolute;left:clamp(18px,5vw,64px);top:50%;transform:translateY(calc(-50% + var(--sw-py,0vh)));width:min(42vw,460px);opacity:0;will-change:opacity,transform;}
   .sw-copy__num{font-family:ui-monospace,Menlo,monospace;font-size:.74rem;letter-spacing:.12em;color:var(--sw-ink-soft);}
   .sw-copy__eyebrow{display:block;margin-top:18px;font-family:var(--sw-font-display);font-weight:700;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sw-accent);}
@@ -478,7 +479,7 @@ function injectCSS() {
   .sw-route__dot.is-active i{background:var(--sw-accent);transform:scale(1.4);box-shadow:0 0 0 5px color-mix(in srgb,var(--sw-accent) 22%,transparent);}
   .sw-route__label{position:absolute;right:24px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--sw-ink);background:color-mix(in srgb,#fff 85%,transparent);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border:1px solid color-mix(in srgb,var(--sw-accent) 14%,transparent);}
   .sw-route__dot:hover .sw-route__label,.sw-route__dot.is-active .sw-route__label{opacity:1;transform:translateY(-50%) translateX(0);}
-  .sw-hint{position:fixed;left:50%;bottom:26px;z-index:30;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink);padding:8px 14px;border-radius:999px;background:color-mix(in srgb,var(--sw-bg) 72%,transparent);backdrop-filter:blur(8px);transition:opacity .3s;}
+  .sw-hint{position:fixed;left:50%;bottom:26px;z-index:30;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink);text-shadow:0 0 6px var(--sw-bg),0 0 14px var(--sw-bg);transition:opacity .3s;}
   .sw-hint i{width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);position:relative;}
   .sw-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
   @keyframes sw-wheel{0%{opacity:0;top:6px}40%{opacity:1}100%{opacity:0;top:17px}}

@@ -137,7 +137,8 @@ Juego v3 (11/10/2026), el que está en la web. Los v1/v2 se conservan como histo
 | `transitions/clip3-v5-comision-personales.mp4` | ✅ Kling pro 10 s, F3v4 → F4v4: giro de 25° con las vigas rígidas (`clip3-v4-*` = misma idea sin marcos; `clip3-v4-minimax-ab` = A/B MiniMax H3 2K 5 s, también limpio) |
 | `keyframes/F4b-v3-pasillo.webp` | ✅ Fotograma intermedio del cierre: el pasillo del ático con el caballete real al fondo y los cuadros de Personales recortados a la izquierda (GPT, refs F5v3 + F4v4) |
 | `transitions/clip4a-v7-personales-pasillo.mp4` · `clip4b-v7-pasillo-caballete.mp4` · `clip4-v7-personales-caballete.mp4` | ✅ Cierre en dos mitades, Kling pro 10 s cada una: giro en el sitio F4v4 → F4b y avance F4b → F5v3, unidas con ffmpeg en un conector de 20 s (482 fotogramas). Los intentos directos F4v4 → F5v3 fallaron: `clip4-v6-giro-fundido` (fundido) y la versión "camina y gira" (barrido circular); `clip4-v6-minimax-ab` hizo un barrido rápido tras la viga, más honesto pero con desenfoque |
-| `public/video/clip-N-1080.{mp4,webm}` · `clip-N-portrait.{mp4,webm}` · `public/world/stop-N{,-portrait}.webp` | Generados por `scripts/encode-world.mjs` (fase 13) |
+| `transitions/*-2k.mp4` | ✅ Upscale ByteDance 2K (`aigc`, 24 fps) de cada clip final; `clip4-v7-*-2k` es la unión de 4a y 4b con `setsar=1` (los dos upscales salen con SAR distinto) |
+| `public/video/clip-N-{1440,1080}.{mp4,webm}` · `clip-N-portrait.{mp4,webm}` · `public/world/stop-N{,-1440,-portrait}.webp` | Generados por `scripts/encode-world.mjs` desde los `-2k` (fases 13 y 14) |
 
 Coste acumulado: ~100 créditos (quedan 0,75).
 
@@ -260,7 +261,8 @@ Con el cambio, *Tránsito del alma* aparece dos veces: en el caballete de la ent
 | Imágenes (F2v3 ×2, F5v3 ×2, panorámica ×2, marcos ×2, F4b ×2, outpaints ×4) | 18 |
 | Clips Kling pro 10 s: clip 3 v4, clip 1 v4, clip 2 v3 (fundido) y v4, clip 3 v5, clip 4 v5 (barrido), v6 (fundido), 4a y 4b | 157,5 |
 | A/B MiniMax H3 (clip 3 y clip 4) | 20 |
-| **Total** | **195,5** (saldo 804,5 de 1 000) |
+| Upscale 2K ByteDance (5 clips, ≈ 4 c / 10 s) | 24,5 |
+| **Total** | **≈ 220** (saldo ≈ 780 de 1 000) |
 
 ### 5.8 · Presupuesto previsto y orden
 
