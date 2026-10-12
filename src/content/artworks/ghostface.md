@@ -1,9 +1,14 @@
 ---
-title: "Ghostface" # PENDIENTE: título definitivo
+title: "Ghostface"
 slug: ghostface
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2024
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 50
+  height: 70
+  unit: cm
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/ghostface/ghostface-portrait.webp

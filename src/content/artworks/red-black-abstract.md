@@ -1,9 +1,14 @@
 ---
-title: "Abstracto en rojo y negro" # PENDIENTE: título definitivo
-slug: abstracto-en-rojo-y-negro
+title: "Magma"
+slug: magma
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2024
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 90
+  height: 60
+  unit: cm
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/red-black-abstract/red-black-abstract.webp
