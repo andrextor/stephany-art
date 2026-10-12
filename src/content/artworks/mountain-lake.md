@@ -1,9 +1,13 @@
 ---
-title: "Lago entre montañas" # PENDIENTE: título definitivo
+title: "Refugio del alma"
 slug: lago-entre-montanas
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2025
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 120
+  height: 80
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/mountain-lake/mountain-lake-framed.webp

@@ -1,9 +1,13 @@
 ---
-title: "Velero al atardecer" # PENDIENTE: título definitivo
+title: "El sol de nuestra historia"
 slug: velero-al-atardecer
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2026
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 90
+  height: 120
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/sailboat/sailboat-at-sunset.webp

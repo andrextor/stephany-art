@@ -1,9 +1,13 @@
 ---
-title: "Árbol dorado" # PENDIENTE: título definitivo
+title: "Sueño de otoño"
 slug: arbol-dorado
 category: commission
 status: delivered
-# PENDIENTE: year, technique, dimensions
+year: 2026
+technique: "Acrílico sobre lienzo"
+dimensions:
+  width: 95
+  height: 110
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/golden-tree/golden-tree-on-easel.webp
