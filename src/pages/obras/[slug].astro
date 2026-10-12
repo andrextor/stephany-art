@@ -58,7 +58,7 @@ const details = [
     </a>
 
     <div class="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-start">
-      <figure class="flex items-center justify-center rounded-lg border border-line bg-surface p-3" style={`view-transition-name: obra-${artwork.id}`}>
+      <figure class="relative flex items-center justify-center rounded-lg border border-line bg-surface p-3" style={`view-transition-name: obra-${artwork.id}`}>
         <Picture
           src={main.src}
           alt={main.alt}
@@ -70,6 +70,14 @@ const details = [
           fetchpriority="high"
           class="max-h-[80vh] w-full object-contain"
         />
+        {
+          status === 'sold' && (
+            <p class="absolute top-6 left-6 flex items-center gap-2 rounded-full bg-surface/90 px-3 py-1.5 text-sm font-semibold text-ink shadow-sm backdrop-blur-sm">
+              <span class="size-2.5 rounded-full bg-sold" aria-hidden="true" />
+              Vendida
+            </p>
+          )
+        }
       </figure>
 
       <div class="flex flex-col gap-8 lg:sticky lg:top-32">

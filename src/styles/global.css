@@ -16,6 +16,8 @@
   --color-clay: #e0b88f;
   --color-sand: #b08e7a;
   --color-ink-faint: #9ca6a5;
+  /* The gallery red dot: a sold work. */
+  --color-sold: #a8432f;
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
