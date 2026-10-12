@@ -43,7 +43,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#efe8da" />
+    <meta name="theme-color" content="#ece8e2" />
     <meta name="author" content={site.artistName} />
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.artistName} />
@@ -55,7 +55,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     {jsonLdHtml && <script type="application/ld+json" set:html={jsonLdHtml} />}
-    <Font cssVariable="--font-cormorant" preload />
+    <Font cssVariable="--font-newsreader" preload />
     <Font cssVariable="--font-manrope" preload />
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>

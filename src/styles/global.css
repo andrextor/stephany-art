@@ -1,20 +1,21 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-display: var(--font-cormorant);
+  --font-display: var(--font-newsreader);
   --font-sans: var(--font-manrope);
 }
 
 @theme {
-  --color-bg: #efe8da;
-  --color-surface: #f8f3e9;
-  --color-ink: #1e1711;
-  --color-ink-soft: #5b5044;
-  --color-moss: #4f6b3a;
-  --color-moss-deep: #3b5230;
-  --color-line: #dcd2bf;
-  --color-clay: #a4502c;
-  --color-ink-faint: #b9ae9c;
+  --color-bg: #ece8e2;
+  --color-surface: #f6f4f0;
+  --color-ink: #1b1d22;
+  --color-ink-soft: #404c4c;
+  --color-moss: #404c4c;
+  --color-moss-deep: #56625f;
+  --color-line: #d6d0c8;
+  --color-clay: #e0b88f;
+  --color-sand: #b08e7a;
+  --color-ink-faint: #7f8a89;
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -30,7 +31,7 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 500;
+    font-weight: 400;
     text-wrap: balance;
   }
 
@@ -71,8 +72,8 @@ body {
 .canvas {
   height: auto;
   box-shadow:
-    0 1px 2px rgb(30 23 17 / 0.18),
-    0 16px 32px -16px rgb(30 23 17 / 0.45);
+    0 1px 2px rgb(27 29 34 / 0.18),
+    0 16px 32px -16px rgb(27 29 34 / 0.45);
 }
 
 /* Home: the sections after the flight stack. Each one pins while the next slides over
@@ -172,7 +173,7 @@ body {
 }
 
 .sw-copy__title {
-  font-weight: 500;
+  font-weight: 400;
   text-wrap: balance;
 }
 
@@ -194,7 +195,7 @@ body {
   color: var(--color-ink);
   font-family: var(--font-display);
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* First stop's copy, server rendered so the LCP does not wait for the engine. It mirrors
