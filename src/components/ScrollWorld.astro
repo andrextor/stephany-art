@@ -121,9 +121,6 @@ const firstStop = config.sections[0];
 
   if (configElement && container) {
     const config = JSON.parse(configElement.textContent ?? '{}');
-    // H.264 first: hardware decoding and reliable seeking everywhere; VP9 only as a fallback.
-    const probe = document.createElement('video');
-    const extension = probe.canPlayType('video/mp4; codecs="avc1.64001F"') ? 'mp4' : 'webm';
     const clips = [1, 2, 3, 4];
     // Wide or hi-DPI desktops get the 2560x1440 tier; the rest the 1080 one (the phone
     // path ignores both and takes connectorsMobile).
@@ -136,8 +133,8 @@ const firstStop = config.sections[0];
     mountScrollWorld(container, {
       ...config,
       sections,
-      connectors: clips.map((n) => `/video/clip-${n}-${tier}.${extension}`),
-      connectorsMobile: clips.map((n) => `/video/clip-${n}-portrait.${extension}`),
+      connectors: clips.map((n) => `/video/clip-${n}-${tier}.mp4`),
+      connectorsMobile: clips.map((n) => `/video/clip-${n}-portrait.mp4`),
     });
     // The engine now renders the first stop's copy itself; drop the static prelude.
     container.querySelector('.sw-prelude')?.remove();

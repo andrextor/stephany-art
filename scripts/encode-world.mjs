@@ -4,8 +4,9 @@
 //   node scripts/encode-world.mjs            # everything
 //   node scripts/encode-world.mjs 3          # only clip 3 (and the posters it touches)
 //
-// Wide:    2560x1440 H.264 (keyframe every 6 frames) + VP9, for screens wider than 1800 CSS
-//          px or hi-DPI desktops; the 1080 tier is the same stream downscaled.
+// Wide:    2560x1440 H.264 (keyframe every 6 frames), for screens wider than 1800 CSS px or
+//          hi-DPI desktops; the 1080 tier is the same stream downscaled. MP4 only: every
+//          current browser decodes H.264, and Cloudflare caps a file at 25 MiB.
 // Phones:  480x1040 portrait crop of the same master, every frame a keyframe (`-g 1`),
 //          so a seek never decodes more than one frame. The crop pans from the stop's
 //          framing at the start of the clip to the next stop's framing at its end.
@@ -29,8 +30,8 @@ const PORTRAIT = { width: 480, height: 1040 };
 const TIERS = [
   // setsar=1: the upscaler returns 2580x1440 / 2546x1440 with a compensating pixel aspect
   // ratio, which would otherwise leak into the encodes and the reported videoWidth.
-  { suffix: '1440', filter: 'scale=2560:1440:flags=lanczos,setsar=1,fps=24', posterSuffix: '-1440' },
-  { suffix: '1080', filter: 'scale=1920:1080:flags=lanczos,setsar=1,fps=24', posterSuffix: '' },
+  { suffix: '1440', filter: 'scale=2560:1440:flags=lanczos,setsar=1,fps=24', posterSuffix: '-1440', crf: 26 },
+  { suffix: '1080', filter: 'scale=1920:1080:flags=lanczos,setsar=1,fps=24', posterSuffix: '', crf: 24 },
 ];
 
 const only = process.argv[2] ? Number(process.argv[2]) : null;
@@ -39,8 +40,6 @@ const duration = (file) =>
   Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file]));
 const h264 = (profile, crf, gop) => ['-c:v', 'libx264', '-profile:v', profile, '-crf', String(crf), '-g', String(gop),
   '-pix_fmt', 'yuv420p', '-movflags', '+faststart'];
-const vp9 = (crf, gop) => ['-c:v', 'libvpx-vp9', '-crf', String(crf), '-b:v', '0', '-g', String(gop),
-  '-deadline', 'good', '-cpu-used', '5', '-row-mt', '1'];
 
 const work = mkdtempSync(join(tmpdir(), 'world-'));
 
@@ -51,15 +50,13 @@ for (const [index, master] of MASTERS.entries()) {
   const base = `public/video/clip-${n}`;
 
   for (const tier of TIERS) {
-    run(['-i', master, '-an', '-vf', tier.filter, ...h264('high', 24, 6), `${base}-${tier.suffix}.mp4`]);
-    run(['-i', master, '-an', '-vf', tier.filter, ...vp9(37, 6), `${base}-${tier.suffix}.webm`]);
+    run(['-i', master, '-an', '-vf', tier.filter, ...h264('high', tier.crf, 6), `${base}-${tier.suffix}.mp4`]);
   }
 
   const cropWidth = `ih*${PORTRAIT.width}/${PORTRAIT.height}`;
   const pan = `(iw-${cropWidth})*(${STOP_X[index]}+(${STOP_X[n]}-${STOP_X[index]})*t/${seconds})`;
   const portrait = `scale=2560:1440:flags=lanczos,setsar=1,fps=24,crop=${cropWidth}:ih:${pan}:0,scale=${PORTRAIT.width}:${PORTRAIT.height}:flags=lanczos`;
   run(['-i', master, '-an', '-vf', portrait, ...h264('main', 26, 1), `${base}-portrait.mp4`]);
-  run(['-i', master, '-an', '-vf', portrait, ...vp9(52, 1), `${base}-portrait.webm`]);
 
   const frames = n === 1 ? [['first', 0]] : [];
   frames.push(['last', n]);

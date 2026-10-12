@@ -122,7 +122,7 @@ cut, scene change, fade, dissolve, crossfade, morphing, warping beams, bending w
 
 ## Archivos
 
-Juego v3 (11/10/2026), el que está en la web. Los v1/v2 se conservan como historial.
+Juego v3 (11/10/2026), el que está en la web. Los fotogramas v1/v2, los clips 1080p originales de Kling, los intentos fallidos y los A/B se borraron del repo el 11/10/2026 (siguen en el historial de git, commit `76f8d41`, y en Higgsfield por su job id); en `transitions/` quedan solo los másteres `-2k`.
 
 | Archivo | Estado |
 |---|---|

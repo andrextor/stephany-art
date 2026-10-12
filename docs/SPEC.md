@@ -452,6 +452,14 @@ Detalle completo, prompts y costes en `media/transitions/PROMPTS.md` §5. Resume
 - *"Desliza para entrar" feo.* Fuera la píldora: texto con un halo de `--bg` (`text-shadow`).
 - *Baja calidad en pantallas grandes.* Kling entrega 1080p y el navegador lo estira. Comprobado que la codificación web no pierde nada respecto al máster (misma nitidez), así que la solución es más resolución de origen: **los 5 clips (4a y 4b aparte) se escalan a 2560×1440 con el upscaler de ByteDance en Higgsfield** (preset `aigc`, ≈ 4 créditos por 10 s; 24,5 en total). Comparado con un reescalado Lanczos del máster, el upscale recupera bordes de marcos, cordaje del velero y veta de las vigas. `scripts/encode-world.mjs` parte ahora de los másteres `-2k` y genera tres niveles: **1440** (2560×1440, para `(min-width: 1800px)` o escritorios con `min-resolution: 1.5dppx`), **1080** y **portrait**; los pósteres tienen variante `-1440` y el póster de la copia previa lleva `srcset`. Pesos: 1440 MP4 11,7 + 11 + 10,5 + 24,7 MB; 1080 MP4 7,7 + 7,3 + 6,6 + 16,2 MB; portrait MP4 5,1 + 3,6 + 3,2 + 8,8 MB.
 
+**Revisión del PR (11/10/2026).**
+- *Imagen para redes:* `og-default.jpg` aún era el fotograma viejo con el retrato de la pareja mayor (encargo sin consentimiento). Ahora sale de la entrada nueva.
+- *SEO:* `SITE_URL` tiene por defecto la URL de workers.dev, así que canonical, `og:url` y el sitemap se generan siempre. Se añade `robots.txt` (ruta `src/pages/robots.txt.ts`, apunta al sitemap del dominio activo).
+- *Peso del despliegue:* fuera los WebM (todos los navegadores actuales decodifican H.264; sin él se queda el póster, verificado sin errores JS). El nivel 1440 pasa a `crf 26`, así que el clip más pesado ocupa 19,4 MiB, por debajo del límite de 25 MiB de Cloudflare. `dist` baja de unos 270 a 163 MB.
+- *Caché:* `public/_headers` con `/_astro/*` inmutable un año, y `/video/*` y `/world/*` una semana con `stale-while-revalidate`.
+- *Sobrante:* fuera 2 fotos sin uso de `src/assets/studio`. La foto original de la Bienal pasa a `media/`. En `media/` solo quedan los másteres 2K y los fotogramas finales: de 391 a 134 MB en el checkout.
+- *Lighthouse móvil en Chrome real (H.264):* home 98–99 (LCP 2,3 s, TBT 0), `/obras` 92, ficha 97; accesibilidad, buenas prácticas y SEO 100, CLS 0.
+
 ## 6. Stack
 
 - Astro 7 + Tailwind v4 + `astro:assets` (`<Picture>`).
