@@ -1,0 +1,49 @@
+---
+// Misty mountain ridges, from the fog-over-forest photo the Niebla palette comes from.
+// Generated at build time; nearer layers rise further on scroll (global.css).
+interface Props {
+  class?: string;
+  layers: { color: string; opacity: number }[];
+  seed?: number;
+}
+
+const { class: className = '', layers, seed = 7 } = Astro.props;
+const width = 1000;
+const height = 300;
+
+let state = seed;
+const random = (): number => {
+  state = (state * 16807) % 2147483647;
+  return (state - 1) / 2147483646;
+};
+
+const paths = layers.map((layer, index) => {
+  const base = height * (0.3 + (index * 0.5) / Math.max(1, layers.length - 1));
+  const amplitude = height * (0.18 - index * 0.025);
+  const phaseA = random() * 6;
+  const phaseB = random() * 6;
+  const points: string[] = [];
+  for (let x = 0; x <= width; x += width / 80) {
+    const t = x / width;
+    const y =
+      base -
+      amplitude *
+        (Math.sin(t * 5.2 + phaseA) * 0.6 + Math.sin(t * 13 + phaseB) * 0.25 + Math.sin(t * 31 + index) * 0.08);
+    points.push(`L${x.toFixed(1)} ${y.toFixed(1)}`);
+  }
+  return { ...layer, d: `M0 ${height}${points.join('')}L${width} ${height}Z` };
+});
+---
+
+<svg
+  viewBox={`0 0 ${width} ${height}`}
+  preserveAspectRatio="none"
+  class:list={['ridges pointer-events-none absolute inset-x-0 bottom-0 w-full', className]}
+  aria-hidden="true"
+>
+  {
+    paths.map((path, index) => (
+      <path d={path.d} fill={path.color} fill-opacity={path.opacity} style={`--i: ${index + 1}`} />
+    ))
+  }
+</svg>

@@ -28,6 +28,9 @@ const filters = [
   { label: statusLabels['in-progress'], cat: '', estado: 'in-progress' },
 ];
 
+const intro =
+  'Exploraciones personales y obras por encargo, universos donde la introspección y la naturaleza cobran vida a través del óleo, el acrílico y la delicadeza de las texturas.';
+
 const filterHref = (cat: string, estado: string): string => {
   const params = new URLSearchParams();
   if (cat) params.set('cat', cat);
@@ -45,9 +48,14 @@ const filterHref = (cat: string, estado: string): string => {
   <section class="mx-auto flex max-w-6xl flex-col gap-12 px-4 pt-40 md:px-8">
     <header class="flex max-w-2xl flex-col gap-4">
       <h1 class="text-5xl md:text-6xl">Obras</h1>
-      <p class="text-lg text-ink-soft">
-        Obra personal y encargos pintados al óleo y acrílico, con veladuras pacientes y texturas orgánicas.
-      </p>
+      <p data-intro class="text-lg text-ink-soft">{intro}</p>
+      <script is:inline>
+        // Inline so the swap lands before first paint and causes no layout shift.
+        if (new URLSearchParams(location.search).get('estado') === 'in-progress') {
+          document.currentScript.previousElementSibling.textContent =
+            'Una sutil danza entre la luz, la sombra y la materia. Así avanza el proceso creativo en el caballete.';
+        }
+      </script>
     </header>
 
     <nav aria-label="Filtrar obras">

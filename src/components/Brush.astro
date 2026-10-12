@@ -1,0 +1,94 @@
+---
+// One dry-brush stroke: many thin bristle lines along a curve, broken up like paint running
+// out. Generated at build time; it is painted in from left to right (global.css).
+interface Props {
+  class?: string;
+  variant?: 'sweep' | 'flat';
+  seed?: number;
+}
+
+const { class: className = '', variant = 'sweep', seed = 11 } = Astro.props;
+const shapes = {
+  sweep: {
+    width: 600,
+    height: 300,
+    bristles: 46,
+    spacing: 1.5,
+    curve: [
+      [20, 250],
+      [180, 40],
+      [380, 300],
+      [590, 70],
+    ],
+  },
+  flat: {
+    width: 600,
+    height: 90,
+    bristles: 34,
+    spacing: 1.9,
+    curve: [
+      [10, 55],
+      [160, 20],
+      [380, 70],
+      [590, 30],
+    ],
+  },
+};
+const { width, height, bristles, spacing, curve } = shapes[variant];
+
+let state = seed;
+const random = (): number => {
+  state = (state * 16807) % 2147483647;
+  return (state - 1) / 2147483646;
+};
+
+const bezier = (t: number, axis: 0 | 1): number =>
+  (1 - t) ** 3 * curve[0][axis] +
+  3 * (1 - t) ** 2 * t * curve[1][axis] +
+  3 * (1 - t) * t * t * curve[2][axis] +
+  t ** 3 * curve[3][axis];
+
+const strokes = Array.from({ length: bristles }, (_, index) => {
+  const offset = (index - bristles / 2) * spacing + (random() - 0.5) * 2;
+  const start = random() * 0.12;
+  const end = 1 - random() * 0.18;
+  const points: string[] = [];
+  for (let i = 0; i <= 80; i++) {
+    const t = start + ((end - start) * i) / 80;
+    const before = Math.max(t - 0.01, 0);
+    const after = Math.min(t + 0.01, 1);
+    const dx = bezier(after, 0) - bezier(before, 0);
+    const dy = bezier(after, 1) - bezier(before, 1);
+    const length = Math.hypot(dx, dy);
+    const taper = Math.sin(Math.PI * Math.min(1, t * 1.15 + 0.05)) ** 0.5;
+    const x = bezier(t, 0) - (dy / length) * offset * taper;
+    const y = bezier(t, 1) + (dx / length) * offset * taper;
+    points.push(`${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`);
+  }
+  const dashes = Array.from(
+    { length: 6 },
+    () => `${Math.round(30 + random() * 160)} ${Math.round(random() * random() * 60)}`,
+  );
+  return {
+    d: points.join(''),
+    width: (0.6 + random() * 1.6).toFixed(1),
+    dashes: dashes.join(' '),
+    opacity: (0.3 + random() * 0.7).toFixed(2),
+  };
+});
+---
+
+<svg
+  viewBox={`0 0 ${width} ${height}`}
+  fill="none"
+  stroke="currentColor"
+  stroke-linecap="round"
+  class:list={['brush pointer-events-none', className]}
+  aria-hidden="true"
+>
+  {
+    strokes.map((stroke) => (
+      <path d={stroke.d} stroke-width={stroke.width} stroke-dasharray={stroke.dashes} stroke-opacity={stroke.opacity} />
+    ))
+  }
+</svg>

@@ -6,15 +6,16 @@
 }
 
 @theme {
-  --color-bg: #efe8da;
-  --color-surface: #f8f3e9;
-  --color-ink: #1e1711;
-  --color-ink-soft: #5b5044;
-  --color-moss: #4f6b3a;
-  --color-moss-deep: #3b5230;
-  --color-line: #dcd2bf;
-  --color-clay: #a4502c;
-  --color-ink-faint: #b9ae9c;
+  --color-bg: #ece8e2;
+  --color-surface: #f6f4f0;
+  --color-ink: #1b1d22;
+  --color-ink-soft: #404c4c;
+  --color-moss: #404c4c;
+  --color-moss-deep: #56625f;
+  --color-line: #d6d0c8;
+  --color-clay: #e0b88f;
+  --color-sand: #b08e7a;
+  --color-ink-faint: #7f8a89;
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -71,8 +72,8 @@ body {
 .canvas {
   height: auto;
   box-shadow:
-    0 1px 2px rgb(30 23 17 / 0.18),
-    0 16px 32px -16px rgb(30 23 17 / 0.45);
+    0 1px 2px rgb(27 29 34 / 0.18),
+    0 16px 32px -16px rgb(27 29 34 / 0.45);
 }
 
 /* Home: the sections after the flight stack. Each one pins while the next slides over
@@ -93,23 +94,46 @@ body {
   mask-image: linear-gradient(to bottom, #000 78%, transparent);
 }
 
-/* Decorative spiral: drawn from the centre outwards as it scrolls into view where
-   scroll-driven animations exist; elsewhere it is simply there. */
+/* Misty ridges (Ridges.astro): nearer layers rise further as the section scrolls in,
+   where scroll-driven animations exist; elsewhere they are simply there. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .spiral path {
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-      animation: spiral-draw linear both;
+    .ridges path {
+      animation: ridge-rise linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 60%;
+      animation-range: entry 0% cover 50%;
     }
   }
 }
 
-@keyframes spiral-draw {
+@keyframes ridge-rise {
+  from {
+    transform: translateY(calc(var(--i) * 14px));
+  }
+}
+
+/* Brush stroke (Brush.astro): painted in from left to right, on scroll in the commission
+   band and once on load in an artwork page. */
+@media (prefers-reduced-motion: no-preference) {
+  .brush--load {
+    animation: brush-paint 1400ms var(--ease-fluid) 300ms both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .brush--scroll {
+      animation: brush-paint linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 55%;
+    }
+  }
+}
+
+@keyframes brush-paint {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
   to {
-    stroke-dashoffset: 0;
+    clip-path: inset(0 0 0 0);
   }
 }
 
