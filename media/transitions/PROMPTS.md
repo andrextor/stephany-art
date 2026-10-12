@@ -135,7 +135,8 @@ Juego v3 (11/10/2026), el que está en la web. Los v1/v2 se conservan como histo
 | `transitions/clip1-v4-entrada-caballete.mp4` | ✅ Kling pro 10 s, F1v3 → F2v3. El poste derecho ya no crece |
 | `transitions/clip2-v4-caballete-comision.mp4` | ✅ Kling pro 10 s, F2v3 → F3v4. La v3 hizo un fundido a mitad; el prompt v4 describe el giro paso a paso y prohíbe la doble exposición |
 | `transitions/clip3-v5-comision-personales.mp4` | ✅ Kling pro 10 s, F3v4 → F4v4: giro de 25° con las vigas rígidas (`clip3-v4-*` = misma idea sin marcos; `clip3-v4-minimax-ab` = A/B MiniMax H3 2K 5 s, también limpio) |
-| `transitions/clip4-v5-personales-caballete.mp4` | F4v4 → F5v3, ver §5.7 |
+| `keyframes/F4b-v3-pasillo.webp` | ✅ Fotograma intermedio del cierre: el pasillo del ático con el caballete real al fondo y los cuadros de Personales recortados a la izquierda (GPT, refs F5v3 + F4v4) |
+| `transitions/clip4a-v7-personales-pasillo.mp4` · `clip4b-v7-pasillo-caballete.mp4` · `clip4-v7-personales-caballete.mp4` | ✅ Cierre en dos mitades, Kling pro 10 s cada una: giro en el sitio F4v4 → F4b y avance F4b → F5v3, unidas con ffmpeg en un conector de 20 s (482 fotogramas). Los intentos directos F4v4 → F5v3 fallaron: `clip4-v6-giro-fundido` (fundido) y la versión "camina y gira" (barrido circular); `clip4-v6-minimax-ab` hizo un barrido rápido tras la viga, más honesto pero con desenfoque |
 | `public/video/clip-N-1080.{mp4,webm}` · `clip-N-portrait.{mp4,webm}` · `public/world/stop-N{,-portrait}.webp` | Generados por `scripts/encode-world.mjs` (fase 13) |
 
 Coste acumulado: ~100 créditos (quedan 0,75).
@@ -249,10 +250,19 @@ Con el cambio, *Tránsito del alma* aparece dos veces: en el caballete de la ent
 - **Outpaint**: con el mismo aspecto apenas amplía (añade ~2 %); para "la misma foto desde más atrás" hay que encadenar 21:9 → 16:9. Tampoco inventa paredes nuevas: extiende la que hay. Por eso la pared de Personales se añadió con una edición GPT sobre la panorámica, no con el outpaint.
 - **Regla 13: los dos extremos de un giro salen de la misma imagen.** Recortar F3 y F4 de una sola panorámica eliminó por completo las vigas que subían. Kling y MiniMax lo resolvieron limpio a la primera.
 - **Regla 14: un avance con giro entre dos fotos muy distintas puede salir como fundido** (clip 2 v3). Describir el movimiento por fases (qué sale de cuadro por dónde, qué entra) y prohibir `double exposure` lo arregló.
-- **Clip 4** (pared lateral → caballete real): la versión "camina y gira" salió como un barrido circular; se reintentó como giro puro en el sitio.
+- **Regla 15: si los dos extremos no comparten nada, no hay prompt que lo salve.** Clip 4 directo (pared lateral → caballete) falló tres veces (barrido circular, fundido, barrido con viga). La solución fue un **fotograma intermedio que comparte contenido con ambos extremos** (los cuadros de Personales recortados a la izquierda + el pasillo con el caballete al fondo), y dos clips: un giro y un avance, cada uno con solape real. Luego se concatenan.
 - Las fotos reales como fotogramas clave (F2v3, F5v3) dan los extremos más estables de todo el recorrido.
 
-### 5.7 · Presupuesto y orden
+### 5.7 · Coste real
+
+| Concepto | Créditos |
+|---|---|
+| Imágenes (F2v3 ×2, F5v3 ×2, panorámica ×2, marcos ×2, F4b ×2, outpaints ×4) | 18 |
+| Clips Kling pro 10 s: clip 3 v4, clip 1 v4, clip 2 v3 (fundido) y v4, clip 3 v5, clip 4 v5 (barrido), v6 (fundido), 4a y 4b | 157,5 |
+| A/B MiniMax H3 (clip 3 y clip 4) | 20 |
+| **Total** | **195,5** (saldo 804,5 de 1 000) |
+
+### 5.8 · Presupuesto previsto y orden
 
 | Bloque | Mínimo | Realista (un reintento por clip) |
 |---|---|---|

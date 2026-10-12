@@ -427,7 +427,7 @@ Descartado: Lenis no interviene en táctil (`syncTouch` apagado, scroll nativo).
 
 **Criterios de aceptación:** en un iPhone o Android de gama media el recorrido avanza con el dedo sin tirones visibles; el encuadre vertical muestra la puerta y el caballete en cada parada; el peso total de los clips de móvil no supera el de hoy (≈ 8,2 MB en MP4).
 
-**Implementado (11/10/2026).** `scripts/encode-world.mjs` genera desde los másteres: `clip-N-1080.{mp4,webm}` (escritorio, `-g 6`), `clip-N-portrait.{mp4,webm}` (480×1040, `-g 1`, recorte que sigue `STOP_X` de parada a parada) y los pósteres `stop-N.webp` / `stop-N-portrait.webp` desde el primer o último fotograma de los clips ya codificados. `ScrollWorld.astro` apunta a los `-portrait` y ya no lleva `position` por parada; la copia previa usa `<picture>` con el póster vertical hasta 860 px. Motor: cambio local 13. Medición en Chromium emulando iPhone 13 con CPU ×4, clip 1 de 10 s: **153 fotogramas pintados en 3,5 s de scroll continuo (44 fps)**, 1 pintado por cada salto pedido. Pesos por clip de 10 s: 1080 MP4 ≈ 7,5 MB, vertical MP4 ≈ 3–4 MB (todo intra), vertical WebM ≈ 3–9 MB (solo reserva para pruebas).
+**Implementado (11/10/2026).** `scripts/encode-world.mjs` genera desde los másteres: `clip-N-1080.{mp4,webm}` (escritorio, `-g 6`), `clip-N-portrait.{mp4,webm}` (480×1040, `-g 1`, recorte que sigue `STOP_X` de parada a parada) y los pósteres `stop-N.webp` / `stop-N-portrait.webp` desde el primer o último fotograma de los clips ya codificados. `ScrollWorld.astro` apunta a los `-portrait` y ya no lleva `position` por parada; la copia previa usa `<picture>` con el póster vertical hasta 860 px. Motor: cambio local 13. Medición en Chromium emulando iPhone 13 con CPU ×4, clip 1 de 10 s: **153 fotogramas pintados en 3,5 s de scroll continuo (44 fps)**, 1 pintado por cada salto pedido. Pesos finales (`crf` 24 / 26): escritorio MP4 6,2 + 6,2 + 5,8 + 13,8 MB (el cierre dura 20 s) = 32 MB; teléfono MP4 vertical 4,2 + 3,1 + 2,7 + 7,5 = 17,5 MB, todo intra; WebM solo como reserva para las pruebas en Chromium. Lighthouse móvil de la home tras el cambio: 99 / 100 / 100 / 100, CLS 0.
 
 Orden de trabajo (un commit por punto): motor y script de ffmpeg ahora → clips y pósteres cuando estén los clips v3 (fase 14) → verificación en teléfono real y spec.
 
@@ -521,8 +521,8 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | ✅ en rama `feat/movimiento`, pendiente de merge |
 | **11 · Scroll como Arko** | §5.8: apariciones con desenfoque escalonadas también en las obras, foto centrada | ✅ en rama `feat/scroll-arko`, pendiente de merge |
 | **12 · Niebla** | §5.11: textos nuevos en `/obras` y en las paradas 01‑02, paleta de bosque con niebla | ✅ en rama `feat/niebla`, pendiente de merge. Copia previa = motor (0 px) en 390 y 1440; Lighthouse 96–99 / 100 / 100 / 100, CLS 0 |
-| **13 · Recorrido en móvil** | §5.12: clips verticales todo intra para el teléfono, saltos a fotograma entero y esperando al pintado | Plan escrito, pendiente de aprobación |
-| **14 · Clips v3** | §5.13: entrada con la foto real y *Tránsito del alma*, giro a Personales sin vigas que suben, clips a 10 s | Plan escrito, pendiente de aprobación. Va antes de la recodificación móvil de la fase 13 |
+| **13 · Recorrido en móvil** | §5.12: clips verticales todo intra para el teléfono, saltos a fotograma entero y esperando al pintado | ✅ en rama `feat/recorrido-movil`: 40–44 fps pintados en Chromium emulando iPhone con CPU ×4. Pendiente: prueba en teléfono real |
+| **14 · Clips v3** | §5.13: entrada con la foto real y *Tránsito del alma*, giro a Personales sin vigas que suben, clips a 10 s, cierre volviendo al caballete con el retrato en proceso | ✅ en rama `feat/recorrido-movil`. 195,5 créditos (saldo 804,5) |
 
 ---
 

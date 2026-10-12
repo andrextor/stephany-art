@@ -42,13 +42,13 @@ for (const [index, master] of MASTERS.entries()) {
   const pan = `(iw-${cropWidth})*(${STOP_X[index]}+(${STOP_X[n]}-${STOP_X[index]})*t/${seconds})`;
   const portrait = `${landscape},crop=${cropWidth}:ih:${pan}:0,scale=${PORTRAIT.width}:${PORTRAIT.height}:flags=lanczos`;
 
-  run(['-i', master, '-an', '-vf', landscape, '-c:v', 'libx264', '-profile:v', 'high', '-crf', '22', '-g', '6',
+  run(['-i', master, '-an', '-vf', landscape, '-c:v', 'libx264', '-profile:v', 'high', '-crf', '24', '-g', '6',
     '-pix_fmt', 'yuv420p', '-movflags', '+faststart', `${base}-1080.mp4`]);
-  run(['-i', master, '-an', '-vf', landscape, '-c:v', 'libvpx-vp9', '-crf', '33', '-b:v', '0', '-g', '6',
+  run(['-i', master, '-an', '-vf', landscape, '-c:v', 'libvpx-vp9', '-crf', '37', '-b:v', '0', '-g', '6',
     '-deadline', 'good', '-cpu-used', '4', '-row-mt', '1', `${base}-1080.webm`]);
   run(['-i', master, '-an', '-vf', portrait, '-c:v', 'libx264', '-profile:v', 'main', '-crf', '26', '-g', '1',
     '-pix_fmt', 'yuv420p', '-movflags', '+faststart', `${base}-portrait.mp4`]);
-  run(['-i', master, '-an', '-vf', portrait, '-c:v', 'libvpx-vp9', '-crf', '45', '-b:v', '0', '-g', '1',
+  run(['-i', master, '-an', '-vf', portrait, '-c:v', 'libvpx-vp9', '-crf', '52', '-b:v', '0', '-g', '1',
     '-deadline', 'good', '-cpu-used', '5', '-row-mt', '1', `${base}-portrait.webm`]);
 
   const frames = n === 1 ? [['first', 0]] : [];
