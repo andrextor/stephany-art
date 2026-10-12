@@ -370,9 +370,8 @@ Correcciones mínimas sobre el texto recibido: "textura" pasa a "texturas", "ava
 
 Se conservan los nombres de los tokens (`moss`, `clay`) para no tocar 40 clases; el renombrado se deja para más adelante si molesta. También se actualizan el `favicon.svg`, el `theme-color` y el velo del recorrido (`--ink` al 40 %).
 
-**7 · Niebla en capas en lugar de la espiral** (elegida el 11/10/2026 en el artefacto "Figuras para Stephany", frente a curvas de nivel, pincelada seca y bambú). `Ridges.astro` genera en build 4 capas de montañas con senos superpuestos y semilla fija. Va abajo y a lo ancho en tres sitios:
+**7 · Niebla en capas en lugar de la espiral** (elegida el 11/10/2026 en el artefacto "Figuras para Stephany", frente a curvas de nivel, pincelada seca y bambú). `Ridges.astro` genera en build 4 capas de montañas con senos superpuestos y semilla fija. Va abajo y a lo ancho en dos sitios (en la banda del encargo se probó y sobraba):
 - **Panel de la cita:** arena, salvia y pizarra, al 30 % de la altura.
-- **Banda del encargo:** al 34 %.
 - **Pie:** al 45 %.
 
 Al entrar cada sección, las capas cercanas suben más que las lejanas (`animation-timeline: view()`, 14 px por capa); sin movimiento con reduced motion. Se elimina `Spiral.astro`.
