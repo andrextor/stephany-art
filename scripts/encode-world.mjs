@@ -7,8 +7,8 @@
 // Wide:    2560x1440 H.264 (keyframe every 6 frames), for screens wider than 1800 CSS px or
 //          hi-DPI desktops; the 1080 tier is the same stream downscaled. MP4 only: every
 //          current browser decodes H.264, and Cloudflare caps a file at 25 MiB.
-// Phones:  480x1040 portrait crop of the same master, every frame a keyframe (`-g 1`),
-//          so a seek never decodes more than one frame. The crop pans from the stop's
+// Phones:  664x1440 portrait crop of the same master at its native height, a keyframe every
+//          4 frames, so a seek decodes at most 4 frames. The crop pans from the stop's
 //          framing at the start of the clip to the next stop's framing at its end.
 // Posters: stop N is the first frame of clip N+1 (stop 0) or the last frame of clip N,
 //          taken from the encoded clips so poster and video match exactly.
@@ -26,7 +26,7 @@ const MASTERS = [
 ];
 // Horizontal framing of each stop on phones, as a fraction of the 16:9 width.
 const STOP_X = [0.42, 0.4, 0.45, 0.72, 0.4];
-const PORTRAIT = { width: 480, height: 1040 };
+const PORTRAIT = { width: 664, height: 1440 };
 const TIERS = [
   // setsar=1: the upscaler returns 2580x1440 / 2546x1440 with a compensating pixel aspect
   // ratio, which would otherwise leak into the encodes and the reported videoWidth.
@@ -56,7 +56,7 @@ for (const [index, master] of MASTERS.entries()) {
   const cropWidth = `ih*${PORTRAIT.width}/${PORTRAIT.height}`;
   const pan = `(iw-${cropWidth})*(${STOP_X[index]}+(${STOP_X[n]}-${STOP_X[index]})*t/${seconds})`;
   const portrait = `scale=2560:1440:flags=lanczos,setsar=1,fps=24,crop=${cropWidth}:ih:${pan}:0,scale=${PORTRAIT.width}:${PORTRAIT.height}:flags=lanczos`;
-  run(['-i', master, '-an', '-vf', portrait, ...h264('main', 26, 1), `${base}-portrait.mp4`]);
+  run(['-i', master, '-an', '-vf', portrait, ...h264('main', 26, 4), `${base}-portrait.mp4`]);
 
   const frames = n === 1 ? [['first', 0]] : [];
   frames.push(['last', n]);
@@ -67,7 +67,7 @@ for (const [index, master] of MASTERS.entries()) {
       const input = `${base}-${size}.mp4`;
       if (which === 'first') run(['-i', input, '-frames:v', '1', png]);
       else run(['-sseof', '-0.05', '-i', input, '-update', '1', '-frames:v', '1', png]);
-      await sharp(png).webp({ quality: 82 }).toFile(`public/world/stop-${stop}${suffix}.webp`);
+      await sharp(png).webp({ quality: 90 }).toFile(`public/world/stop-${stop}${suffix}.webp`);
     }
   }
   console.log(`clip ${n}: ${seconds.toFixed(1)} s`);

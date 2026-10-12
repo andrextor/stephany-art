@@ -19,7 +19,7 @@ const reveal = new IntersectionObserver(
   // negative margin would keep it from ever counting as visible.
   { threshold: 0 },
 );
-for (const element of document.querySelectorAll<HTMLElement>('[data-reveal]')) {
+for (const element of document.querySelectorAll<HTMLElement>('[data-reveal], .brush--scroll')) {
   if (reduceMotion || element.getBoundingClientRect().top < window.innerHeight) {
     element.classList.add('is-in');
   } else {

@@ -1,9 +1,14 @@
 ---
-title: "Retrato de mujer" # PENDIENTE: título definitivo
-slug: retrato-de-mujer
+title: "El despertar del loto"
+slug: el-despertar-del-loto
 category: personal
 status: in-progress
-# PENDIENTE: year, technique, dimensions
+# PENDIENTE: year
+technique: "Óleo sobre lienzo"
+dimensions:
+  width: 120
+  height: 90
+  unit: cm
 # PENDIENTE: descripción de la obra (va debajo del frontmatter)
 images:
   - src: ../../assets/artworks/woman-portrait/woman-portrait-on-easel.webp

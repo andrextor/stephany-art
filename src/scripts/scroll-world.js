@@ -286,6 +286,7 @@ export function mountScrollWorld(container, config) {
     }
 
     const lead = COPY_LEAD * vh;
+    let veil = 0;
     for (let i = 0; i < N; i++) {
       const seg = SECTIONS[i]._seg;
       // Copy for stops after the first starts rising `lead` before its scene, i.e. during
@@ -299,9 +300,11 @@ export function mountScrollWorld(container, config) {
       else cop = (before || after) ? 0 : smooth(Math.min(pr / 0.3, (1 - pr) / 0.22));
       const c = copies[i];
       c.style.opacity = cop;
+      veil = Math.max(veil, cop);
       c.style.setProperty('--sw-py', reduce ? '0vh' : `${(0.5 - pr) * 4}vh`);
       c.style.pointerEvents = cop > 0.5 ? 'auto' : 'none';
     }
+    copylayer.style.setProperty('--sw-veil', veil.toFixed(3));
 
     const cur = SEGMENTS[ci];
     const near = clamp(cur.kind === 'dive' ? cur.si
@@ -488,14 +491,14 @@ function injectCSS() {
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
   @media (max-width:860px){
     .sw-nav{display:none;}
-    .sw-copylayer::before{width:100%;height:82%;top:auto;bottom:0;background:linear-gradient(0deg,var(--sw-bg) 10%,color-mix(in srgb,var(--sw-bg) 92%,transparent) 52%,color-mix(in srgb,var(--sw-bg) 60%,transparent) 76%,transparent 100%);}
+    .sw-copylayer::before{width:100%;height:56%;top:auto;bottom:0;opacity:var(--sw-veil,1);background:linear-gradient(0deg,var(--sw-bg) 10%,color-mix(in srgb,var(--sw-bg) 92%,transparent) 45%,color-mix(in srgb,var(--sw-bg) 60%,transparent) 70%,transparent 100%);}
     /* Anchor copy to the bottom, clear of the home indicator / collapsing URL bar.
        dvh + env() are progressive: browsers that lack them keep the vh fallback line. */
-    .sw-copy{left:clamp(18px,5vw,64px);right:clamp(18px,5vw,64px);top:auto;bottom:clamp(96px,20vh,170px);transform:translateY(var(--sw-py,0vh));width:auto;max-width:560px;}
-    .sw-copy{bottom:calc(clamp(88px,18dvh,160px) + env(safe-area-inset-bottom));}
+    .sw-copy{left:clamp(18px,5vw,64px);right:clamp(18px,5vw,64px);top:auto;bottom:clamp(100px,14vh,134px);transform:translateY(var(--sw-py,0vh));width:auto;max-width:560px;}
+    .sw-copy{bottom:calc(clamp(92px,13dvh,124px) + env(safe-area-inset-bottom));}
     .sw-copy__title{font-size:clamp(1.9rem,7.5vw,2.7rem);}
     .sw-copy__body{max-width:none;font-size:clamp(.98rem,3.6vw,1.1rem);} .sw-scene__video,.sw-scene__still{object-position:center 46%;}
-    .sw-hint{bottom:calc(20px + env(safe-area-inset-bottom));}
+    .sw-hint{bottom:calc(10px + env(safe-area-inset-bottom));}
     .sw-route{gap:16px;right:6px;} .sw-route__label{display:none;}
   }
   /* Portrait phones crop a 16:9 clip hard; keep the framing centred so the focal
