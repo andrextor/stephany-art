@@ -17,7 +17,7 @@ images:
   - src: ../../assets/artworks/elderly-couple-rose/elderly-couple-rose-detail.webp
     alt: "Detalle de las manos y la rosa roja"
     kind: detail
-order: 110
+order: 20
 ---
 
 Entre rosas y miradas\

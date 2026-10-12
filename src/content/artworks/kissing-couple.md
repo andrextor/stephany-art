@@ -11,6 +11,6 @@ images:
   - src: ../../assets/artworks/kissing-couple/kissing-couple-bw-with-palette.webp
     alt: "El retrato junto a la paleta de colores"
     kind: studio
-order: 150
+order: 60
 draft: true # PENDIENTE: confirmar que el cliente autoriza publicar su retrato
 ---

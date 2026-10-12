@@ -15,5 +15,5 @@ images:
   - src: ../../assets/artworks/elephants/elephant-family-on-easel-alt.webp
     alt: "La obra en el caballete, segunda vista"
     kind: studio
-order: 50
+order: 110
 ---

@@ -19,5 +19,5 @@ images:
     alt: "Certificado de autenticidad de la obra"
     kind: certificate
 featured: true
-order: 20
+order: 80
 ---

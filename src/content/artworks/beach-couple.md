@@ -14,7 +14,7 @@ images:
   - src: ../../assets/artworks/beach-couple/beach-couple-bw-alt.webp
     alt: "Segunda vista del retrato en blanco y negro"
     kind: detail
-order: 140
+order: 50
 ---
 
 Sonrisas que son el faro de un amor tan inmenso como el mar.

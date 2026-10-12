@@ -11,7 +11,7 @@ dimensions:
 images:
   - src: ../../assets/artworks/couple-garden/couple-in-garden.webp
     alt: "Retrato de una pareja mayor abrazada entre vegetación tropical"
-order: 120
+order: 30
 ---
 
 Un amor que no necesita palabras, forjado en el calor de los años y la ternura de las pequeñas cosas. Dos vidas que se volvieron un solo latido, demostrando que la eternidad cabe en una sonrisa compartida.
