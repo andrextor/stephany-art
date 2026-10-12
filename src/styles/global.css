@@ -95,12 +95,30 @@ body {
 /* Lets a photo dissolve into the band behind it instead of ending on a hard edge. */
 /* A painting shown whole inside a fixed mat: the shadow follows the painted pixels, not the
    letterboxed box. */
-/* Gallery backdrop (PaintedBackdrop.astro): soft pools of the palette, like washes on raw paper. */
-.painted-wash {
-  background:
-    radial-gradient(ellipse 45% 40% at 88% 12%, color-mix(in srgb, var(--color-clay) 32%, transparent), transparent 70%),
-    radial-gradient(ellipse 40% 45% at 6% 55%, color-mix(in srgb, var(--color-ink-faint) 22%, transparent), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 70% 95%, color-mix(in srgb, var(--color-sand) 22%, transparent), transparent 70%);
+/* Gallery backdrop (PaintedBackdrop.astro): soft blurred blobs of the palette drifting slowly,
+   with a fine grain on top so the gradient reads like paper instead of a flat screen fill. */
+.mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mesh-blob {
+    animation: mesh-drift 24s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes mesh-drift {
+  to {
+    transform: translate(-6vw, 5vh) scale(1.12);
+  }
+}
+
+.paper-grain {
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .45 0 0 0 0 .4 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .canvas-drop {

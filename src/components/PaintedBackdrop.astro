@@ -1,32 +1,14 @@
 ---
-// Page backdrop for the gallery pages: soft palette washes fixed behind the page and large brush
-// strokes down its length, alternating sides. Wraps the page so its layers sit under the content,
-// not the body. Strokes past the end of a short page are clipped away.
-import Brush from './Brush.astro';
-
-const strokes = [
-  { top: '-4rem', side: 'right-0 translate-x-[30%] -rotate-12', color: 'text-clay/45', load: true },
-  { top: '70rem', side: 'left-0 -translate-x-[35%] rotate-[14deg] -scale-x-100', color: 'text-sand/40' },
-  { top: '130rem', side: 'right-0 translate-x-[35%] rotate-6', color: 'text-ink-faint/40' },
-  { top: '190rem', side: 'left-0 -translate-x-[35%] -rotate-6 -scale-x-100', color: 'text-clay/40' },
-  { top: '250rem', side: 'right-0 translate-x-[35%] rotate-[18deg]', color: 'text-sand/40' },
-  { top: '310rem', side: 'left-0 -translate-x-[35%] rotate-12 -scale-x-100', color: 'text-ink-faint/40' },
-];
+// Page backdrop for the gallery pages: a slow-drifting mesh gradient (clay, sage, sand) under a fine
+// paper grain, fixed behind the page. Wraps the page so its layers sit under the content, not the body.
 ---
 
 <div class="relative isolate">
-  <div class="painted-wash pointer-events-none fixed inset-0 -z-10" aria-hidden="true"></div>
-  <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-    {
-      strokes.map((stroke, index) => (
-        <div class:list={['absolute w-[min(120vw,860px)]', stroke.side]} style={`top: ${stroke.top}`}>
-          <Brush
-            seed={11 + index * 7}
-            class:list={['block w-full', stroke.load ? 'brush--load' : 'brush--scroll', stroke.color]}
-          />
-        </div>
-      ))
-    }
+  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+    <div class="mesh-blob top-[-20%] right-[-15%] size-[70vmax] bg-clay/90"></div>
+    <div class="mesh-blob bottom-[-25%] left-[-20%] size-[65vmax] bg-[#9fb3ae]/80 [animation-delay:-8s]"></div>
+    <div class="mesh-blob top-[30%] left-[35%] size-[45vmax] bg-sand/70 [animation-delay:-16s]"></div>
+    <div class="paper-grain absolute inset-0"></div>
   </div>
   <slot />
 </div>
