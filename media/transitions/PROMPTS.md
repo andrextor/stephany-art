@@ -139,74 +139,117 @@ Coste acumulado: ~100 créditos (quedan 0,75).
 
 ---
 
-## 5 · Cambios v2 (pendientes: hacen falta créditos)
+## 5 · Cambios v3 (plan 11/10/2026 · 1 000 créditos disponibles, plan Plus)
 
-### 5.1 · Cuadro del caballete en la entrada: *La noche oscura del alma* (espiral)
+Sustituye a los "Cambios v2" (espiral en el caballete): la decisión nueva es **la foto real del taller `keyframes/obra-inicio.jpeg` con *Tránsito del alma* en el caballete**. Los clips 2 y 4 están aprobados; el 1 y el 3 tienen defectos que se corrigen aquí.
 
-El retrato de la pareja mayor del caballete (F1/F2) es un encargo de cliente, pendiente de consentimiento. Se sustituye por la espiral texturizada (`artworks/textured-figure/figure-in-textured-circle.webp`): obra personal, formato cuadrado, negro sobre blanco, se lee desde lejos y no se repite en las paredes de Comisión/Personales.
+### 5.0 · Costes reales (preflight `get_cost`, 11/10/2026)
 
-Orden: **F2' (edición) → F1' (outpaint de F2', regla 12) → clip 1 → clip 2**. Los clips 3 y 4 no cambian.
+| Modelo | Ajustes | Créditos / clip |
+|---|---|---|
+| **Kling 3.0 pro** (el usado) | 5 s, sin sonido, start+end | **8,75** |
+| Kling 3.0 pro | **10 s**, sin sonido | **17,5** |
+| Kling 3.0 4K | 5 s | 30 |
+| MiniMax H3 (2K, start+end) | 5 s | 10 |
+| MiniMax H3 Max (768p) | 5 s | (no medido, más barato) |
+| Seedance 2.5 1080p | 5 s, sin audio | 60 |
+| Seedance 2.5 borrador 480p | 5 s | 15 |
+| FLUX 3 Video 1080p | 5 s, sin audio | 45 |
+| GPT Image 2.5 · imagen | 2k, medium | 1 |
+| Outpaint | | 2 |
+
+**Elección de modelo.** Los tirones no vienen del modelo sino de (a) fotogramas clave con geometría distinta (reglas 1–3, 12) y (b) **pocos fotogramas por clip**: 5 s = 121 fotogramas que el scroll recorre en ~0,9 pantallas. Con **10 s (241 fotogramas) la cámara va a la mitad de velocidad y el scrub tiene el doble de pasos**: es la mejora de fluidez más barata y segura (17,5 c). Seedance y FLUX cuestan 5–7 veces más sin ninguna evidencia de que manejen mejor un paneo con fotograma inicial y final; Kling 4K solo añade resolución. **MiniMax H3** (2K, 10 c) es la única alternativa que vale la pena probar: un A/B en el clip 3, que es el más difícil.
+
+### 5.1 · Entrada con *Tránsito del alma* (bloque A)
+
+Orden: **F2v3 (edición de la foto) → F1v3 (outpaint de F2v3, regla 12) → clip 1 → clip 2**.
 
 | Paso | Modelo | Coste |
 |---|---|---|
-| F2' | `gpt_image_2_5` edición, refs: F2 + espiral, `quality medium` | 1 |
-| F1' | `outpaint_image` de F2' (mismo encuadre que F1 v3) | 2 |
-| Clip 1 v3 | `kling3_0` pro, F1' → F2' | 8,75 |
-| Clip 2 v2 | `kling3_0` pro, F2' → F3 | 8,75 |
-| **Total** | | **20,5** |
+| F2v3 | `gpt_image_2_5`, refs: `obra-inicio.jpeg` + `sea-stairs/woman-climbing-sea-stairs.webp` + `sea-stairs/woman-climbing-sea-stairs-in-studio.webp`, 16:9, 2k, medium | 1 (+1 reintento) |
+| F1v3 | `outpaint_image` de F2v3, 16:9 con lienzo mayor (F2v3 intacta en el centro, ≈ 70 % del ancho) | 2 |
+| Clip 1 v4 | `kling3_0` pro, F1v3 → F2v3, **10 s** | 17,5 |
+| Clip 2 v3 | `kling3_0` pro, F2v3 → F3, 10 s | 17,5 |
+| **Total** | | **38** (≈ 73 con un reintento por clip) |
 
-#### F2' · caballete con la espiral (refs: `F2-caballete.webp`, `textured-figure/figure-in-textured-circle.webp`)
+Por qué desaparece la "columna que crece" del clip 1: F1 v3 y F2 salían de dos imágenes generadas por separado y Kling reconciliaba el poste de la derecha moviéndolo. Ahora F1v3 es un outpaint de F2v3, que a su vez es la foto real: el poste es el mismo píxel en los dos extremos.
 
-```
-Edit the first reference image (the attic studio) changing only one thing: the painting standing on the wooden easel. Replace the portrait of the elderly couple with the painting from the second reference: a square canvas, about 80 by 80 cm, covered in a thick black textured relief forming a spiral, with a small figure of a woman in a white dress curled up at its dark center. The new canvas rests on the same easel ledge, in the same place, facing the camera at the same slight angle as the original painting. Reproduce the painting exactly as in the reference: same relief, same spiral, same figure, same black and grey tones. Everything else stays exactly identical to the first reference: the easel, the leather pouf with the palette, the blank canvas on the plastic sheet on the floor, the open wooden door and the balcony with green bamboo, the white folding table with printer and baskets, the dark wooden A-frame beams, slanted white walls, dark polished floorboards and the soft overcast daylight. Photorealistic photograph, 16:9, eye level, 24mm lens, no people, no hands, no mug, no text, no signs, no watermark.
-```
-
-#### F1' · entrada
-
-Sin prompt de imagen: `outpaint_image` de F2' al mismo lienzo que F1 v3 (F2' intacta en el centro, más ático alrededor). Si el outpaint pide prompt:
+#### F2v3 · caballete con *Tránsito del alma*
 
 ```
-Continue the same attic studio outward: more dark wooden A-frame beams, slanted white walls, dark wooden panelled knee walls and wide dark polished floorboards in the foreground, as seen from the entrance of the attic. Nothing inside the original image changes. Same light, no people, no text.
+Extend the first reference photo of the attic studio to a 16:9 widescreen frame, keeping its full height and changing only one thing: the painting on the wooden easel. Replace the unfinished portrait with the painting from the second reference, a nearly square canvas about one meter wide: a woman in a pale blue dress climbing a stone stairway across a turquoise sea toward a glowing figure in a swirling cloudy sky. The third reference shows this same canvas standing on this same easel in this same spot: match that size, position and slight angle. Reproduce the painting exactly as in the second reference, same composition, colors and proportions. Everything else stays identical to the first reference: the paint-stained wooden easel with the black tablet arm beside it, the leather pouf, the blank canvas leaning on the left wall, the small dark cabinet, the open wooden door and the balcony with green bamboo, the white folding table with printer and baskets on the right, the dark wooden A-frame beams, white walls, wide dark polished floorboards and soft overcast daylight. Continue the beams, slanted walls and floorboards naturally on both sides. Photorealistic photograph, eye level, 24mm lens, no people, no hands, no text, no signs, no watermark.
 ```
 
-#### Clip 1 v3 · F1' → F2'
+#### F1v3 · entrada
+
+`outpaint_image` de F2v3 (sin prompt). Revisar que el poste derecho y la mesa no cambien.
+
+#### Clip 1 v4 · F1v3 → F2v3 · avanza (10 s)
 
 ```
-The camera walks slowly forward down the middle of the attic studio toward the open balcony door, the easel with the dark textured spiral painting growing closer, and stops a few steps in front of the blank canvas lying on the plastic sheet on the floor. One continuous shot on a steady gimbal at eye level, 24mm, slow constant walking pace with natural parallax, gentle ease-in and ease-out, landing exactly on the final frame. The painting is a static artwork: its relief and the small figure at its center do not move or change. Keep the house structure, beams, walls, floor, furniture and daylight unchanged. No cuts, no fades, no dissolves, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
+The camera walks very slowly forward down the middle of the attic studio toward the open balcony door, the easel with the painting of the woman climbing stone steps across the sea growing closer, and stops a few steps in front of the leather pouf. One continuous shot on a steady gimbal at eye level, 24mm, slow constant walking pace with natural parallax, gentle ease-in and ease-out, landing exactly on the final frame. The dark wooden post and beams on the right are the same ones throughout: they only get closer, they never grow, bend, appear or disappear. The painting is a static artwork: nothing inside it moves. Keep the house structure, beams, walls, floor, furniture and daylight unchanged. No cuts, no fades, no dissolves, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
 ```
 
-#### Clip 2 v2 · F2' → F3
+#### Clip 2 v3 · F2v3 → F3 · gira a la izquierda (10 s)
 
 ```
-The camera turns gently to the left, away from the easel with the dark textured spiral painting, and walks a few steps along the attic, passing under a dark wooden beam, then settles facing a white wall where two canvases hang side by side: a colorful hummingbird and a sailboat at sunset. One continuous shot on a steady gimbal at eye level, 24mm, slow constant walking pace with subtle natural parallax, gentle ease-in and ease-out, landing exactly on the final frame. The paintings are static artworks: nothing inside them moves. Keep the house structure, beams, walls, floor and daylight unchanged. No cuts, no fades, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
+The camera turns gently to the left, away from the easel with the painting of the woman climbing stone steps across the sea, and walks a few slow steps along the attic, passing under a dark wooden beam, then settles facing a white wall where two canvases hang side by side: a colorful hummingbird and a sailboat at sunset. One continuous shot on a steady gimbal at eye level, 24mm, slow constant walking pace with subtle natural parallax, gentle ease-in and ease-out, landing exactly on the final frame. The paintings are static artworks: nothing inside them moves. Keep the house structure, beams, walls, floor and daylight unchanged. No cuts, no fades, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
 ```
 
-### 5.2 · Cierre: volver a la puerta y al cuadro del principio
+### 5.2 · Giro a Personales sin columnas que suben (bloque B)
 
-Dos formas de terminar en F2' (caballete con la espiral y puerta del balcón) después de F5:
+Defecto del clip 3 v3: al aparecer la pared lateral, las vigas de la derecha se esconden y suben. Causa: F3 y F4 v3 son dos imágenes generadas por separado y sus vigas no coinciden, así que Kling las "reconstruye" durante el giro (misma raíz que la regla 12). Solución: **F4v3 sale de F3 por outpaint**, para que la pared lateral y sus vigas ya existan en la misma imagen que F3; la cámara solo gira hacia ellas.
 
-**A · Rebobinar (0 créditos, recomendado para probar primero).** El recorrido F3 → F4 → F5 son giros en el sitio, así que reproducidos al revés son el mismo giro hacia la izquierda; y clip 2 al revés devuelve al caballete. Un solo conector largo, sin paradas, a doble velocidad:
+| Paso | Modelo | Coste |
+|---|---|---|
+| F3 ancha | `outpaint_image` de F3 hacia la derecha, al doble de ancho (≈ 32:9; si la herramienta no lo admite, dos outpaints 21:9 encadenados) | 2–4 |
+| F4v3 ancha | `gpt_image_2_5` edición de la imagen ancha: colgar los dos cuadros en la pared lateral derecha sin tocar nada más | 1 (+1) |
+| F4v3 | Recorte local (sharp) del tercio derecho a 16:9, misma altura que F3 | 0 |
+| Clip 3 v4 | `kling3_0` pro, F3 → F4v3, **10 s** | 17,5 |
+| A/B opcional | `minimax_h3` 2K, mismo par y prompt | 10 |
+| **Total** | | **20,5–24** (+17,5 reintento, +10 A/B) |
 
-```
-ffmpeg -i clip4.mp4 -vf "reverse,setpts=0.5*PTS" -an c4r.mp4
-ffmpeg -i clip3.mp4 -vf "reverse,setpts=0.5*PTS" -an c3r.mp4
-ffmpeg -i clip2.mp4 -vf "reverse,setpts=0.5*PTS" -an c2r.mp4
-printf "file 'c4r.mp4'\nfile 'c3r.mp4'\nfile 'c2r.mp4'\n" > vuelta.txt
-ffmpeg -f concat -safe 0 -i vuelta.txt -an -c:v libx264 -crf 20 -pix_fmt yuv420p clip5-vuelta.mp4
-```
+Plan B si Kling sigue deformando las vigas: el giro como **paneo CSS sobre la imagen ancha** (sin vídeo, 0 créditos, perfecto en móvil). Requiere un tipo de conector nuevo en el motor; se decide tras ver el clip.
 
-En un vídeo scrubeado por scroll no se nota que es un reverse: solo son fotogramas.
-
-**B · Clip nuevo F5 → F1' (8,75 créditos por intento).** Giro de 180° en el sitio en 5 s. Es el movimiento más ambicioso de todos (regla 4 llevada al límite); contar con un segundo intento. Si sale bien, el cierre es clip 5 + clip 1 v3 reutilizado (F1' → F2', 0 créditos).
-
-#### Clip 5 · F5 → F1' · media vuelta en el sitio
+#### F4v3 ancha · colgar los cuadros (ref: F3 ancha + `sea-stairs/woman-climbing-sea-stairs.webp` + `shattered-mirror/…` o el cuadro que se decida)
 
 ```
-Pure camera pan: the camera stays in exactly the same spot and slowly turns around 180 degrees to the left, like a person turning to look back the way they came. It does not walk, does not move forward or backward. The working corner with the easel and the unfinished portrait slides out of the frame to the right, the long side wall with the two large paintings passes across the frame rigid and unchanged, and then the other end of the attic comes into view: it already exists outside the frame. It is the full length of the attic seen from its entrance: dark wooden A-frame beams, slanted white walls, dark panelled knee walls, wide dark polished floorboards, and at the far end the wooden easel with the dark textured spiral painting, the leather pouf, the white folding table and the open wooden door to the balcony with green bamboo. The room keeps its shape: walls and beams do not move or bend, no new doors, no new windows, no openings appear. Steady gimbal at eye level, 24mm, slow constant rotation speed, gentle ease-in and ease-out, landing exactly on the final frame. The paintings are static artworks: nothing inside them moves. No cuts, no fades, no dissolves, no morphing, no zoom, no camera shake, no people, no new objects. Photorealistic, silent.
+Edit the reference image changing only one thing: on the long white side wall at the right, between the dark rafters, hang two unframed canvases side by side at eye level, slightly apart, seen at the same perspective angle as that wall: the painting from the second reference (woman in a blue dress climbing stone steps across a turquoise sea toward a glowing figure in a swirling sky) and the painting from the third reference (dark painting of a woman embracing a child in a blue hoodie among shattered mirror shards with large painted eyes). Reproduce both paintings exactly as in the references. Nothing else changes: same walls, rafters, beams, floorboards, end wall with the hummingbird and sailboat paintings, same light. Photorealistic, no people, no text, no watermark, no spotlights, no frames.
 ```
 
-Si en 5 s el giro sale brusco, pedir el clip de 10 s (precio doble) con el mismo prompt.
+#### Clip 3 v4 · F3 → F4v3 · giro en el sitio (10 s)
 
-### En la web
+```
+Pure camera pan: the camera stays in exactly the same spot and very slowly rotates about 40 degrees to the right, like a person turning their head. It does not walk, does not move forward or backward. The end wall with the hummingbird and sailboat paintings stays rigid and unchanged and simply slides toward the left of the frame. The side wall and its two paintings already exist just outside the frame on the right and come into view only because the camera turns, already hanging on the wall. The dark rafters and the corner post on the right are the same ones already visible at the right edge of the first frame: they only slide left; no rafter rises, lowers, bends, appears or disappears. The room does not change shape: no new doors, no new windows, no openings. Steady gimbal at eye level, 24mm, slow constant rotation speed, gentle ease-in and ease-out, landing exactly on the final frame. The paintings are static artworks: nothing inside them moves. No cuts, no fades, no dissolves, no morphing, no zoom, no camera shake, no people. Photorealistic, silent.
+```
 
-Una sexta parada en `ScrollWorld.astro` sobre F2' con el CTA de contacto ("Hablemos de tu obra" → WhatsApp): el recorrido termina donde empezó y con la invitación a escribir.
+### 5.3 · Decisión: *Tránsito del alma* repetida
+
+Con el cambio, *Tránsito del alma* aparece dos veces: en el caballete de la entrada y en la pared de Personales (F4). Opciones:
+
+- **Mantenerla** (0 créditos extra). Se ve primero de cerca y luego colgada: puede leerse como un hilo.
+- **Cambiarla en la pared** por *La noche oscura del alma* (espiral) u otra obra personal: se hace en la misma edición de F4v3 (0 extra) **pero obliga a rehacer el clip 4**, que muestra esa pared (8,75 a 5 s · 17,5 a 10 s).
+
+### 5.4 · Sugerencias sobre los clips aprobados (opcionales)
+
+- **Clip 2:** a mitad del giro hay dos fotogramas oscuros y borrosos al pasar bajo la viga. A 10 s se suaviza; ya está contemplado en el bloque A.
+- **Clip 4:** el cuadro de la escalera se deforma un poco a mitad del giro (ya anotado). Rehacerlo a 10 s con el mismo prompt lo reduce (17,5). Solo si se rehace por 5.3, o si molesta al verlo en el móvil.
+- **Cierre volviendo a la puerta** (antes 5.2 de v2): sigue vigente. Opción A, rebobinar los clips 4, 3 y 2 con ffmpeg (0 c); opción B, clip 5 F5 → F1v3 como media vuelta en el sitio, 10 s (17,5, contar con un reintento). Se decide al final.
+
+### 5.5 · Móvil (ver SPEC §5.12 y §5.13)
+
+- **Siempre:** los clips 16:9 nuevos pasan por la cadena de la fase 13 (recorte vertical que sigue el `position` de cada parada, todo intra, 480×1040). A 10 s el clip de móvil pesa ≈ 4,5 MB en vez de 2,3; se cargan al acercarse, no afectan al LCP.
+- **Opcional, 9:16 nativo (fase 14b):** la foto de entrada ya es vertical, así que F2v3-m y F1v3-m salen casi gratis (edición 9:16, 1 c + outpaint 2 c). F3, F4 y F5 en vertical necesitan recomponer la cámara más cerca de la pared para que los dos cuadros llenen el ancho (1 c cada una, con reintentos) y 4 clips más (8,75 / 17,5 c). ≈ 45–85 créditos. Se decide después de aprobar el juego 16:9.
+
+### 5.6 · Presupuesto y orden
+
+| Bloque | Mínimo | Realista (un reintento por clip) |
+|---|---|---|
+| A · entrada | 38 | 73 |
+| B · giro a Personales | 20,5 | 48 (con A/B MiniMax) |
+| C · clip 4 a 10 s | 0 | 17,5 |
+| D · cierre a la puerta | 0 | 17,5 |
+| E · móvil 9:16 nativo | 0 | 45–85 |
+| **Total** | **≈ 60** | **≈ 150–240** de 1 000 |
+
+Orden: F2v3 → revisar → F1v3 → F3 ancha y F4v3 → revisar contra las reglas → **clip 3 v4 primero** (el más difícil, con A/B) → clips 1 y 2 → opcionales → fase 13 (recodificación móvil) → web (pósteres, clips, copia de la parada 01 si cambia).

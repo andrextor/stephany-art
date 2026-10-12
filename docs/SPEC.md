@@ -427,7 +427,19 @@ Descartado: Lenis no interviene en táctil (`syncTouch` apagado, scroll nativo).
 
 **Criterios de aceptación:** en un iPhone o Android de gama media el recorrido avanza con el dedo sin tirones visibles; el encuadre vertical muestra la puerta y el caballete en cada parada; el peso total de los clips de móvil no supera el de hoy (≈ 8,2 MB en MP4).
 
-Orden de trabajo (un commit por punto): clips y pósteres → motor → verificación y spec.
+Orden de trabajo (un commit por punto): motor y script de ffmpeg ahora → clips y pósteres cuando estén los clips v3 (fase 14) → verificación en teléfono real y spec.
+
+### 5.13 Fase 14 "clips v3" (rama `feat/recorrido-movil`, plan 11/10/2026, pendiente de aprobación)
+
+Detalle completo, prompts y costes en `media/transitions/PROMPTS.md` §5. Resumen:
+
+- **Entrada nueva:** la foto real del taller (`media/keyframes/obra-inicio.jpeg`) con *Tránsito del alma* en el caballete, extendida a 16:9 por GPT Image 2.5 y con la entrada (F1v3) como outpaint de esa misma imagen. Esto elimina de raíz la "columna que crece" del clip 1.
+- **Giro a Personales:** F4v3 sale de un outpaint de F3, así la pared lateral y sus vigas ya existen cuando la cámara gira; prompt que prohíbe que las vigas suban o aparezcan.
+- **Modelo:** se sigue con Kling 3.0 pro, pero a **10 s** (17,5 c): el doble de fotogramas por conector y la cámara a mitad de velocidad. Es la mejora de fluidez más barata; Seedance (60 c) y FLUX (45 c) descartados por precio sin evidencia de mejora; A/B con MiniMax H3 (10 c) solo en el clip 3.
+- **Decisión pendiente:** *Tránsito del alma* quedaría dos veces (caballete y pared de Personales). Mantener, o cambiarla en la pared y rehacer el clip 4.
+- **Móvil:** todos los clips nuevos pasan por la fase 13; el 9:16 nativo es opcional y se decide tras aprobar el 16:9.
+- **Presupuesto:** ≈ 60 créditos mínimo, 150–240 realista, de 1 000 disponibles.
+- **Web al final:** pósteres y clips nuevos en `public/world` y `public/video`, prueba en teléfono real, Lighthouse y CLS 0.
 
 ## 6. Stack
 
@@ -506,6 +518,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **11 · Scroll como Arko** | §5.8: apariciones con desenfoque escalonadas también en las obras, foto centrada | ✅ en rama `feat/scroll-arko`, pendiente de merge |
 | **12 · Niebla** | §5.11: textos nuevos en `/obras` y en las paradas 01‑02, paleta de bosque con niebla | ✅ en rama `feat/niebla`, pendiente de merge. Copia previa = motor (0 px) en 390 y 1440; Lighthouse 96–99 / 100 / 100 / 100, CLS 0 |
 | **13 · Recorrido en móvil** | §5.12: clips verticales todo intra para el teléfono, saltos a fotograma entero y esperando al pintado | Plan escrito, pendiente de aprobación |
+| **14 · Clips v3** | §5.13: entrada con la foto real y *Tránsito del alma*, giro a Personales sin vigas que suben, clips a 10 s | Plan escrito, pendiente de aprobación. Va antes de la recodificación móvil de la fase 13 |
 
 ---
 
