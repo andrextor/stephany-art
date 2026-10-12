@@ -389,7 +389,7 @@ Al entrar cada sección, las capas cercanas suben más que las lejanas (`animati
 
 **Orden de trabajo** (un commit por punto): paleta → textos.
 
-### 5.12 Fase 13 "recorrido fluido en móvil" (rama `feat/recorrido-movil`, plan 11/10/2026, pendiente de aprobación)
+### 5.12 Fase 13 "recorrido fluido en móvil" (rama `feat/recorrido-movil`, implementada el 11/10/2026)
 
 Síntoma: en el celular el recorrido se ve a saltos y recortado; en el PC va fluido. Son tres causas que se suman, todas medidas sobre los archivos actuales.
 
@@ -427,9 +427,11 @@ Descartado: Lenis no interviene en táctil (`syncTouch` apagado, scroll nativo).
 
 **Criterios de aceptación:** en un iPhone o Android de gama media el recorrido avanza con el dedo sin tirones visibles; el encuadre vertical muestra la puerta y el caballete en cada parada; el peso total de los clips de móvil no supera el de hoy (≈ 8,2 MB en MP4).
 
+**Implementado (11/10/2026).** `scripts/encode-world.mjs` genera desde los másteres: `clip-N-1080.{mp4,webm}` (escritorio, `-g 6`), `clip-N-portrait.{mp4,webm}` (480×1040, `-g 1`, recorte que sigue `STOP_X` de parada a parada) y los pósteres `stop-N.webp` / `stop-N-portrait.webp` desde el primer o último fotograma de los clips ya codificados. `ScrollWorld.astro` apunta a los `-portrait` y ya no lleva `position` por parada; la copia previa usa `<picture>` con el póster vertical hasta 860 px. Motor: cambio local 13. Medición en Chromium emulando iPhone 13 con CPU ×4, clip 1 de 10 s: **153 fotogramas pintados en 3,5 s de scroll continuo (44 fps)**, 1 pintado por cada salto pedido. Pesos por clip de 10 s: 1080 MP4 ≈ 7,5 MB, vertical MP4 ≈ 3–4 MB (todo intra), vertical WebM ≈ 3–9 MB (solo reserva para pruebas).
+
 Orden de trabajo (un commit por punto): motor y script de ffmpeg ahora → clips y pósteres cuando estén los clips v3 (fase 14) → verificación en teléfono real y spec.
 
-### 5.13 Fase 14 "clips v3" (rama `feat/recorrido-movil`, plan 11/10/2026, pendiente de aprobación)
+### 5.13 Fase 14 "clips v3" (rama `feat/recorrido-movil`, ejecutada el 11/10/2026)
 
 Detalle completo, prompts y costes en `media/transitions/PROMPTS.md` §5. Resumen:
 
@@ -440,6 +442,8 @@ Detalle completo, prompts y costes en `media/transitions/PROMPTS.md` §5. Resume
 - **Móvil:** todos los clips nuevos pasan por la fase 13; el 9:16 nativo es opcional y se decide tras aprobar el 16:9.
 - **Presupuesto:** ≈ 60 créditos mínimo, 150–240 realista, de 1 000 disponibles.
 - **Web al final:** pósteres y clips nuevos en `public/world` y `public/video`, prueba en teléfono real, Lighthouse y CLS 0.
+
+**Ejecutado (11/10/2026).** Decisiones del cliente: caballete A; *Tránsito del alma* se queda también en la pared de Personales; marcos finos de madera y tamaños ligeramente distintos en los cuatro cuadros colgados; **cierre nuevo**: el recorrido termina donde empezó, en el caballete junto a la puerta, ahora con el retrato en proceso real (F5v3, mismo encuadre que F2v3), en lugar del rincón generado. Detalle, aprendizajes y archivos en `media/transitions/PROMPTS.md` §5 y "Archivos".
 
 ## 6. Stack
 

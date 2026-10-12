@@ -86,6 +86,9 @@
      9. Scene stills load on demand: only the first scene's poster has a src at mount;
         the others get theirs when their segment comes within range (the scenes are
         fixed and stacked, so `loading="lazy"` alone never defers them).
+    13. Phone seeks (fase 13): one-frame step (1/24), the next seek waits for the previous
+        frame to be painted (requestVideoFrameCallback, 150 ms safety timer), fastSeek on
+        the all-intra phone clips, softer lerp (0.14).
    ========================================================================== */
 
 export function mountScrollWorld(container, config) {
@@ -315,21 +318,43 @@ export function mountScrollWorld(container, config) {
   }
 
   function raf() {
-    const eps = isMobile() ? 0.02 : 0.008;   // coarser seek step on phones = fewer decodes
+    const mobile = isMobile();
+    // Phones: one frame at 24 fps. A smaller step costs a decode without changing the
+    // picture. Desktop keeps the fine step; its decoder is not the bottleneck.
+    const eps = mobile ? 1 / 24 : 0.008;
     for (let i = 0; i < NSEG; i++) {
       const s = SEGMENTS[i];
       if (!s.hasClip || !s.ready || !s.video) continue;
-      // Never queue a seek while the decoder is still resolving the last one.
-      // On phones a fast flick would otherwise pile up seeks and freeze the clip;
-      // cur keeps lerping, so we snap to the latest target the moment it's free.
-      if (s.video.seeking) continue;
+      // Never queue a seek while the decoder is still resolving the last one, nor (on
+      // phones) before the last seeked frame has been painted: iOS clears `seeking`
+      // before the frame is on screen. cur keeps lerping, so we snap to the latest
+      // target the moment it's free.
+      if (s.video.seeking || s.painting) continue;
       if (!s.visible && Math.abs(s.cur - s.target) < 0.002) continue;
-      s.cur += (s.target - s.cur) * (reduce ? 1 : 0.18);
+      s.cur += (s.target - s.cur) * (reduce ? 1 : mobile ? 0.14 : 0.18);
       const dur = s.video.duration || 1;
       const t = clamp(s.cur, 0, 0.999) * dur;
-      if (Math.abs(s.video.currentTime - t) > eps) { try { s.video.currentTime = t; } catch (e) {} }
+      if (Math.abs(s.video.currentTime - t) > eps) seek(s, t, mobile);
     }
     requestAnimationFrame(raf);
+  }
+
+  function seek(s, t, mobile) {
+    const v = s.video;
+    if (mobile && typeof v.requestVideoFrameCallback === 'function') {
+      // A seek to the frame already shown presents nothing, so a timer backs up the
+      // frame callback or the segment would wait forever.
+      s.painting = true;
+      clearTimeout(s.paintTimer);
+      s.paintTimer = setTimeout(() => { s.painting = false; }, 150);
+      v.requestVideoFrameCallback(() => { clearTimeout(s.paintTimer); s.painting = false; });
+    }
+    try {
+      // The phone clips are all-intra (every frame a keyframe), so the "nearest" frame
+      // fastSeek lands on is the exact one and Safari skips its slow precise-seek path.
+      if (mobile && s.clipM && typeof v.fastSeek === 'function') v.fastSeek(t);
+      else v.currentTime = t;
+    } catch (e) { s.painting = false; }
   }
 
   // iOS needs a user gesture before a muted video will decode/paint reliably. On the

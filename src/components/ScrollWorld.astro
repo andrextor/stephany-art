@@ -3,8 +3,9 @@ import { site, whatsappUrl } from '../data/site';
 
 const commission = { label: 'Encargar una obra', href: whatsappUrl(site.whatsapp.commissionMessage), external: true };
 
-// Stops are still frames taken from the clips themselves (see docs/SPEC.md §4.1),
-// and clip-N is the walk between stop N-1 and stop N.
+// Stops are still frames taken from the clips themselves (scripts/encode-world.mjs),
+// and clip-N is the walk between stop N-1 and stop N. Phones get a portrait crop of
+// each clip with the framing baked in, so there is no per-stop object-position.
 const config = {
   nav: false,
   atmosphere: false,
@@ -17,8 +18,7 @@ const config = {
       id: 'inicio',
       label: 'Inicio',
       still: '/world/stop-0.webp',
-      stillMobile: '/world/stop-0-960.webp',
-      position: '50% 44%',
+      stillMobile: '/world/stop-0-portrait.webp',
       scroll: 1.2,
       titleTag: 'h1',
       eyebrow: `${site.role} · ${site.country}`,
@@ -30,8 +30,7 @@ const config = {
       id: 'taller',
       label: 'El taller',
       still: '/world/stop-1.webp',
-      stillMobile: '/world/stop-1-960.webp',
-      position: '45% 44%',
+      stillMobile: '/world/stop-1-portrait.webp',
       eyebrow: 'El taller',
       title: 'Donde nace cada obra',
       body: 'Donde el tiempo se desacelera entre pigmentos y bastidores. El taller es un refugio íntimo para dar forma a lo invisible.',
@@ -40,8 +39,7 @@ const config = {
       id: 'comision',
       label: 'Por comisión',
       still: '/world/stop-2.webp',
-      stillMobile: '/world/stop-2-960.webp',
-      position: '55% 44%',
+      stillMobile: '/world/stop-2-portrait.webp',
       eyebrow: 'Obras por comisión',
       title: 'Tu historia, pintada a mano',
       body: 'Retratos, paisajes, animales y abstractos por encargo, con la misma atención al detalle que mi obra personal.',
@@ -51,8 +49,7 @@ const config = {
       id: 'personales',
       label: 'Personales',
       still: '/world/stop-3.webp',
-      stillMobile: '/world/stop-3-960.webp',
-      position: '75% 44%',
+      stillMobile: '/world/stop-3-portrait.webp',
       eyebrow: 'Obras personales',
       title: 'Entre la luz y la sombra',
       body: 'Obras sobre la memoria y la transformación humana, expuestas en la Bienal de Armenia en 2024 y 2026.',
@@ -63,8 +60,7 @@ const config = {
       id: 'en-proceso',
       label: 'En proceso',
       still: '/world/stop-4.webp',
-      stillMobile: '/world/stop-4-960.webp',
-      position: '85% 44%',
+      stillMobile: '/world/stop-4-portrait.webp',
       scroll: 1.4,
       eyebrow: 'En proceso',
       title: 'Capa a capa, en el caballete',
@@ -86,18 +82,10 @@ const firstStop = config.sections[0];
 ---
 
 <div id="world" data-spy="/#world" aria-label="Recorrido por el taller" style={`--sw-total: ${totalViewportHeights}`}>
-  <img
-    class="sw-poster"
-    src={firstStop.still}
-    srcset={`${firstStop.still.replace('.webp', '-960.webp')} 960w, ${firstStop.still} 1920w`}
-    sizes="100vw"
-    alt=""
-    width="1920"
-    height="1080"
-    fetchpriority="high"
-    decoding="async"
-    style={`object-position: ${firstStop.position}`}
-  />
+  <picture>
+    <source media="(max-width: 860px)" srcset={firstStop.stillMobile} width="480" height="1040" />
+    <img class="sw-poster" src={firstStop.still} alt="" width="1920" height="1080" fetchpriority="high" decoding="async" />
+  </picture>
   <div class="sw-prelude" aria-hidden="true">
     <article class="sw-copy">
       <span class="sw-copy__num">01 / {String(config.sections.length).padStart(2, '0')}</span>
@@ -131,7 +119,7 @@ const firstStop = config.sections[0];
     mountScrollWorld(container, {
       ...config,
       connectors: clips.map((n) => `/video/clip-${n}-1080.${extension}`),
-      connectorsMobile: clips.map((n) => `/video/clip-${n}-720.${extension}`),
+      connectorsMobile: clips.map((n) => `/video/clip-${n}-portrait.${extension}`),
     });
     // The engine now renders the first stop's copy itself; drop the static prelude.
     container.querySelector('.sw-prelude')?.remove();

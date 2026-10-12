@@ -122,18 +122,21 @@ cut, scene change, fade, dissolve, crossfade, morphing, warping beams, bending w
 
 ## Archivos
 
+Juego v3 (11/10/2026), el que está en la web. Los v1/v2 se conservan como historial.
+
 | Archivo | Estado |
 |---|---|
-| `keyframes/F1-atico.webp` | ✅ v3: **outpaint de F2** (F2 intacta en el centro). Las versiones reinventadas hacían que la pared de paneles de la izquierda se "construyera" durante el avance (regla 12) |
-| `keyframes/F2-caballete.webp` | ✅ |
-| `keyframes/F3-comision.webp` | ✅ |
-| `keyframes/F4-personales.webp` | ✅ v3 (v1 `-frontal` descartada por la regla 1, v2 `-con-puerta` por la regla 3) |
-| `keyframes/F5-en-proceso.webp` | ✅ v4: giro de 45° más a la derecha por la misma pared lateral; el caballete está más adelante en esa pared |
-| `transitions/clip1-entrada-atico.mp4` | ✅ v2: avance recto, la pared izquierda ya existe desde el primer fotograma. Sale a 1928×1076: normalizar a 1920×1080 al concatenar |
-| `transitions/clip2-taller-comision.mp4` | ✅ |
-| `transitions/clip3-comision-personales.mp4` | ✅ v3: giro en el sitio, pared del fondo rígida, sin puerta |
-| `transitions/clip4-personales-en-proceso.mp4` | ✅ v4: giro en el sitio hacia la derecha, sin fundidos. El cuadro de la escalera se deforma un poco a mitad del giro |
-| `recorrido-preview.mp4` / `recorrido-scroll.mp4` | ✅ rehechos con los clips nuevos |
+| `keyframes/obra-inicio.jpeg` | Foto real del taller (3:4). Origen de F2v3 y F5v3 |
+| `keyframes/F2v3-caballete-transito.webp` | ✅ GPT Image 2.5: la foto extendida a 16:9 con *Tránsito del alma* en el caballete (variante `-alt` descartada) |
+| `keyframes/F1v3-entrada.webp` | ✅ Outpaint de F2v3 en dos pasos (21:9 → 16:9); un solo outpaint 16:9 apenas amplía |
+| `keyframes/F3-F4v4-panoramica-marcos.webp` | ✅ Panorámica 21:9: outpaint de F3 + edición GPT (pared lateral con los cuadros) + marcos finos y tamaños distintos |
+| `keyframes/F3v4-comision.webp` · `F4v4-personales.webp` | ✅ Recortes 16:9 izquierdo y derecho de la panorámica (`sharp`) |
+| `keyframes/F5v3-caballete-en-proceso.webp` | ✅ Mismo encuadre que F2v3 con el retrato en proceso real |
+| `transitions/clip1-v4-entrada-caballete.mp4` | ✅ Kling pro 10 s, F1v3 → F2v3. El poste derecho ya no crece |
+| `transitions/clip2-v4-caballete-comision.mp4` | ✅ Kling pro 10 s, F2v3 → F3v4. La v3 hizo un fundido a mitad; el prompt v4 describe el giro paso a paso y prohíbe la doble exposición |
+| `transitions/clip3-v5-comision-personales.mp4` | ✅ Kling pro 10 s, F3v4 → F4v4: giro de 25° con las vigas rígidas (`clip3-v4-*` = misma idea sin marcos; `clip3-v4-minimax-ab` = A/B MiniMax H3 2K 5 s, también limpio) |
+| `transitions/clip4-v5-personales-caballete.mp4` | F4v4 → F5v3, ver §5.7 |
+| `public/video/clip-N-1080.{mp4,webm}` · `clip-N-portrait.{mp4,webm}` · `public/world/stop-N{,-portrait}.webp` | Generados por `scripts/encode-world.mjs` (fase 13) |
 
 Coste acumulado: ~100 créditos (quedan 0,75).
 
@@ -241,7 +244,15 @@ Con el cambio, *Tránsito del alma* aparece dos veces: en el caballete de la ent
 - **Siempre:** los clips 16:9 nuevos pasan por la cadena de la fase 13 (recorte vertical que sigue el `position` de cada parada, todo intra, 480×1040). A 10 s el clip de móvil pesa ≈ 4,5 MB en vez de 2,3; se cargan al acercarse, no afectan al LCP.
 - **Opcional, 9:16 nativo (fase 14b):** la foto de entrada ya es vertical, así que F2v3-m y F1v3-m salen casi gratis (edición 9:16, 1 c + outpaint 2 c). F3, F4 y F5 en vertical necesitan recomponer la cámara más cerca de la pared para que los dos cuadros llenen el ancho (1 c cada una, con reintentos) y 4 clips más (8,75 / 17,5 c). ≈ 45–85 créditos. Se decide después de aprobar el juego 16:9.
 
-### 5.6 · Presupuesto y orden
+### 5.6 · Lo aprendido en la ejecución (11/10/2026)
+
+- **Outpaint**: con el mismo aspecto apenas amplía (añade ~2 %); para "la misma foto desde más atrás" hay que encadenar 21:9 → 16:9. Tampoco inventa paredes nuevas: extiende la que hay. Por eso la pared de Personales se añadió con una edición GPT sobre la panorámica, no con el outpaint.
+- **Regla 13: los dos extremos de un giro salen de la misma imagen.** Recortar F3 y F4 de una sola panorámica eliminó por completo las vigas que subían. Kling y MiniMax lo resolvieron limpio a la primera.
+- **Regla 14: un avance con giro entre dos fotos muy distintas puede salir como fundido** (clip 2 v3). Describir el movimiento por fases (qué sale de cuadro por dónde, qué entra) y prohibir `double exposure` lo arregló.
+- **Clip 4** (pared lateral → caballete real): la versión "camina y gira" salió como un barrido circular; se reintentó como giro puro en el sitio.
+- Las fotos reales como fotogramas clave (F2v3, F5v3) dan los extremos más estables de todo el recorrido.
+
+### 5.7 · Presupuesto y orden
 
 | Bloque | Mínimo | Realista (un reintento por clip) |
 |---|---|---|
