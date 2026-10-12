@@ -48,6 +48,11 @@ const details = [
   { label: 'Técnica', value: technique },
   { label: 'Medidas', value: dimensions ? `${dimensions.width} × ${dimensions.height} ${dimensions.unit}` : undefined },
 ].filter((detail): detail is { label: string; value: string } => detail.value !== undefined);
+const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
+  sold: 'bg-sold',
+  available: 'bg-available',
+  delivered: 'bg-sand',
+};
 ---
 
 <Layout title={title} description={description} image={ogImage.src} imageAlt={main.alt} type="article" jsonLd={jsonLd}>
@@ -71,13 +76,13 @@ const details = [
           class="max-h-[80vh] w-full object-contain"
         />
         {
-          (status === 'sold' || status === 'available') && (
+          status && status in statusDots && (
             <p class="absolute top-6 left-6 flex items-center gap-2 rounded-full bg-surface/90 px-3 py-1.5 text-sm font-semibold text-ink shadow-sm backdrop-blur-sm">
               <span class="relative flex size-2.5" aria-hidden="true">
                 {status === 'available' && (
                   <span class="absolute inset-0 rounded-full bg-available opacity-75 motion-safe:animate-ping" />
                 )}
-                <span class:list={['relative size-2.5 rounded-full', status === 'sold' ? 'bg-sold' : 'bg-available']} />
+                <span class:list={['relative size-2.5 rounded-full', statusDots[status]]} />
               </span>
               {statusLabels[status]}
             </p>
