@@ -334,6 +334,56 @@ Resultado: en 390×844 y 1440×900 cada sección apilada termina en el borde inf
 
 ---
 
+### 5.11 Fase 12 "niebla" (rama `feat/niebla`, aprobada e implementada el 11/10/2026)
+
+Pedido del cliente: fuente Althera (se usa Newsreader por licencia), textos nuevos en cuatro sitios y la paleta de la foto de bosque con niebla.
+
+**1 · Tipografía: Newsreader en lugar de Cormorant Garamond.** El cliente pidió Althera (Syauqi Studio), pero el zip disponible es la versión *free for personal use only* (`LICENSE.txt`: sin uso comercial; la EULA de 1001fonts incluye "websites… for companies"). Además trae un solo `.otf`, sin cursiva. Se decidió (11/10/2026) usar **Newsreader**, la alternativa más parecida (comparativa en el artefacto "Fuentes para Stephany"): serif editorial moderna, remates afilados, contraste medio, con licencia OFL apta para uso comercial.
+- **Implementación.** Igual que Cormorant: `fontProviders.google()`, pesos 400 y 500, `normal` e `italic`, subconjunto latino, `display: swap`, fallbacks Georgia y serif. Fuente variable con eje `opsz` 6–72 (`options.experimental.variableAxis`), así el navegador elige el tamaño óptico según el cuerpo de letra. Se usa peso 400; el 500 de Cormorant pasa a 400.
+- **Tokens.** `--font-display` pasa a apuntar a `--font-newsreader`. Manrope se queda para el texto corrido, los botones y las fichas.
+- **Cursiva.** Se mantiene en títulos de obra y en la cita, porque Newsreader tiene cursiva real.
+- **Validación.** Captura de los titulares a 390 y 1440 px, y ajuste de tamaños: Newsreader es más ancha que Cormorant, así que los `text-5xl`/`text-6xl` y la copia del recorrido pueden necesitar un punto menos.
+- **Si se compra Althera.** Si más adelante compran la licencia web completa en Gumroad, se sirve en local con `fontProviders.local()` y es un cambio de una línea.
+
+**2 a 5 · Textos.** Solo cambia el texto; la maquetación se queda igual.
+
+| # | Dónde | Archivo | Texto nuevo |
+|---|---|---|---|
+| 2 | Introducción de `/obras` | `src/pages/obras/index.astro` | Exploraciones personales y obras por encargo, universos donde la introspección y la naturaleza cobran vida a través del óleo, el acrílico y la delicadeza de las texturas. |
+| 3 | `/obras`, con el filtro **En proceso** activo | `src/pages/obras/index.astro` | Una sutil danza entre la luz, la sombra y la materia. Así avanza el proceso creativo en el caballete. |
+| 4 | Recorrido, parada 01 (Stephany Londoño) | `src/components/ScrollWorld.astro` | Un viaje visual hacia los rincones del alma. Pinturas al óleo y acrílico donde la memoria cobra latido y el tiempo se detiene en el lienzo. |
+| 5 | Recorrido, parada 02 (El taller) | `src/components/ScrollWorld.astro` | Donde el tiempo se desacelera entre pigmentos y bastidores. El taller es un refugio íntimo para dar forma a lo invisible. |
+
+Correcciones mínimas sobre el texto recibido: "textura" pasa a "texturas", "avanzan" a "avanza" y se añade el punto final.
+- **N.º 3, confirmado (11/10/2026).** Es la introducción que sustituye al texto 2 cuando está activo el filtro "En proceso" (`?estado=in-progress`).
+- **Copia sincronizada.** La parada 01 tiene una copia HTML previa (`.sw-prelude`) que debe coincidir píxel a píxel con la del motor. Con el texto más largo, hay que volver a comprobar ese ajuste en móvil.
+
+**6 · Paleta "Niebla".** Sale de la foto de referencia (bosque, niebla y luz de amanecer). Como la referencia no trae claros, el fondo es un gris niebla cálido derivado de ella.
+
+| Token | Antes (Nogal) | Ahora (Niebla) | Uso | Contraste |
+|---|---|---|---|---|
+| `--bg` | `#EFE8DA` | `#ECE8E2` niebla | Fondo general | — |
+| `--surface` | `#F8F3E9` | `#F6F4F0` | Banda "Sobre mí", tarjetas | — |
+| `--ink` | `#1E1711` | `#1B1D22` noche | Texto, botón principal, bandas oscuras, pie | 13,8:1 sobre bg |
+| `--ink-soft` | `#5B5044` | `#404C4C` pizarra | Texto secundario sobre claro | 7,3:1 |
+| `--ink-faint` | `#B9AE9C` | `#7F8A89` salvia | Texto secundario sobre noche | 4,7:1 |
+| `--moss` | `#4F6B3A` | `#404C4C` pizarra | Banda "Cómo funciona un encargo" (texto bg 7,3:1) | — |
+| `--moss-deep` | `#3B5230` | `#56625F` | Años, kicker, estados | 5,2:1 |
+| `--clay` | `#A4502C` | `#E0B88F` luz de amanecer | Botón WhatsApp del pie y "Encargar una obra" del menú, con **texto `--ink`** (ya no `--surface`) | 9,2:1 |
+| `--line` | `#DCD2BF` | `#D6D0C8` | Bordes | — |
+| espirales | musgo / bg | `#B08E7A` arena | Figura decorativa (sin texto) | — |
+
+Se conservan los nombres de los tokens (`moss`, `clay`) para no tocar 40 clases; el renombrado se deja para más adelante si molesta. También se actualizan el `favicon.svg`, el `theme-color` y el velo del recorrido (`--ink` al 40 %).
+
+**Criterios de aceptación**
+- Todos los pares de texto ≥ 4,5:1, con Lighthouse de accesibilidad a 100 en `/`, `/obras` y una ficha.
+- La copia previa coincide con la del motor (diferencia de 0 px) en 390 y 1440 px.
+- `?estado=en-proceso` muestra el texto 3; el resto de filtros, el texto 2.
+- Sin CLS por el cambio de fuente: preload más fallback métrico.
+- Se mantienen Performance ≥ 95 y CLS 0.
+
+**Orden de trabajo** (un commit por punto): paleta → textos → fuente.
+
 ## 6. Stack
 
 - Astro 7 + Tailwind v4 + `astro:assets` (`<Picture>`).
@@ -409,6 +459,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **9 · La obra y la artista** | §5.6: obra insignia junto a la artista, tarjetas sin caja con cartela de museo | ✅ en rama `feat/obra-y-artista`, pendiente de merge |
 | **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | ✅ en rama `feat/movimiento`, pendiente de merge |
 | **11 · Scroll como Arko** | §5.8: apariciones con desenfoque escalonadas también en las obras, foto centrada | ✅ en rama `feat/scroll-arko`, pendiente de merge |
+| **12 · Niebla** | §5.11: fuente Newsreader (sustituye a Althera por licencia), textos nuevos en `/obras` y en las paradas 01‑02, paleta de bosque con niebla | ✅ en rama `feat/niebla`, pendiente de merge. Copia previa = motor (0 px) en 390 y 1440; Lighthouse 96–99 / 100 / 100 / 100, CLS 0 |
 
 ---
 
