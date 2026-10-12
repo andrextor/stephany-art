@@ -389,6 +389,46 @@ Al entrar cada sección, las capas cercanas suben más que las lejanas (`animati
 
 **Orden de trabajo** (un commit por punto): paleta → textos.
 
+### 5.12 Fase 13 "recorrido fluido en móvil" (rama `feat/recorrido-movil`, plan 11/10/2026, pendiente de aprobación)
+
+Síntoma: en el celular el recorrido se ve a saltos y recortado; en el PC va fluido. Son tres causas que se suman, todas medidas sobre los archivos actuales.
+
+**Diagnóstico**
+
+| # | Causa | Dato |
+|---|---|---|
+| 1 | **Cada paso del scroll obliga al decodificador del móvil a reconstruir hasta 6 fotogramas.** Los clips llevan un fotograma clave cada 6 (`-g 6`, 0,25 s). Para mostrar un fotograma intermedio hay que decodificar desde el fotograma clave anterior. Un PC lo hace de sobra; un móvil resuelve 6–15 saltos por segundo y el resto se pierde: el vídeo avanza a tirones | `ffprobe clip-1-1080.mp4`: 121 fotogramas, 20 claves |
+| 2 | **El móvil decodifica 4 veces más imagen de la que muestra.** El clip es 16:9 (1280×720 en móvil) y la pantalla es 9:19,5. Con `object-fit: cover` se ve el centro: unos 333 px de los 1280 de ancho (26 %). Por eso además se ve "recortado": la puerta y el caballete quedan fuera del encuadre | 390×844 sobre 1280×720: escala 1,17, ancho visible 333 px |
+| 3 | **El motor pide saltos que no cambian nada.** En móvil `eps = 0,02 s`, medio fotograma a 24 fps: la mitad de los `currentTime` que pide muestran el mismo fotograma, pero cuestan una decodificación. Y solo espera a `seeking`, que en iOS se apaga antes de que el fotograma se pinte, así que encadena peticiones sobre un decodificador ocupado | `scroll-world.js`, `raf()` |
+
+Descartado: Lenis no interviene en táctil (`syncTouch` apagado, scroll nativo). Los clips se cargan como Blob, así que no es un problema de red ni de `Range`.
+
+**Plan**
+
+1. **Clips de móvil verticales y "todo intra"** (0 créditos, solo ffmpeg sobre los másteres de `media/transitions/`).
+   - Recorte 9:19,5 del máster 1080p que **sigue el `position` de cada parada**: el clip *n* va de la parada *n* a la *n+1*, así que el recorte se desplaza linealmente de `x_n` a `x_{n+1}` (50 → 45 → 55 → 75 → 85 %). Altura completa, por eso el 44 % vertical deja de importar. Salida 480×1040.
+   - `-g 1`: todos los fotogramas son clave. Cualquier salto = 1 decodificación, sea cual sea el fotograma. Es exactamente lo que recomienda la cabecera del motor para móvil.
+   - H.264 Main, `crf 26`, `+faststart`, sin audio.
+   - **Peso medido en el clip 1:** 720p actual (`-g 6`) 2,27 MB · 720p todo intra 4,47 MB (el doble, descartado) · **vertical 540×960 todo intra `crf 26` 2,27 MB**: el mismo peso de hoy con 3 veces menos píxeles por fotograma y 6 veces menos trabajo por salto. 480×1040 tiene los mismos píxeles, así que pesa igual.
+   - Pósteres `stop-{0..4}-960.webp` regenerados a partir del **primer o último fotograma del clip vertical**, con el mismo recorte, para que el póster y el vídeo coincidan al píxel (hoy son recortes del 16:9 por CSS).
+   - Se mantienen las variantes `.webm` (VP9 `-g 1`, mismo recorte) solo como reserva y para las pruebas en Chromium sin H.264.
+   - Cuando se rehagan los clips en Higgsfield (previsto), la cadena se repite en minutos; si se renderizan en 9:16 nativo, se omite el recorte.
+2. **Motor, cambio local 13** (`scroll-world.js`, solo en la rama móvil):
+   - `eps` en móvil = 1 fotograma (`1/24`). No se pide ningún salto que muestre el mismo fotograma.
+   - Un salto nuevo solo cuando **el anterior ya se pintó**: `requestVideoFrameCallback` (Safari 15.4+, Chrome, Firefox) con `seeked` como reserva. Hoy solo se mira `seeking`.
+   - En Safari, `fastSeek()` en vez de `currentTime` para los clips de móvil: como son todo intra, el fotograma "más cercano" es el exacto y evita la ruta lenta de búsqueda precisa.
+   - Factor del lerp en móvil 0,14 (hoy 0,18) para que el movimiento sea más flotante; parámetro, no regla.
+   - `--sw-pos` en móvil pasa a `center`, porque el recorte ya va en el vídeo.
+3. **Verificación**
+   - Chromium con emulación de móvil (390×844, táctil, CPU ×4) sobre `.webm`: latencia media entre `currentTime` y el fotograma pintado, antes y después. Objetivo: ≥ 20 fotogramas pintados por segundo durante un scroll continuo.
+   - **Prueba en el teléfono real** con `astro dev --host` por wifi (iOS Safari y Android Chrome): fluidez, sin fotograma en blanco al entrar, sin salto al esconderse la barra de direcciones, pósteres iguales al vídeo.
+   - Lighthouse móvil sin cambio (los clips se cargan al acercarse, no afectan al LCP) y CLS 0.
+   - En escritorio nada cambia: mismos clips 1080p `-g 6`.
+
+**Criterios de aceptación:** en un iPhone o Android de gama media el recorrido avanza con el dedo sin tirones visibles; el encuadre vertical muestra la puerta y el caballete en cada parada; el peso total de los clips de móvil no supera el de hoy (≈ 8,2 MB en MP4).
+
+Orden de trabajo (un commit por punto): clips y pósteres → motor → verificación y spec.
+
 ## 6. Stack
 
 - Astro 7 + Tailwind v4 + `astro:assets` (`<Picture>`).
@@ -465,6 +505,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | ✅ en rama `feat/movimiento`, pendiente de merge |
 | **11 · Scroll como Arko** | §5.8: apariciones con desenfoque escalonadas también en las obras, foto centrada | ✅ en rama `feat/scroll-arko`, pendiente de merge |
 | **12 · Niebla** | §5.11: textos nuevos en `/obras` y en las paradas 01‑02, paleta de bosque con niebla | ✅ en rama `feat/niebla`, pendiente de merge. Copia previa = motor (0 px) en 390 y 1440; Lighthouse 96–99 / 100 / 100 / 100, CLS 0 |
+| **13 · Recorrido en móvil** | §5.12: clips verticales todo intra para el teléfono, saltos a fotograma entero y esperando al pintado | Plan escrito, pendiente de aprobación |
 
 ---
 
