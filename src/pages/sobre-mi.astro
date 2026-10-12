@@ -1,0 +1,93 @@
+---
+import ArtistPortrait from '../components/ArtistPortrait.astro';
+import Brush from '../components/Brush.astro';
+import Icon from '../components/Icon.astro';
+import { site, whatsappUrl } from '../data/site';
+import Layout from '../layouts/Layout.astro';
+import { artistJsonLd, graph } from '../lib/seo';
+
+const origin = Astro.site ?? Astro.url;
+const jsonLd = graph(
+  {
+    '@type': 'ProfilePage',
+    url: new URL('/sobre-mi', origin).href,
+    mainEntity: { '@id': new URL('/#artista', origin).href },
+  },
+  artistJsonLd(origin),
+);
+---
+
+<Layout
+  title="Sobre mí"
+  description={`Biografía de ${site.artistName}, artista plástica colombiana y autodidacta: su técnica de veladuras y texturas, su taller y sus exposiciones en la Bienal de Armenia.`}
+  type="profile"
+  jsonLd={jsonLd}
+>
+  <article class="relative overflow-hidden">
+    <div class="mx-auto grid max-w-6xl gap-12 px-4 pt-32 pb-24 md:grid-cols-[1fr_1.4fr] md:gap-16 md:px-8">
+      <div class="md:sticky md:top-32 md:self-start">
+        <ArtistPortrait eager />
+      </div>
+
+      <div class="flex flex-col gap-8">
+        <header class="flex flex-col gap-3">
+          <p data-reveal class="text-xs font-semibold tracking-[0.16em] text-moss-deep uppercase">
+            {site.artistName} · {site.role}
+          </p>
+          <h1 data-reveal class="text-5xl md:text-6xl">Sobre mí</h1>
+        </header>
+
+        <div class="flex flex-col gap-5 text-lg text-ink-soft">
+          {site.bio.map((paragraph, index) => <p data-reveal style={`--d: ${index * 80}ms`}>{paragraph}</p>)}
+        </div>
+
+        <ul data-reveal class="flex flex-wrap gap-2">
+          {
+            site.highlights.map((highlight) => (
+              <li class="flex flex-col rounded-full border border-line bg-surface px-4 py-1.5 text-xs leading-snug">
+                <span class="font-semibold text-ink">{highlight.title}</span>
+                <span class="text-ink-soft">{highlight.detail}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <section aria-labelledby="exposiciones" class="flex flex-col gap-4 border-t border-line pt-8">
+          <h2 id="exposiciones" data-reveal class="text-3xl">Exposiciones y publicaciones</h2>
+          <ol class="flex flex-col gap-4">
+            {
+              site.exhibitions.map((exhibition, index) => (
+                <li data-reveal style={`--d: ${index * 80}ms`} class="grid grid-cols-[4rem_1fr] gap-4">
+                  <span class="pt-1 text-sm font-semibold text-moss-deep">{exhibition.year}</span>
+                  <span class="flex flex-col">
+                    <span class="font-display text-2xl text-ink italic">{exhibition.artwork}</span>
+                    <span class="text-base text-ink-soft">{exhibition.event}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <div data-reveal class="flex flex-wrap gap-3 pt-4">
+          <a
+            href={whatsappUrl(site.whatsapp.commissionMessage)}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+          >
+            <Icon name="whatsapp" />
+            Encargar una obra
+          </a>
+          <a
+            href="/obras"
+            class="inline-flex items-center rounded-full border-[1.5px] border-ink/25 px-3 py-2 text-base font-semibold text-ink transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
+          >
+            Ver las obras
+          </a>
+        </div>
+      </div>
+    </div>
+    <Brush class="brush--scroll pointer-events-none absolute bottom-0 left-0 w-[min(140%,760px)] -translate-x-[15%] translate-y-[20%] text-sand/50" />
+  </article>
+</Layout>

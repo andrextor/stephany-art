@@ -91,7 +91,8 @@
         the all-intra phone clips, softer lerp (0.14).
     14. Legibility: a soft elliptical veil behind the copy on desktop (90 % of --sw-bg where
         the text sits, instead of a full-height column), a denser bottom gradient on phones,
-        body text in full --sw-ink, and a bg glow behind the scroll hint.
+        body text in full --sw-ink. The scroll hint is light with a dark shadow on desktop (it
+        sits on the dark floor) and stays dark on phones (it sits on the bottom veil).
    ========================================================================== */
 
 export function mountScrollWorld(container, config) {
@@ -480,6 +481,7 @@ function injectCSS() {
   .sw-route__label{position:absolute;right:24px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--sw-ink);background:color-mix(in srgb,#fff 85%,transparent);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border:1px solid color-mix(in srgb,var(--sw-accent) 14%,transparent);}
   .sw-route__dot:hover .sw-route__label,.sw-route__dot.is-active .sw-route__label{opacity:1;transform:translateY(-50%) translateX(0);}
   .sw-hint{position:fixed;left:50%;bottom:26px;z-index:30;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink);text-shadow:0 0 6px var(--sw-bg),0 0 14px var(--sw-bg);transition:opacity .3s;}
+  @media (min-width:861px){ .sw-hint{color:var(--sw-bg);text-shadow:0 1px 3px rgb(0 0 0/.55),0 0 14px rgb(0 0 0/.45);} .sw-hint i{border-color:color-mix(in srgb,var(--sw-bg) 80%,transparent)!important;box-shadow:0 0 12px rgb(0 0 0/.35);} }
   .sw-hint i{width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);position:relative;}
   .sw-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
   @keyframes sw-wheel{0%{opacity:0;top:6px}40%{opacity:1}100%{opacity:0;top:17px}}

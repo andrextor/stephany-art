@@ -1,0 +1,29 @@
+---
+import { Picture } from 'astro:assets';
+import artistPhoto from '../assets/artist/stephany-cutout.webp';
+
+interface Props {
+  class?: string;
+  eager?: boolean;
+}
+
+const { class: className = '', eager = false } = Astro.props;
+---
+
+<figure data-reveal class:list={['mx-auto flex w-full max-w-sm flex-col gap-3', className]}>
+  <div class="relative aspect-4/5">
+    <div class="arch absolute inset-x-0 top-[7%] bottom-0 bg-linear-to-b from-sand/20 to-sand/50"></div>
+    <Picture
+      src={artistPhoto}
+      alt="Retrato de Stephany Londoño con el catálogo de la 5.ª Bienal Internacional de Arte de Armenia"
+      formats={['avif', 'webp']}
+      fallbackFormat="webp"
+      widths={[320, 480, 640, 768]}
+      sizes="(min-width: 768px) 24rem, 90vw"
+      loading={eager ? 'eager' : 'lazy'}
+      pictureAttributes={{ class: 'contents' }}
+      class="relative size-full object-contain object-bottom"
+    />
+  </div>
+  <figcaption class="text-center text-xs text-pretty text-ink-soft">En la 5.ª Bienal Internacional de Arte de Armenia, 2024</figcaption>
+</figure>

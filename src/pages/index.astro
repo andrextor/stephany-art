@@ -1,6 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
-import artistPhoto from '../assets/artist/stephany-cutout.webp';
+import ArtistPortrait from '../components/ArtistPortrait.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import Brush from '../components/Brush.astro';
 import Footer from '../components/Footer.astro';
@@ -104,48 +104,20 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
       </div>
     </section>
 
-    <section id="sobre" data-spy="/#sobre" aria-labelledby="sobre-titulo" class="grid border-t border-line md:grid-cols-[1fr_1.6fr]">
-      <div class="relative flex flex-col gap-6 overflow-hidden bg-surface px-4 pt-16 pb-40 md:px-10 md:pt-20">
-        <figure data-reveal class="mx-auto flex w-full max-w-sm flex-col gap-3">
-          <div class="relative aspect-4/5">
-            <div class="arch absolute inset-x-0 top-[7%] bottom-0 bg-linear-to-b from-sand/20 to-sand/50"></div>
-            <Picture
-              src={artistPhoto}
-              alt="Retrato de Stephany Londoño con el catálogo de la 5.ª Bienal Internacional de Arte de Armenia"
-              formats={['avif', 'webp']}
-              fallbackFormat="webp"
-              widths={[320, 480, 640, 768]}
-              sizes="(min-width: 768px) 24rem, 90vw"
-              pictureAttributes={{ class: 'contents' }}
-              class="relative size-full object-contain object-bottom"
-            />
-          </div>
-          <figcaption class="text-center text-xs text-pretty text-ink-soft">En la 5.ª Bienal Internacional de Arte de Armenia, 2024</figcaption>
-        </figure>
+    <section id="sobre" data-spy="/sobre-mi" aria-labelledby="sobre-titulo" class="grid border-t border-line md:grid-cols-[1fr_1.6fr]">
+      <div class="relative flex flex-col gap-6 overflow-hidden bg-surface px-4 pt-16 pb-48 md:px-10 md:pt-20">
+        <ArtistPortrait />
         <h2 id="sobre-titulo" data-reveal class="text-4xl">Sobre mí</h2>
         <p data-reveal style="--d: 100ms" class="text-base text-ink-soft">{site.intro}</p>
-        <details data-reveal style="--d: 200ms" class="group">
-          <summary class="inline-flex cursor-pointer list-none items-center gap-2 border-b border-line pb-0.5 text-sm font-semibold text-ink">
-            <span class="group-open:hidden">Leer la biografía</span>
-            <span class="hidden group-open:inline">Cerrar la biografía</span>
-          </summary>
-          <div class="flex flex-col gap-4 pt-6">
-            {site.bio.map((paragraph) => <p class="text-base text-ink-soft">{paragraph}</p>)}
-            <ul class="flex flex-col gap-2 border-t border-line pt-4 text-sm">
-              {
-                site.exhibitions.map((exhibition) => (
-                  <li class="grid grid-cols-[3.5rem_1fr] gap-3">
-                    <span class="text-moss-deep">{exhibition.year}</span>
-                    <span>
-                      <span class="font-display text-lg text-ink italic">{exhibition.artwork}</span>
-                      <span class="text-ink-soft"> · {exhibition.event}</span>
-                    </span>
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-        </details>
+        <a
+          data-reveal
+          style="--d: 200ms"
+          href="/sobre-mi"
+          class="inline-flex w-max items-center gap-2 border-b border-line pb-0.5 text-sm font-semibold text-ink hover:border-ink"
+        >
+          Leer la biografía
+          <Icon name="arrow-right" class="size-4" />
+        </a>
         <Brush class="brush--scroll absolute bottom-0 left-0 w-[min(120%,640px)] -translate-x-[12%] translate-y-[18%] text-sand/60 md:w-[150%] md:translate-y-[8%]" />
       </div>
 

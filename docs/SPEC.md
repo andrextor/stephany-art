@@ -467,6 +467,8 @@ El bloque desentonaba: la foto con el muro de logos de la Bienal detrás parecí
 - **Obras en paspartú:** `ArtworkCard` pone cada cuadro entero (`object-contain`) dentro de un marco 4:5 igual para todos, con sombra `drop-shadow` que sigue la pintura. Afecta a la home, a `/obras` y a las relacionadas de cada ficha, cuyas cuadrículas dejan `items-end`.
 - **"Ver las N obras"** pasa a botón oscuro.
 - **Pincelada** grande en arena bajo la biografía para llenar el hueco de la columna, que se estira hasta la altura de la cuadrícula.
+- **Página `/sobre-mi`** (en lugar del desplegable "Leer la biografía", que al abrirse estiraba la columna y metía la pincelada encima de las exposiciones): retrato en arco fijo al hacer scroll en escritorio, biografía completa, datos clave, exposiciones y publicaciones, CTA de encargo y pincelada al pie. JSON-LD `ProfilePage` con `mainEntity` → la persona, `og:type profile`. El menú "Sobre mí" apunta a ella y la sección de la home también la activa en el scroll-spy. El retrato pasa a `ArtistPortrait.astro` (home y página).
+- **"Desliza para entrar"** (cambio 14 del motor): en escritorio va en `--bg` con sombra oscura, porque cae sobre el suelo de madera; en móvil sigue oscuro sobre el velo claro.
 
 ## 6. Stack
 
