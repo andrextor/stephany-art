@@ -20,4 +20,4 @@ images:
 order: 40
 ---
 
-El gran árbol es puerta a otro mundo, donde el río es de polvo de hadas, y en el bosque turquesa brillan mil luciérnagas doradas. Una maga de sombra y de viento, con un faro de luz, cruza el velo de un reino somnoliento donde el tiempo… Y comprende, al mirar el entorno, que la magia es su eterno retorno.
+El gran árbol es puerta a otro mundo, donde el río es de polvo de hadas, y en el bosque turquesa brillan mil luciérnagas doradas. Una maga de sombra y de viento, con un faro de luz, cruza el velo de un reino somnoliento. Y comprende, al mirar el entorno, que la magia es su eterno retorno.
