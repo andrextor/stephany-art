@@ -65,7 +65,7 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
     </a>
 
     <div class="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-start">
-      <figure class="relative flex items-center justify-center rounded-lg border border-line bg-surface p-3" style={`view-transition-name: obra-${artwork.id}`}>
+      <figure class="relative flex items-center justify-center glass rounded-2xl p-3" style={`view-transition-name: obra-${artwork.id}`}>
         <Picture
           src={main.src}
           alt={main.alt}
@@ -145,7 +145,7 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
           <h2 id="detalles" class="text-3xl">Detalles y proceso</h2>
           <div class="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {gallery.map((image) => (
-              <figure class="rounded-lg border border-line bg-surface p-3">
+              <figure class="glass rounded-2xl p-3">
                 <Picture
                   src={image.src}
                   alt={image.alt}

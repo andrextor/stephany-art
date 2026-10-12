@@ -115,6 +115,13 @@ body {
   }
 }
 
+/* Frosted frame for artworks over the gallery backdrop: lets the gradient through, blurred. */
+.glass {
+  border: 1px solid rgb(255 255 255 / 0.45);
+  background-color: rgb(246 244 240 / 0.28);
+  backdrop-filter: blur(14px);
+}
+
 .paper-grain {
   opacity: 0.35;
   mix-blend-mode: multiply;
