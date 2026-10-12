@@ -90,8 +90,10 @@ body {
 }
 
 /* Lets a photo dissolve into the band behind it instead of ending on a hard edge. */
-.fade-bottom {
-  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+/* A painting shown whole inside a fixed mat: the shadow follows the painted pixels, not the
+   letterboxed box. */
+.canvas-drop {
+  filter: drop-shadow(0 1px 1px rgb(27 29 34 / 0.2)) drop-shadow(0 12px 14px rgb(27 29 34 / 0.28));
 }
 
 /* Misty ridges (Ridges.astro): nearer layers rise further as the section scrolls in,
