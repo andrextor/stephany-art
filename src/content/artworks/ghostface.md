@@ -16,5 +16,5 @@ images:
   - src: ../../assets/artworks/ghostface/ghostface-knife-detail.webp
     alt: "Detalle de la máscara y el cuchillo"
     kind: detail
-order: 90
+order: 150
 ---

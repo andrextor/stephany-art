@@ -3,6 +3,7 @@ import { getImage, Picture } from 'astro:assets';
 import { render } from 'astro:content';
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import Brush from '../../components/Brush.astro';
+import PaintedBackdrop from '../../components/PaintedBackdrop.astro';
 import Icon from '../../components/Icon.astro';
 import Layout from '../../layouts/Layout.astro';
 import {
@@ -56,6 +57,7 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
 ---
 
 <Layout title={title} description={description} image={ogImage.src} imageAlt={main.alt} type="article" jsonLd={jsonLd}>
+  <PaintedBackdrop>
   <article class="mx-auto flex max-w-6xl flex-col gap-16 px-4 pt-32 md:px-8">
     <a href="/obras" class="inline-flex w-max items-center gap-2 text-sm text-ink-soft transition-colors duration-700 ease-fluid hover:text-ink">
       <Icon name="arrow-left" class="size-4" />
@@ -178,4 +180,5 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
       )
     }
   </article>
+  </PaintedBackdrop>
 </Layout>

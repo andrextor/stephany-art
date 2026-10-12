@@ -19,5 +19,5 @@ images:
     alt: "Detalle de la canoa con dos figuras sobre el lago y la textura del lienzo"
     kind: detail
 featured: true
-order: 30
+order: 90
 ---

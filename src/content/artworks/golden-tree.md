@@ -15,5 +15,5 @@ images:
   - src: ../../assets/artworks/golden-tree/golden-tree-front.webp
     alt: "Vista frontal del árbol con hojas en relieve"
     kind: detail
-order: 60
+order: 120
 ---

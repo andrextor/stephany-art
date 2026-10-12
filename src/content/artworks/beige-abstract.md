@@ -16,5 +16,5 @@ images:
   - src: ../../assets/artworks/beige-abstract/beige-black-abstract-on-easel-alt.webp
     alt: "La obra en el caballete, segunda vista"
     kind: studio
-order: 80
+order: 140
 ---

@@ -29,7 +29,7 @@ images:
   - src: ../../assets/artworks/family-portrait/family-portrait-detail-vertical.webp
     alt: "Detalle vertical del retrato"
     kind: detail
-order: 100
+order: 10
 ---
 
 Bajo el cuidado constante de dos padres amorosos,\

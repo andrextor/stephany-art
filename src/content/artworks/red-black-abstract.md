@@ -16,5 +16,5 @@ images:
   - src: ../../assets/artworks/red-black-abstract/red-black-abstract-angled.webp
     alt: "La obra colgada en una pared blanca, vista en ángulo"
     kind: studio
-order: 70
+order: 130
 ---

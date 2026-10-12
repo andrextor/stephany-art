@@ -16,5 +16,5 @@ images:
     alt: "Las guacamayas en el caballete del taller"
     kind: studio
 featured: true
-order: 40
+order: 100
 ---

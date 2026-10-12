@@ -1,5 +1,6 @@
 ---
 import ArtworkCard from '../../components/ArtworkCard.astro';
+import PaintedBackdrop from '../../components/PaintedBackdrop.astro';
 import Layout from '../../layouts/Layout.astro';
 import { categoryLabels, getPublishedArtworks, statusLabels } from '../../lib/artworks';
 import { graph } from '../../lib/seo';
@@ -45,6 +46,7 @@ const filterHref = (cat: string, estado: string): string => {
   description="Catálogo de obras de Stephany Londoño: obras personales, encargos entregados y obras en proceso."
   jsonLd={jsonLd}
 >
+  <PaintedBackdrop>
   <section class="mx-auto flex max-w-6xl flex-col gap-12 px-4 pt-40 md:px-8">
     <header class="flex max-w-2xl flex-col gap-4">
       <h1 class="text-5xl md:text-6xl">Obras</h1>
@@ -85,6 +87,7 @@ const filterHref = (cat: string, estado: string): string => {
       No hay obras con este filtro por ahora. <a href="/obras" class="text-ink underline decoration-moss underline-offset-4">Ver todas las obras</a>
     </p>
   </section>
+  </PaintedBackdrop>
 </Layout>
 
 <script>

@@ -2,6 +2,7 @@
 import ArtistPortrait from '../components/ArtistPortrait.astro';
 import Brush from '../components/Brush.astro';
 import Icon from '../components/Icon.astro';
+import PaintedBackdrop from '../components/PaintedBackdrop.astro';
 import { site, whatsappUrl } from '../data/site';
 import Layout from '../layouts/Layout.astro';
 import { artistJsonLd, graph } from '../lib/seo';
@@ -23,6 +24,7 @@ const jsonLd = graph(
   type="profile"
   jsonLd={jsonLd}
 >
+  <PaintedBackdrop>
   <article class="relative overflow-hidden">
     <div class="mx-auto grid max-w-6xl gap-12 px-4 pt-32 pb-24 md:grid-cols-[1fr_1.4fr] md:gap-16 md:px-8">
       <div class="md:sticky md:top-32 md:self-start">
@@ -90,4 +92,5 @@ const jsonLd = graph(
     </div>
     <Brush class="brush--scroll pointer-events-none absolute bottom-0 left-0 w-[min(140%,760px)] -translate-x-[15%] translate-y-[20%] text-sand/50" />
   </article>
+  </PaintedBackdrop>
 </Layout>

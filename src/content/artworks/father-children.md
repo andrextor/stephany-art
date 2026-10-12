@@ -14,7 +14,7 @@ images:
   - src: ../../assets/artworks/father-children/father-with-children-alt.webp
     alt: "Segunda vista del retrato"
     kind: detail
-order: 130
+order: 40
 ---
 
 En el nido tibio de su abrazo, anida la calma.\
