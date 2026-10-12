@@ -286,6 +286,7 @@ export function mountScrollWorld(container, config) {
     }
 
     const lead = COPY_LEAD * vh;
+    let veil = 0;
     for (let i = 0; i < N; i++) {
       const seg = SECTIONS[i]._seg;
       // Copy for stops after the first starts rising `lead` before its scene, i.e. during
@@ -299,9 +300,11 @@ export function mountScrollWorld(container, config) {
       else cop = (before || after) ? 0 : smooth(Math.min(pr / 0.3, (1 - pr) / 0.22));
       const c = copies[i];
       c.style.opacity = cop;
+      veil = Math.max(veil, cop);
       c.style.setProperty('--sw-py', reduce ? '0vh' : `${(0.5 - pr) * 4}vh`);
       c.style.pointerEvents = cop > 0.5 ? 'auto' : 'none';
     }
+    copylayer.style.setProperty('--sw-veil', veil.toFixed(3));
 
     const cur = SEGMENTS[ci];
     const near = clamp(cur.kind === 'dive' ? cur.si
@@ -488,7 +491,7 @@ function injectCSS() {
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
   @media (max-width:860px){
     .sw-nav{display:none;}
-    .sw-copylayer::before{width:100%;height:82%;top:auto;bottom:0;background:linear-gradient(0deg,var(--sw-bg) 10%,color-mix(in srgb,var(--sw-bg) 92%,transparent) 52%,color-mix(in srgb,var(--sw-bg) 60%,transparent) 76%,transparent 100%);}
+    .sw-copylayer::before{width:100%;height:82%;top:auto;bottom:0;opacity:var(--sw-veil,1);background:linear-gradient(0deg,var(--sw-bg) 10%,color-mix(in srgb,var(--sw-bg) 92%,transparent) 52%,color-mix(in srgb,var(--sw-bg) 60%,transparent) 76%,transparent 100%);}
     /* Anchor copy to the bottom, clear of the home indicator / collapsing URL bar.
        dvh + env() are progressive: browsers that lack them keep the vh fallback line. */
     .sw-copy{left:clamp(18px,5vw,64px);right:clamp(18px,5vw,64px);top:auto;bottom:clamp(96px,20vh,170px);transform:translateY(var(--sw-py,0vh));width:auto;max-width:560px;}
