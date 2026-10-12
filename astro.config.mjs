@@ -13,11 +13,10 @@ export default defineConfig({
   integrations: site ? [sitemap({ filter: (page) => !page.endsWith('/404/') })] : [],
   fonts: [
     {
-      name: 'Newsreader',
-      cssVariable: '--font-newsreader',
+      name: 'Cormorant Garamond',
+      cssVariable: '--font-cormorant',
       provider: fontProviders.google(),
-      weights: [400],
-      options: { experimental: { variableAxis: { opsz: [['6', '72']] } } },
+      weights: [500],
       styles: ['normal', 'italic'],
       display: 'swap',
       subsets: ['latin'],

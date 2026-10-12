@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-display: var(--font-newsreader);
+  --font-display: var(--font-cormorant);
   --font-sans: var(--font-manrope);
 }
 
@@ -31,7 +31,7 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 500;
     text-wrap: balance;
   }
 
@@ -173,7 +173,7 @@ body {
 }
 
 .sw-copy__title {
-  font-weight: 400;
+  font-weight: 500;
   text-wrap: balance;
 }
 
@@ -195,7 +195,7 @@ body {
   color: var(--color-ink);
   font-family: var(--font-display);
   font-size: 1.125rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* First stop's copy, server rendered so the LCP does not wait for the engine. It mirrors

@@ -338,12 +338,7 @@ Resultado: en 390×844 y 1440×900 cada sección apilada termina en el borde inf
 
 Pedido del cliente: fuente Althera (se usa Newsreader por licencia), textos nuevos en cuatro sitios y la paleta de la foto de bosque con niebla.
 
-**1 · Tipografía: Newsreader en lugar de Cormorant Garamond.** El cliente pidió Althera (Syauqi Studio), pero el zip disponible es la versión *free for personal use only* (`LICENSE.txt`: sin uso comercial; la EULA de 1001fonts incluye "websites… for companies"). Además trae un solo `.otf`, sin cursiva. Se decidió (11/10/2026) usar **Newsreader**, la alternativa más parecida (comparativa en el artefacto "Fuentes para Stephany"): serif editorial moderna, remates afilados, contraste medio, con licencia OFL apta para uso comercial.
-- **Implementación.** Igual que Cormorant: `fontProviders.google()`, pesos 400 y 500, `normal` e `italic`, subconjunto latino, `display: swap`, fallbacks Georgia y serif. Fuente variable con eje `opsz` 6–72 (`options.experimental.variableAxis`), así el navegador elige el tamaño óptico según el cuerpo de letra. Se usa peso 400; el 500 de Cormorant pasa a 400.
-- **Tokens.** `--font-display` pasa a apuntar a `--font-newsreader`. Manrope se queda para el texto corrido, los botones y las fichas.
-- **Cursiva.** Se mantiene en títulos de obra y en la cita, porque Newsreader tiene cursiva real.
-- **Validación.** Captura de los titulares a 390 y 1440 px, y ajuste de tamaños: Newsreader es más ancha que Cormorant, así que los `text-5xl`/`text-6xl` y la copia del recorrido pueden necesitar un punto menos.
-- **Si se compra Althera.** Si más adelante compran la licencia web completa en Gumroad, se sirve en local con `fontProviders.local()` y es un cambio de una línea.
+**1 · Tipografía: se mantiene Cormorant Garamond.** El cliente pidió Althera (Syauqi Studio), pero el zip disponible es la versión *free for personal use only*, sin uso comercial y sin cursiva. Se probó **Newsreader** como alternativa libre (comparativa en el artefacto "Fuentes para Stephany"), pero tras verla en el sitio se prefirió volver a Cormorant (11/10/2026). Si más adelante compran la licencia web de Althera en Gumroad, se sirve en local con `fontProviders.local()`.
 
 **2 a 5 · Textos.** Solo cambia el texto; la maquetación se queda igual.
 
@@ -382,7 +377,7 @@ Se conservan los nombres de los tokens (`moss`, `clay`) para no tocar 40 clases;
 - Sin CLS por el cambio de fuente: preload más fallback métrico.
 - Se mantienen Performance ≥ 95 y CLS 0.
 
-**Orden de trabajo** (un commit por punto): paleta → textos → fuente.
+**Orden de trabajo** (un commit por punto): paleta → textos.
 
 ## 6. Stack
 
@@ -459,7 +454,7 @@ Sin usar todavía: 2 vídeos del taller y 2 vídeos en `Videos/` (posible materi
 | **9 · La obra y la artista** | §5.6: obra insignia junto a la artista, tarjetas sin caja con cartela de museo | ✅ en rama `feat/obra-y-artista`, pendiente de merge |
 | **10 · Movimiento y espirales** | §5.7: secciones apiladas de vuelta, scroll suave, espiral de Stephany como figura decorativa, cita palabra a palabra, foto en arco | ✅ en rama `feat/movimiento`, pendiente de merge |
 | **11 · Scroll como Arko** | §5.8: apariciones con desenfoque escalonadas también en las obras, foto centrada | ✅ en rama `feat/scroll-arko`, pendiente de merge |
-| **12 · Niebla** | §5.11: fuente Newsreader (sustituye a Althera por licencia), textos nuevos en `/obras` y en las paradas 01‑02, paleta de bosque con niebla | ✅ en rama `feat/niebla`, pendiente de merge. Copia previa = motor (0 px) en 390 y 1440; Lighthouse 96–99 / 100 / 100 / 100, CLS 0 |
+| **12 · Niebla** | §5.11: textos nuevos en `/obras` y en las paradas 01‑02, paleta de bosque con niebla | ✅ en rama `feat/niebla`, pendiente de merge. Copia previa = motor (0 px) en 390 y 1440; Lighthouse 96–99 / 100 / 100 / 100, CLS 0 |
 
 ---
 

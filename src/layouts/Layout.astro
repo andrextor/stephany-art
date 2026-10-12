@@ -55,7 +55,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     {jsonLdHtml && <script type="application/ld+json" set:html={jsonLdHtml} />}
-    <Font cssVariable="--font-newsreader" preload />
+    <Font cssVariable="--font-cormorant" preload />
     <Font cssVariable="--font-manrope" preload />
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
