@@ -117,19 +117,17 @@ body {
   }
 }
 
-/* Brush stroke (Brush.astro): painted in from left to right, on scroll in the commission
-   band and once on load in an artwork page. */
+/* Brush stroke (Brush.astro): painted in from left to right once, on load in an artwork page
+   and when it scrolls into view elsewhere (.is-in, src/scripts/motion.ts). Not scroll-linked:
+   the home sections pin, so a scroll timeline would stall half painted. */
 @media (prefers-reduced-motion: no-preference) {
-  .brush--load {
+  .brush--load,
+  .brush--scroll.is-in {
     animation: brush-paint 1400ms var(--ease-fluid) 300ms both;
   }
 
-  @supports (animation-timeline: view()) {
-    .brush--scroll {
-      animation: brush-paint linear both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 55%;
-    }
+  .js .brush--scroll:not(.is-in) {
+    opacity: 0;
   }
 }
 
