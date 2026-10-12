@@ -376,6 +376,10 @@ Se conservan los nombres de los tokens (`moss`, `clay`) para no tocar 40 clases;
 
 Al entrar cada sección, las capas cercanas suben más que las lejanas (`animation-timeline: view()`, 14 px por capa); sin movimiento con reduced motion. Se elimina `Spiral.astro`.
 
+**8 · Pincelada seca** (opción C del mismo artefacto, 11/10/2026). `Brush.astro` genera en build un trazo de pincel seco: decenas de cerdas a lo largo de una curva bezier, con grosor, opacidad y cortes aleatorios de semilla fija. Se pinta de izquierda a derecha con una animación `clip-path` y no se muestra con reduced motion.
+- **Banda del encargo:** trazo grande (`sweep`) abajo a la derecha en `--bg` al 40 %, pintado con el scroll (`view()`).
+- **Ficha de obra:** trazo plano (`flat`) bajo el título en arena, pintado una vez al abrir la obra. Nunca va encima del cuadro.
+
 **Criterios de aceptación**
 - Todos los pares de texto ≥ 4,5:1, con Lighthouse de accesibilidad a 100 en `/`, `/obras` y una ficha.
 - La copia previa coincide con la del motor (diferencia de 0 px) en 390 y 1440 px.

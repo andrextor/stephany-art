@@ -112,6 +112,31 @@ body {
   }
 }
 
+/* Brush stroke (Brush.astro): painted in from left to right, on scroll in the commission
+   band and once on load in an artwork page. */
+@media (prefers-reduced-motion: no-preference) {
+  .brush--load {
+    animation: brush-paint 1400ms var(--ease-fluid) 300ms both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .brush--scroll {
+      animation: brush-paint linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 55%;
+    }
+  }
+}
+
+@keyframes brush-paint {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 /* Quote words light up in reading order (src/scripts/motion.ts). */
 .js [data-word] {
   opacity: 0.5;

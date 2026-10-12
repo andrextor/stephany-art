@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import artistPhoto from '../assets/artist/stephany-portrait.webp';
 import ArtworkCard from '../components/ArtworkCard.astro';
+import Brush from '../components/Brush.astro';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import Ridges from '../components/Ridges.astro';
@@ -162,6 +163,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
     </section>
 
     <section aria-labelledby="encargo-titulo" class="relative overflow-hidden bg-moss text-bg">
+      <Brush class="brush--scroll absolute right-0 bottom-0 w-[min(95vw,720px)] translate-x-[18%] translate-y-[12%] text-bg/40" />
       <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 py-24 md:px-8">
         <div data-reveal class="flex max-w-2xl flex-col gap-4">
           <h2 id="encargo-titulo" class="text-4xl md:text-5xl">Cómo funciona un encargo</h2>

@@ -2,6 +2,7 @@
 import { getImage, Picture } from 'astro:assets';
 import { render } from 'astro:content';
 import ArtworkCard from '../../components/ArtworkCard.astro';
+import Brush from '../../components/Brush.astro';
 import Icon from '../../components/Icon.astro';
 import Layout from '../../layouts/Layout.astro';
 import {
@@ -75,6 +76,7 @@ const details = [
         <header class="flex flex-col gap-2">
           <p class="text-sm text-ink-soft">{categoryLabels[category]}</p>
           <h1 class="text-5xl md:text-6xl">{title}</h1>
+          <Brush variant="flat" class="brush--load -ml-2 w-64 text-sand md:w-80" />
         </header>
 
         <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-y border-line py-6 text-sm">
