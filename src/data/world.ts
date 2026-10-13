@@ -79,8 +79,10 @@ export const worldStops = (lang: Lang): WorldStop[] => {
       id: 'en-proceso',
       label: inProgress.label,
       still: '/world/stop-4.webp',
-      scroll: 1.4,
-      // clip-4 runs 20 s, the other walks 10 s: twice the scroll keeps the same pace.
+      scroll: 0.5,
+      // The copy is fully in before this dive starts (copy lead), so a short dwell is
+      // enough: anything longer is a still picture under finished copy before the page
+      // slides up. clip-4 runs 20 s, the other walks 10 s: twice the scroll, same pace.
       walk: 2.8,
       eyebrow: inProgress.eyebrow,
       title: inProgress.title,
