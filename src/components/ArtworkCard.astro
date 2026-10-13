@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
-import { type Artwork, categoryNames, mainImage, statusLabels } from '../lib/artworks';
+import { copy, langFromUrl, localePath } from '../i18n';
+import { type Artwork, mainImage } from '../lib/artworks';
 
 interface Props {
   artwork: Artwork;
@@ -21,10 +22,12 @@ const {
 const Heading = headingLevel === 2 ? 'h2' : 'h3';
 const { title, category, status, year } = artwork.data;
 const image = mainImage(artwork);
+const lang = langFromUrl(Astro.url);
+const { categoryNames, statusLabels } = copy[lang];
 ---
 
 <a
-  href={`/obras/${artwork.id}`}
+  href={localePath(lang, `/obras/${artwork.id}`)}
   data-category={category}
   data-status={status ?? 'none'}
   data-reveal

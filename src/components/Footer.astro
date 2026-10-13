@@ -1,5 +1,6 @@
 ---
 import { site, whatsappUrl } from '../data/site';
+import { copy, langFromUrl } from '../i18n';
 import Icon from './Icon.astro';
 import Ridges from './Ridges.astro';
 
@@ -9,6 +10,7 @@ interface Props {
 
 const { class: className } = Astro.props;
 const year = new Date().getFullYear();
+const t = copy[langFromUrl(Astro.url)];
 ---
 
 <footer id="contacto" data-spy="#contacto" class:list={['relative overflow-hidden bg-ink text-bg', className]}>
@@ -24,35 +26,35 @@ const year = new Date().getFullYear();
   />
   <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 py-20 md:flex-row md:items-end md:justify-between md:px-8">
     <div class="flex max-w-xl flex-col gap-6">
-      <h2 data-reveal class="text-4xl md:text-5xl">¿Tienes una idea para una obra?</h2>
+      <h2 data-reveal class="text-4xl md:text-5xl">{t.ui.footerTitle}</h2>
       <p data-reveal style="--d: 100ms" class="text-lg text-bg/85">
-        Escríbeme por WhatsApp con tu idea o tu foto y te cuento cómo podemos convertirla en una pintura.
+        {t.ui.footerText}
       </p>
       <div data-reveal style="--d: 200ms">
       <a
-        href={whatsappUrl(site.whatsapp.commissionMessage)}
+        href={whatsappUrl(t.messages.commission)}
         target="_blank"
         rel="noopener"
         class="inline-flex w-max items-center gap-2 rounded-full bg-clay px-3 py-2 text-base font-semibold text-ink transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
       >
         <Icon name="whatsapp" />
-        Escribir por WhatsApp
+        {t.ui.footerCta}
       </a>
       </div>
     </div>
 
     <div class="flex flex-col gap-2 text-sm text-bg/80 md:text-right">
       <p class="font-display text-2xl text-bg">{site.artistName}</p>
-      <p>{site.role}</p>
+      <p>{t.role}</p>
       <p>WhatsApp {site.whatsapp.display}</p>
       <a href={`mailto:${site.email}`} class="underline-offset-4 hover:text-bg hover:underline">{site.email}</a>
       <a href={site.instagram.url} target="_blank" rel="noopener" class="underline-offset-4 hover:text-bg hover:underline">
         Instagram {site.instagram.handle}
       </a>
-      <p class="pt-4">© {year} {site.artistName}. Todas las obras son originales.</p>
+      <p class="pt-4">© {year} {site.artistName}. {t.ui.rights}</p>
     </div>
   </div>
   <p class="relative px-4 pb-6 text-center text-xs text-bg/55">
-    Sitio creado por <a href="https://landak.pro/" target="_blank" rel="noopener" class="underline underline-offset-4 hover:text-bg">Landak Studio</a>
+    {t.ui.credit} <a href="https://landak.pro/" target="_blank" rel="noopener" class="underline underline-offset-4 hover:text-bg">Landak Studio</a>
   </p>
 </footer>

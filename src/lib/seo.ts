@@ -1,37 +1,38 @@
 import { site } from '../data/site';
+import { copy, type Lang, localePath } from '../i18n';
 import type { Artwork } from './artworks';
 
 export type JsonLd = Record<string, unknown>;
 
-export const artistJsonLd = (origin: URL): JsonLd => ({
+export const artistJsonLd = (origin: URL, lang: Lang): JsonLd => ({
   '@type': 'Person',
   '@id': new URL('/#artista', origin).href,
   name: site.artistName,
-  jobTitle: site.role,
+  jobTitle: copy[lang].role,
   nationality: { '@type': 'Country', name: site.country },
-  url: new URL('/', origin).href,
-  description: site.bio[0],
+  url: new URL(localePath(lang, '/'), origin).href,
+  description: copy[lang].bio[0],
   email: site.email,
   sameAs: [site.instagram.url],
 });
 
-export const websiteJsonLd = (origin: URL): JsonLd => ({
+export const websiteJsonLd = (origin: URL, lang: Lang): JsonLd => ({
   '@type': 'WebSite',
   '@id': new URL('/#sitio', origin).href,
   name: site.artistName,
-  url: new URL('/', origin).href,
-  inLanguage: 'es',
+  url: new URL(localePath(lang, '/'), origin).href,
+  inLanguage: lang,
   publisher: { '@id': new URL('/#artista', origin).href },
 });
 
-export const artworkJsonLd = (artwork: Artwork, origin: URL, imageUrl: string): JsonLd => {
+export const artworkJsonLd = (artwork: Artwork, origin: URL, imageUrl: string, lang: Lang): JsonLd => {
   const { title, year, technique, dimensions } = artwork.data;
   return {
     '@type': 'VisualArtwork',
     name: title,
-    url: new URL(`/obras/${artwork.id}/`, origin).href,
+    url: new URL(localePath(lang, `/obras/${artwork.id}/`), origin).href,
     image: imageUrl,
-    artform: 'Pintura',
+    artform: copy[lang].ui.artform,
     creator: { '@type': 'Person', '@id': new URL('/#artista', origin).href, name: site.artistName },
     ...(year && { dateCreated: String(year) }),
     ...(technique && { artMedium: technique }),

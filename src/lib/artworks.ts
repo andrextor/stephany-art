@@ -1,37 +1,46 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import type { artworkCategories, artworkStatuses } from '../content.config';
-import { site, whatsappUrl } from '../data/site';
+import { whatsappUrl } from '../data/site';
+import { copy, type Lang } from '../i18n';
 
-export type Artwork = CollectionEntry<'artworks'>;
+// `content` is the entry whose body is the description in the artwork's language.
+export type Artwork = CollectionEntry<'artworks'> & {
+  content: CollectionEntry<'artworks'> | CollectionEntry<'artworksEn'>;
+};
 export type ArtworkCategory = (typeof artworkCategories)[number];
 export type ArtworkStatus = (typeof artworkStatuses)[number];
 
-export const categoryLabels: Record<ArtworkCategory, string> = {
-  commission: 'Obras por comisión',
-  personal: 'Obras personales',
-};
-
-export const statusLabels: Record<ArtworkStatus, string> = {
-  available: 'Disponible',
-  reserved: 'Reservada',
-  sold: 'Vendida',
-  delivered: 'Encargo entregado',
-  'in-progress': 'En proceso',
-  'private-collection': 'Colección personal',
-};
-
-export const categoryNames: Record<ArtworkCategory, string> = {
-  commission: 'Por encargo',
-  personal: 'Obra personal',
-};
-
 const categoryOrder: Record<ArtworkCategory, number> = { personal: 0, commission: 1 };
 
-export const getPublishedArtworks = async (): Promise<Artwork[]> => {
+// Spanish entries as they are; in English, title, technique and alts come from artworks-en
+// when a translation exists.
+export const getPublishedArtworks = async (lang: Lang): Promise<Artwork[]> => {
   const artworks = await getCollection('artworks', ({ data }) => !data.draft);
-  return artworks.sort(
-    (a, b) => categoryOrder[a.data.category] - categoryOrder[b.data.category] || a.data.order - b.data.order,
-  );
+  const translations = lang === 'en' ? await getCollection('artworksEn') : [];
+  const { techniques } = copy[lang];
+  return artworks
+    .map((artwork): Artwork => {
+      const translation = translations.find((entry) => entry.id === artwork.id);
+      if (!translation) return { ...artwork, content: artwork };
+      const { title, alts } = translation.data;
+      const { technique, images } = artwork.data;
+      return {
+        ...artwork,
+        content: translation,
+        data: {
+          ...artwork.data,
+          title,
+          technique: technique && (techniques[technique] ?? technique),
+          images: images.map((image, index) => ({ ...image, alt: alts[index] ?? image.alt })),
+        },
+      };
+    })
+    .sort((a, b) => categoryOrder[a.data.category] - categoryOrder[b.data.category] || a.data.order - b.data.order);
+};
+
+export const artworkPaths = async (lang: Lang) => {
+  const artworks = await getPublishedArtworks(lang);
+  return artworks.map((artwork) => ({ params: { slug: artwork.id }, props: { artwork, artworks } }));
 };
 
 export const mainImage = (artwork: Artwork): Artwork['data']['images'][number] =>
@@ -42,22 +51,17 @@ interface ArtworkCta {
   href: string;
 }
 
-export const artworkCta = (artwork: Artwork): ArtworkCta => {
+export const artworkCta = (artwork: Artwork, lang: Lang): ArtworkCta => {
   const { status, title } = artwork.data;
+  const { messages, ui } = copy[lang];
   if (status === 'available') {
-    return { label: 'Preguntar por esta obra', href: whatsappUrl(site.whatsapp.artworkMessage(title)) };
+    return { label: ui.ctaAvailable, href: whatsappUrl(messages.artwork(title)) };
   }
   if (status === 'reserved') {
-    return {
-      label: 'Avisarme si se libera',
-      href: whatsappUrl(`Hola Stephany, ¿me avisas si "${title}" vuelve a estar disponible?`),
-    };
+    return { label: ui.ctaReserved, href: whatsappUrl(messages.reserved(title)) };
   }
   if (status === 'sold') {
-    return {
-      label: 'Encargar algo parecido',
-      href: whatsappUrl(`Hola Stephany, me encantó "${title}". ¿Podrías pintarme algo en esa línea?`),
-    };
+    return { label: ui.ctaSold, href: whatsappUrl(messages.sold(title)) };
   }
-  return { label: 'Encargar una obra', href: whatsappUrl(site.whatsapp.commissionMessage) };
+  return { label: ui.commission, href: whatsappUrl(messages.commission) };
 };

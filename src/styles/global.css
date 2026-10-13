@@ -323,6 +323,13 @@ body {
   color: var(--color-ink);
 }
 
+/* Phones: tour buttons wrap before reaching the fixed social bar on the right. */
+@media (max-width: 860px) {
+  .sw-copy__cta {
+    padding-right: 3.5rem;
+  }
+}
+
 .sw-prelude .sw-copy__cta {
   display: flex;
   flex-wrap: wrap;

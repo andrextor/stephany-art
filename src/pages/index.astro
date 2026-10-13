@@ -8,16 +8,20 @@ import Icon from '../components/Icon.astro';
 import Ridges from '../components/Ridges.astro';
 import ScrollWorld from '../components/ScrollWorld.astro';
 import { site, whatsappUrl } from '../data/site';
+import { copy, langFromUrl, localePath } from '../i18n';
 import Layout from '../layouts/Layout.astro';
-import { categoryNames, getPublishedArtworks, mainImage, statusLabels } from '../lib/artworks';
+import { getPublishedArtworks, mainImage } from '../lib/artworks';
 import { artistJsonLd, graph, websiteJsonLd } from '../lib/seo';
 
-const published = await getPublishedArtworks();
+const lang = langFromUrl(Astro.url);
+const t = copy[lang];
+const { categoryNames, statusLabels, ui } = t;
+const published = await getPublishedArtworks(lang);
 const [hero, ...rest] = published.filter((artwork) => artwork.data.featured);
 const more = rest.slice(0, 6);
-const quoteWords = `“${site.quote}”`.split(' ');
+const quoteWords = `“${t.quote}”`.split(' ');
 const heroImage = mainImage(hero);
-const heroExhibition = site.exhibitions.findLast((exhibition) => exhibition.artwork === hero.data.title);
+const heroExhibition = t.exhibitions.findLast((exhibition) => exhibition.artwork === hero.id);
 const heroCaption = [
   categoryNames[hero.data.category],
   heroExhibition
@@ -27,16 +31,16 @@ const heroCaption = [
   .filter(Boolean)
   .join(' · ');
 const origin = Astro.site ?? Astro.url;
-const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
+const jsonLd = graph(websiteJsonLd(origin, lang), artistJsonLd(origin, lang));
 ---
 
 <Layout jsonLd={jsonLd} hideFooter>
   <ScrollWorld />
 
   <div class="after-world">
-    <section aria-labelledby="obra-insignia" data-spy="/obras" class="grid md:grid-cols-[1.15fr_1fr]">
+    <section aria-labelledby="obra-insignia" data-spy={localePath(lang, '/obras')} class="grid md:grid-cols-[1.15fr_1fr]">
       <a
-        href={`/obras/${hero.id}`}
+        href={localePath(lang, `/obras/${hero.id}`)}
         class="group flex flex-col items-center justify-center gap-5 bg-ink px-4 py-16 md:px-10 md:py-20"
       >
         <div data-reveal style={`view-transition-name: obra-${hero.id}`}>
@@ -67,7 +71,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
           ]}
         />
         <p data-reveal class="relative text-xs font-semibold tracking-[0.16em] text-moss-deep uppercase">
-          {site.artistName} · {site.role}
+          {site.artistName} · {t.role}
         </p>
         <blockquote class="relative max-w-xl">
           <p data-words class="font-display text-3xl text-ink italic md:text-4xl">
@@ -76,7 +80,7 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
         </blockquote>
         <ul data-reveal style="--d: 100ms" class="relative flex flex-wrap gap-2">
           {
-            site.highlights.map((highlight) => (
+            t.highlights.map((highlight) => (
               <li class="flex flex-col rounded-full border border-line bg-surface px-4 py-1.5 text-xs leading-snug">
                 <span class="font-semibold text-ink">{highlight.title}</span>
                 <span class="text-ink-soft">{highlight.detail}</span>
@@ -86,36 +90,36 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
         </ul>
         <div data-reveal style="--d: 200ms" class="relative flex flex-wrap gap-3">
           <a
-            href={whatsappUrl(site.whatsapp.commissionMessage)}
+            href={whatsappUrl(t.messages.commission)}
             target="_blank"
             rel="noopener"
             class="inline-flex items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
           >
             <Icon name="whatsapp" />
-            Encargar una obra
+            {ui.commission}
           </a>
           <a
-            href="/obras"
+            href={localePath(lang, '/obras')}
             class="inline-flex items-center rounded-full border-[1.5px] border-ink/25 px-3 py-2 text-base font-semibold text-ink transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
           >
-            Ver las obras
+            {ui.viewWorks}
           </a>
         </div>
       </div>
     </section>
 
-    <section id="sobre" data-spy="/sobre-mi" aria-labelledby="sobre-titulo" class="grid border-t border-line md:grid-cols-[1fr_1.6fr]">
+    <section id="sobre" data-spy={localePath(lang, '/sobre-mi')} aria-labelledby="sobre-titulo" class="grid border-t border-line md:grid-cols-[1fr_1.6fr]">
       <div class="relative flex flex-col gap-6 overflow-hidden bg-surface px-4 pt-16 pb-48 md:px-10 md:pt-20">
         <ArtistPortrait />
-        <h2 id="sobre-titulo" data-reveal class="text-4xl">Sobre mí</h2>
-        <p data-reveal style="--d: 100ms" class="text-base text-ink-soft">{site.intro}</p>
+        <h2 id="sobre-titulo" data-reveal class="text-4xl">{ui.about}</h2>
+        <p data-reveal style="--d: 100ms" class="text-base text-ink-soft">{t.intro}</p>
         <a
           data-reveal
           style="--d: 200ms"
-          href="/sobre-mi"
+          href={localePath(lang, '/sobre-mi')}
           class="inline-flex w-max items-center gap-2 border-b border-line pb-0.5 text-sm font-semibold text-ink hover:border-ink"
         >
-          Leer la biografía
+          {ui.readBio}
           <Icon name="arrow-right" class="size-4" />
         </a>
         <Brush class="brush--scroll absolute bottom-0 left-0 w-[min(120%,640px)] -translate-x-[12%] translate-y-[18%] text-sand/60 md:w-[150%] md:translate-y-[8%]" />
@@ -123,12 +127,12 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
 
       <div class="flex flex-col gap-10 bg-bg px-4 py-16 md:px-10 md:py-20">
         <div class="flex items-end justify-between gap-4">
-          <h2 data-reveal class="text-4xl">Más obras</h2>
+          <h2 data-reveal class="text-4xl">{ui.moreWorks}</h2>
           <a
-            href="/obras"
+            href={localePath(lang, '/obras')}
             class="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-bg transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
           >
-            Ver las {published.length} obras
+            {ui.viewAllWorks(published.length)}
             <Icon name="arrow-right" class="size-4" />
           </a>
         </div>
@@ -146,12 +150,12 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
       <Brush class="brush--scroll absolute right-0 bottom-0 w-[min(95vw,720px)] translate-x-[18%] translate-y-[12%] text-bg/40" />
       <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 py-24 md:px-8">
         <div data-reveal class="flex max-w-2xl flex-col gap-4">
-          <h2 id="encargo-titulo" class="text-4xl md:text-5xl">Cómo funciona un encargo</h2>
-          <p class="text-lg text-bg">Una obra hecha a mano a partir de tu historia, en tres pasos.</p>
+          <h2 id="encargo-titulo" class="text-4xl md:text-5xl">{ui.commissionTitle}</h2>
+          <p class="text-lg text-bg">{ui.commissionText}</p>
         </div>
         <ol class="grid gap-6 md:grid-cols-3">
           {
-            site.commissionSteps.map((step, index) => (
+            t.commissionSteps.map((step, index) => (
               <li data-reveal style={`--d: ${index * 100}ms`} class="flex flex-col gap-4 rounded-lg border border-ink/10 bg-ink/15 p-6">
                 <span class="font-display text-5xl text-bg italic">{index + 1}</span>
                 <h3 class="text-2xl">{step.title}</h3>
@@ -161,27 +165,27 @@ const jsonLd = graph(websiteJsonLd(origin), artistJsonLd(origin));
           }
         </ol>
         <a
-          href={whatsappUrl(site.whatsapp.commissionMessage)}
+          href={whatsappUrl(t.messages.commission)}
           target="_blank"
           rel="noopener"
           class="inline-flex w-max items-center gap-2 rounded-full bg-bg px-3 py-2 text-base font-semibold text-ink transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px"
         >
           <Icon name="whatsapp" />
-          Encargar una obra
+          {ui.commission}
         </a>
       </div>
     </section>
 
 
     {
-      site.faq.length > 0 && (
+      t.faq.length > 0 && (
         <section aria-labelledby="faq-titulo" class="bg-bg">
           <div class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-24 md:px-8">
             <h2 id="faq-titulo" class="text-4xl md:text-5xl">
-              Preguntas frecuentes
+              {ui.faqTitle}
             </h2>
             <div class="flex flex-col border-t border-line">
-              {site.faq.map((item) => (
+              {t.faq.map((item) => (
                 <details class="group border-b border-line py-6">
                   <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg text-ink">
                     {item.question}
