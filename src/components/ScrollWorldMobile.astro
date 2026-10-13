@@ -63,11 +63,9 @@ const pad = (n: number): string => String(n).padStart(2, '0');
 </div>
 
 <script>
-  const root = document.querySelector<HTMLElement>('[data-world-mobile]');
   const stops = [...document.querySelectorAll<HTMLElement>('[data-stop]')];
-  const last = stops.at(-1);
 
-  if (root && last) {
+  if (stops.length) {
     // A stop takes over once it covers half the screen and stays on until the next one
     // does, so the last still holds while the page slides over it.
     const activate = (stop: HTMLElement): void => {
@@ -82,18 +80,6 @@ const pad = (n: number): string => String(n).padStart(2, '0');
       { threshold: 0.5 },
     );
     for (const stop of stops) observer.observe(stop);
-
-    // Snapping lives on <html> (the page is the scroller) and only before the last stop,
-    // which is reached by a snap and left by a free scroll into the rest of the page.
-    const snap = (): void => {
-      document.documentElement.classList.toggle('world-snap', window.scrollY < last.offsetTop);
-    };
-    window.addEventListener('scroll', snap, { passive: true });
-    snap();
-    // An anchor jump from inside the tour (the menu's "Contacto") must not stop at a stop.
-    document.addEventListener('click', (event) => {
-      if ((event.target as Element).closest('a[href*="#"]')) document.documentElement.classList.remove('world-snap');
-    });
   }
 </script>
 
@@ -118,8 +104,17 @@ const pad = (n: number): string => String(n).padStart(2, '0');
     scroll-snap-stop: always;
   }
 
-  :global(html.world-snap) {
-    scroll-snap-type: y mandatory;
+  /* The page snaps stop by stop. The rest of the page (.after-world, footer included) is a
+     single snap area taller than the screen, inside which the browser scrolls freely, so
+     nothing has to switch snapping off, and nothing re-snaps at the edge. */
+  @media (max-width: 860px) {
+    :global(html) {
+      scroll-snap-type: y mandatory;
+    }
+
+    :global(.after-world) {
+      scroll-snap-align: start;
+    }
   }
 
   /* Stills and veil sit below the page flow (negative z-index), so the sections after the
