@@ -21,6 +21,8 @@
            linger: 0.5,   // optional 0..1 — remaps time so the camera settles mid-scene
                           // (exactly where the copy peaks) and moves quicker at the
                           // edges. 0 = linear (default). Keep ≤ 0.6; 1 = full pause.
+           walk: 2.8,     // optional override of connScroll for the connector that
+                          // arrives at this section (a longer clip needs more scroll)
            eyebrow, title, body, tags:[…],
            cta:{ primary:{label,href}, secondary:{label,href} } }, // last section only
          …
@@ -129,7 +131,8 @@ export function mountScrollWorld(container, config) {
     if (i < N - 1 && CONNECTORS[i]) {
       SEGMENTS.push({ kind: 'conn', si: i, clip: CONNECTORS[i], clipM: CONNECTORS_M[i],
                       still: SECTIONS[i + 1].still, stillM: SECTIONS[i + 1].stillMobile,
-                      accent: SECTIONS[i + 1].accent, pos: SECTIONS[i + 1].position, w: CONN_W });
+                      accent: SECTIONS[i + 1].accent, pos: SECTIONS[i + 1].position,
+                      w: SECTIONS[i + 1].walk || CONN_W });
     }
   });
   const NSEG = SEGMENTS.length;

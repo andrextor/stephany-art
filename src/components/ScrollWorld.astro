@@ -12,8 +12,8 @@ const config = {
   nav: false,
   atmosphere: false,
   hint: world.hint,
-  diveScroll: 0.5,
-  connScroll: 0.8,
+  diveScroll: 0.9,
+  connScroll: 1.4,
   crossfade: 0.12,
   sections: worldStops(lang),
 };
@@ -23,9 +23,11 @@ const configJson = JSON.stringify(config).replace(/</g, '\\u003c');
 // Same height the engine gives its track (segments + 1vh of hand-off), reserved before
 // the script runs so the page below does not flash and then jump.
 const totalViewportHeights =
-  config.sections.reduce((sum, section) => sum + (section.scroll ?? config.diveScroll), 0) +
-  config.connScroll * (config.sections.length - 1) +
-  1;
+  config.sections.reduce(
+    (sum, section, index) =>
+      sum + (section.scroll ?? config.diveScroll) + (index > 0 ? (section.walk ?? config.connScroll) : 0),
+    0,
+  ) + 1;
 const firstStop = config.sections[0];
 ---
 
