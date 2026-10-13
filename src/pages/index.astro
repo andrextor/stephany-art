@@ -77,7 +77,7 @@ const jsonLd = graph(websiteJsonLd(origin, lang), artistJsonLd(origin, lang));
         </p>
         <blockquote class="relative max-w-xl">
           <p data-words class="font-display text-3xl text-ink italic md:text-4xl">
-            {quoteWords.map((word) => <><span data-word>{word}</span>{' '}</>)}
+            {quoteWords.map((word, index) => <><span data-word style={`--i: ${index}`}>{word}</span>{' '}</>)}
           </p>
         </blockquote>
         <ul data-reveal style="--d: 100ms" class="relative flex flex-wrap gap-2">

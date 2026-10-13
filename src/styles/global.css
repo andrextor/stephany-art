@@ -177,13 +177,15 @@ body {
   }
 }
 
-/* Quote words light up in reading order (src/scripts/motion.ts). */
+/* Quote words light up in reading order once the block scrolls into view (.is-in,
+   src/scripts/motion.ts). Timed like the brush, not scroll-linked: the block sits in a
+   pinned section, where a scroll-linked run stalls half lit. */
 .js [data-word] {
   opacity: 0.5;
-  transition: opacity 700ms var(--ease-fluid);
+  transition: opacity 700ms var(--ease-fluid) calc(var(--i, 0) * 70ms);
 }
 
-.js [data-word].is-lit {
+.js [data-words].is-in [data-word] {
   opacity: 1;
 }
 
@@ -204,7 +206,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal] {
+  .js [data-reveal],
+  .js [data-word] {
     transition: none;
   }
 }
