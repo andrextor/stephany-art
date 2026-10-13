@@ -1,27 +1,32 @@
 ---
 import { site, whatsappUrl } from '../data/site';
+import { copy, langFromUrl, localePath } from '../i18n';
 import Icon from './Icon.astro';
+import LangSwitch from './LangSwitch.astro';
 
+const lang = langFromUrl(Astro.url);
+const { ui, messages } = copy[lang];
+const worksPath = localePath(lang, '/obras');
 const links = [
-  { href: '/#world', label: 'Recorrido' },
-  { href: '/obras', label: 'Obras' },
-  { href: '/sobre-mi', label: 'Sobre mí' },
-  { href: '#contacto', label: 'Contacto' },
+  { href: localePath(lang, '/#world'), label: ui.tour },
+  { href: worksPath, label: ui.works },
+  { href: localePath(lang, '/sobre-mi'), label: ui.about },
+  { href: '#contacto', label: ui.contact },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
 const isCurrent = (href: string): boolean =>
-  href === currentPath || (href === '/obras' && currentPath.startsWith('/obras'));
-const commissionHref = whatsappUrl(site.whatsapp.commissionMessage);
+  href === currentPath || (href === worksPath && currentPath.startsWith(worksPath));
+const commissionHref = whatsappUrl(messages.commission);
 ---
 
-<header class="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-4 lg:justify-start lg:px-8 xl:px-16">
+<header class="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-4 md:px-8 lg:justify-between xl:px-16">
   <nav
-    aria-label="Principal"
+    aria-label={ui.mainNav}
     style="view-transition-name: header"
-    class="pointer-events-auto mt-6 flex w-max items-center gap-5 rounded-full border border-line bg-surface/75 py-2 pr-2 pl-6 shadow-sm backdrop-blur-xl"
+    class="pointer-events-auto mt-6 flex w-max items-center gap-5 whitespace-nowrap rounded-full border border-line bg-surface/75 py-2 pr-2 pl-6 shadow-sm backdrop-blur-xl"
   >
-    <a href="/" class="font-display text-xl text-ink">{site.artistName}</a>
+    <a href={localePath(lang, '/')} class="font-display text-xl text-ink">{site.artistName}</a>
 
     <div class="relative hidden md:block">
       <span aria-hidden="true" data-nav-indicator class="nav-indicator absolute top-0 left-0 h-9 rounded-full bg-ink/[0.07]"></span>
@@ -50,15 +55,19 @@ const commissionHref = whatsappUrl(site.whatsapp.commissionMessage);
       class="hidden items-center gap-2 rounded-full bg-clay px-4 py-2 text-sm font-semibold text-ink transition-transform duration-700 ease-fluid hover:-translate-y-0.5 active:translate-y-px md:inline-flex"
     >
       <Icon name="whatsapp" class="size-4" />
-      Encargar una obra
+      {ui.commission}
     </a>
+
+    <LangSwitch class="lg:hidden" />
 
     <button
       type="button"
       data-menu-toggle
       aria-expanded="false"
       aria-controls="mobile-menu"
-      aria-label="Abrir menú"
+      aria-label={ui.openMenu}
+      data-label-open={ui.openMenu}
+      data-label-close={ui.closeMenu}
       class="group relative size-10 rounded-full md:hidden"
     >
       <span
@@ -69,6 +78,8 @@ const commissionHref = whatsappUrl(site.whatsapp.commissionMessage);
       ></span>
     </button>
   </nav>
+
+  <LangSwitch class="pointer-events-auto mt-6 hidden self-start rounded-full border border-line bg-surface/75 p-1 shadow-sm backdrop-blur-xl lg:flex" />
 
   <div
     id="mobile-menu"
@@ -96,7 +107,7 @@ const commissionHref = whatsappUrl(site.whatsapp.commissionMessage);
       class="inline-flex w-max items-center gap-2 rounded-full bg-ink px-3 py-2 text-base font-semibold text-bg"
     >
       <Icon name="whatsapp" class="size-5" />
-      Encargar una obra
+      {ui.commission}
     </a>
   </div>
 </header>
@@ -108,10 +119,15 @@ const commissionHref = whatsappUrl(site.whatsapp.commissionMessage);
   const setOpen = (open: boolean): void => {
     if (!toggle || !menu) return;
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    toggle.setAttribute('aria-label', (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? '');
     menu.toggleAttribute('data-open', open);
     document.documentElement.classList.toggle('overflow-hidden', open);
   };
+
+  // Static build: carry the works filter over when switching language.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]')) {
+    link.search = window.location.search;
+  }
 
   toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
   for (const link of document.querySelectorAll('[data-menu-link]')) {

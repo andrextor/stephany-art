@@ -1,7 +1,11 @@
 ---
 import { site, whatsappUrl } from '../data/site';
+import { copy, langFromUrl, localePath } from '../i18n';
 
-const commission = { label: 'Encargar una obra', href: whatsappUrl(site.whatsapp.commissionMessage), external: true };
+const lang = langFromUrl(Astro.url);
+const { role, ui, messages, world } = copy[lang];
+const [home, studio, commissions, personal, inProgress] = world.stops;
+const commission = { label: ui.commission, href: whatsappUrl(messages.commission), external: true };
 
 // Stops are still frames taken from the clips themselves (scripts/encode-world.mjs),
 // and clip-N is the walk between stop N-1 and stop N. Phones get a portrait crop of
@@ -9,63 +13,69 @@ const commission = { label: 'Encargar una obra', href: whatsappUrl(site.whatsapp
 const config = {
   nav: false,
   atmosphere: false,
-  hint: 'Desliza para entrar',
+  hint: world.hint,
   diveScroll: 0.5,
   connScroll: 0.8,
   crossfade: 0.12,
   sections: [
     {
       id: 'inicio',
-      label: 'Inicio',
+      label: home.label,
       still: '/world/stop-0.webp',
       stillMobile: '/world/stop-0-portrait.webp',
       scroll: 0.25,
       titleTag: 'h1',
-      eyebrow: `${site.role} · ${site.country}`,
+      eyebrow: role,
       title: site.artistName,
-      body: 'Un viaje visual hacia los rincones del alma. Pinturas al óleo y acrílico donde la memoria cobra latido y el tiempo se detiene en el lienzo.',
-      cta: { primary: commission, secondary: { label: 'Ver las obras', href: '/obras' } },
+      body: home.body,
+      cta: { primary: commission, secondary: { label: ui.viewWorks, href: localePath(lang, '/obras') } },
     },
     {
       id: 'taller',
-      label: 'El taller',
+      label: studio.label,
       still: '/world/stop-1.webp',
       stillMobile: '/world/stop-1-portrait.webp',
-      eyebrow: 'El taller',
-      title: 'Donde nace cada obra',
-      body: 'Donde el tiempo se desacelera entre pigmentos y bastidores. El taller es un refugio íntimo para dar forma a lo invisible.',
+      eyebrow: studio.eyebrow,
+      title: studio.title,
+      body: studio.body,
     },
     {
       id: 'comision',
-      label: 'Por comisión',
+      label: commissions.label,
       still: '/world/stop-2.webp',
       stillMobile: '/world/stop-2-portrait.webp',
-      eyebrow: 'Obras por comisión',
-      title: 'Tu historia, pintada a mano',
-      body: 'Retratos, paisajes, animales y abstractos por encargo, con la misma atención al detalle que mi obra personal.',
-      cta: { primary: commission, secondary: { label: 'Ver encargos', href: '/obras?cat=commission' } },
+      eyebrow: commissions.eyebrow,
+      title: commissions.title,
+      body: commissions.body,
+      cta: {
+        primary: commission,
+        secondary: { label: world.viewCommissions, href: localePath(lang, '/obras?cat=commission') },
+      },
     },
     {
       id: 'personales',
-      label: 'Personales',
+      label: personal.label,
       still: '/world/stop-3.webp',
       stillMobile: '/world/stop-3-portrait.webp',
-      eyebrow: 'Obras personales',
-      title: 'Entre la luz y la sombra',
-      body: 'Obras sobre la memoria y la transformación humana, expuestas en la Bienal de Armenia en 2024 y 2026.',
-      tags: ['La noche oscura del alma', 'Tránsito de luz eterna'],
-      cta: { secondary: { label: 'Ver obras personales', href: '/obras?cat=personal' } },
+      eyebrow: personal.eyebrow,
+      title: personal.title,
+      body: personal.body,
+      tags: world.personalTags,
+      cta: { secondary: { label: world.viewPersonal, href: localePath(lang, '/obras?cat=personal') } },
     },
     {
       id: 'en-proceso',
-      label: 'En proceso',
+      label: inProgress.label,
       still: '/world/stop-4.webp',
       stillMobile: '/world/stop-4-portrait.webp',
       scroll: 0.3,
-      eyebrow: 'En proceso',
-      title: 'Capa a capa, en el caballete',
-      body: 'Veladuras pacientes y texturas orgánicas: así avanza el retrato que estoy pintando ahora.',
-      cta: { primary: commission, secondary: { label: 'Ver obras en proceso', href: '/obras?estado=in-progress' } },
+      eyebrow: inProgress.eyebrow,
+      title: inProgress.title,
+      body: inProgress.body,
+      cta: {
+        primary: commission,
+        secondary: { label: world.viewInProgress, href: localePath(lang, '/obras?estado=in-progress') },
+      },
     },
   ],
 };
@@ -81,7 +91,7 @@ const totalViewportHeights =
 const firstStop = config.sections[0];
 ---
 
-<div id="world" data-spy="/#world" aria-label="Recorrido por el taller" style={`--sw-total: ${totalViewportHeights}`}>
+<div id="world" data-spy="/#world" aria-label={world.label} style={`--sw-total: ${totalViewportHeights}`}>
   <picture>
     <source media="(max-width: 860px)" srcset={firstStop.stillMobile} width="664" height="1440" />
     <img

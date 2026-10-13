@@ -1,66 +1,67 @@
 ---
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import PaintedBackdrop from '../../components/PaintedBackdrop.astro';
+import { copy, langFromUrl, localePath } from '../../i18n';
 import Layout from '../../layouts/Layout.astro';
-import { categoryLabels, getPublishedArtworks, statusLabels } from '../../lib/artworks';
+import { getPublishedArtworks } from '../../lib/artworks';
 import { graph } from '../../lib/seo';
 
-const artworks = await getPublishedArtworks();
+const lang = langFromUrl(Astro.url);
+const { categoryLabels, statusLabels, ui } = copy[lang];
+const worksPath = localePath(lang, '/obras');
+const artworks = await getPublishedArtworks(lang);
 const origin = Astro.site ?? Astro.url;
 const jsonLd = graph({
   '@type': 'CollectionPage',
-  name: 'Obras de Stephany Londoño',
-  url: new URL('/obras/', origin).href,
+  name: ui.worksCollection,
+  url: new URL(`${worksPath}/`, origin).href,
   mainEntity: {
     '@type': 'ItemList',
     itemListElement: artworks.map((artwork, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: artwork.data.title,
-      url: new URL(`/obras/${artwork.id}/`, origin).href,
+      url: new URL(`${worksPath}/${artwork.id}/`, origin).href,
     })),
   },
 });
 
 const filters = [
-  { label: 'Todas', cat: '', estado: '' },
+  { label: ui.filterAll, cat: '', estado: '' },
   { label: categoryLabels.personal, cat: 'personal', estado: '' },
   { label: categoryLabels.commission, cat: 'commission', estado: '' },
   { label: statusLabels['in-progress'], cat: '', estado: 'in-progress' },
 ];
-
-const intro =
-  'Exploraciones personales y obras por encargo, universos donde la introspección y la naturaleza cobran vida a través del óleo, el acrílico y la delicadeza de las texturas.';
 
 const filterHref = (cat: string, estado: string): string => {
   const params = new URLSearchParams();
   if (cat) params.set('cat', cat);
   if (estado) params.set('estado', estado);
   const query = params.toString();
-  return query ? `/obras?${query}` : '/obras';
+  return query ? `${worksPath}?${query}` : worksPath;
 };
 ---
 
 <Layout
-  title="Obras"
-  description="Catálogo de obras de Stephany Londoño: obras personales, encargos entregados y obras en proceso."
+  title={ui.works}
+  description={ui.worksDescription}
   jsonLd={jsonLd}
 >
   <PaintedBackdrop>
   <section class="mx-auto flex max-w-6xl flex-col gap-12 px-4 pt-40 md:px-8">
     <header class="flex max-w-2xl flex-col gap-4">
-      <h1 class="text-5xl md:text-6xl">Obras</h1>
-      <p data-intro class="text-lg text-ink-soft">{intro}</p>
+      <h1 class="text-5xl md:text-6xl">{ui.works}</h1>
+      <p data-intro data-in-progress={ui.worksIntroInProgress} class="text-lg text-ink-soft">{ui.worksIntro}</p>
       <script is:inline>
         // Inline so the swap lands before first paint and causes no layout shift.
         if (new URLSearchParams(location.search).get('estado') === 'in-progress') {
-          document.currentScript.previousElementSibling.textContent =
-            'Una sutil danza entre la luz, la sombra y la materia. Así avanza el proceso creativo en el caballete.';
+          const intro = document.currentScript.previousElementSibling;
+          intro.textContent = intro.dataset.inProgress;
         }
       </script>
     </header>
 
-    <nav aria-label="Filtrar obras">
+    <nav aria-label={ui.filterLabel}>
       <ul class="flex flex-wrap gap-2">
         {
           filters.map((filter) => (
@@ -84,7 +85,7 @@ const filterHref = (cat: string, estado: string): string => {
     </div>
 
     <p data-empty hidden class="rounded-lg border border-line bg-surface p-8 text-center text-ink-soft">
-      No hay obras con este filtro por ahora. <a href="/obras" class="text-ink underline decoration-moss underline-offset-4">Ver todas las obras</a>
+      {ui.filterEmpty} <a href={worksPath} class="text-ink underline decoration-moss underline-offset-4">{ui.allWorks}</a>
     </p>
   </section>
   </PaintedBackdrop>

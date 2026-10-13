@@ -1,0 +1,38 @@
+---
+// Segmented ES | EN toggle. Both labels are always rendered, so its width never changes;
+// the current language is a plain span and the other one links to the same page.
+import { copy, type Lang, langFromUrl, otherLangPath } from '../i18n';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const lang = langFromUrl(Astro.url);
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const options: Lang[] = ['es', 'en'];
+const itemClass = 'flex h-8 items-center rounded-full px-2.5 text-xs font-semibold tracking-wide uppercase';
+---
+
+<div style="view-transition-name: lang-switch" class:list={['flex rounded-full bg-ink/[0.07] p-0.5', className]}>
+  {
+    options.map((option) =>
+      option === lang ? (
+        <span aria-current="true" class:list={[itemClass, 'bg-ink text-bg']}>
+          {option}
+        </span>
+      ) : (
+        <a
+          href={otherLangPath(Astro.url)}
+          data-lang-switch
+          hreflang={other}
+          lang={other}
+          aria-label={copy[lang].ui.switchLabel}
+          class:list={[itemClass, 'text-ink-soft transition-colors duration-700 ease-fluid hover:text-ink']}
+        >
+          {option}
+        </a>
+      ),
+    )
+  }
+</div>

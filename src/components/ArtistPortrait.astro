@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import artistPhoto from '../assets/artist/stephany-cutout.webp';
+import { copy, langFromUrl } from '../i18n';
 
 interface Props {
   class?: string;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const { class: className = '', eager = false } = Astro.props;
+const { ui } = copy[langFromUrl(Astro.url)];
 ---
 
 <figure data-reveal class:list={['mx-auto flex w-full max-w-sm flex-col gap-3', className]}>
@@ -15,7 +17,7 @@ const { class: className = '', eager = false } = Astro.props;
     <div class="arch absolute inset-x-0 top-[7%] bottom-0 bg-linear-to-b from-sand/20 to-sand/50"></div>
     <Picture
       src={artistPhoto}
-      alt="Retrato de Stephany Londoño con el catálogo de la 5.ª Bienal Internacional de Arte de Armenia"
+      alt={ui.portraitAlt}
       formats={['avif', 'webp']}
       fallbackFormat="webp"
       widths={[320, 480, 640, 768]}
@@ -25,5 +27,5 @@ const { class: className = '', eager = false } = Astro.props;
       class="relative size-full object-contain object-bottom"
     />
   </div>
-  <figcaption class="text-center text-xs text-pretty text-ink-soft">En la 5.ª Bienal Internacional de Arte de Armenia, 2024</figcaption>
+  <figcaption class="text-center text-xs text-pretty text-ink-soft">{ui.portraitCaption}</figcaption>
 </figure>

@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Icon from '../components/Icon.astro';
 import { site, whatsappUrl } from '../data/site';
+import { copy, langFromUrl, otherLangPath } from '../i18n';
 import type { JsonLd } from '../lib/seo';
 
 interface Props {
@@ -17,31 +18,38 @@ interface Props {
   hideFooter?: boolean;
 }
 
+const lang = langFromUrl(Astro.url);
+const t = copy[lang];
 const {
   title,
-  description = `${site.artistName}, ${site.role.toLowerCase()} en ${site.country}. Obras personales y retratos por encargo pintados al óleo y acrílico.`,
+  description = t.ui.defaultDescription,
   image = '/og-default.jpg',
-  imageAlt = `El taller de ${site.artistName}`,
+  imageAlt = t.ui.ogImageAlt,
   type = 'website',
   jsonLd,
   hideFooter = false,
 } = Astro.props;
 
-const fullTitle = title ? `${title} · ${site.artistName}` : `${site.artistName} · ${site.role}`;
+const fullTitle = title ? `${title} · ${site.artistName}` : `${site.artistName} · ${t.role}`;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const alternate = Astro.site ? new URL(otherLangPath(Astro.url), Astro.site).href : undefined;
+const [esHref, enHref] = lang === 'es' ? [canonical, alternate] : [alternate, canonical];
 const origin = Astro.site ?? Astro.url;
 const imageUrl = new URL(image, origin).href;
 const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : undefined;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={t.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
+    {esHref && <link rel="alternate" hreflang="es" href={esHref} />}
+    {enHref && <link rel="alternate" hreflang="en" href={enHref} />}
+    {esHref && <link rel="alternate" hreflang="x-default" href={esHref} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#ece8e2" />
     <meta name="author" content={site.artistName} />
@@ -49,7 +57,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     <meta property="og:site_name" content={site.artistName} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="es_CO" />
+    <meta property="og:locale" content={t.ogLocale} />
     {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={imageUrl} />
     <meta property="og:image:alt" content={imageAlt} />
@@ -64,7 +72,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
       href="#contenido"
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-ink focus:px-3 focus:py-2 focus:text-bg"
     >
-      Saltar al contenido
+      {t.ui.skip}
     </a>
     <Header />
     <main id="contenido">
@@ -72,23 +80,23 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : un
     </main>
     {!hideFooter && <Footer class="mt-24" />}
     <nav
-      aria-label="Redes y contacto"
+      aria-label={t.ui.social}
       class="fixed right-0 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-50 flex flex-col gap-1 rounded-l-2xl border border-r-0 border-bg/15 bg-ink/90 px-1.5 py-2 text-bg shadow-lg backdrop-blur-md"
     >
       <a
         href={site.instagram.url}
         target="_blank"
         rel="noopener"
-        aria-label={`Instagram de ${site.artistName} (${site.instagram.handle})`}
+        aria-label={t.ui.instagramLabel}
         class="inline-flex size-11 items-center justify-center rounded-full transition-colors duration-700 ease-fluid hover:bg-bg/15"
       >
         <Icon name="instagram" class="size-6" />
       </a>
       <a
-        href={whatsappUrl(site.whatsapp.commissionMessage)}
+        href={whatsappUrl(t.messages.commission)}
         target="_blank"
         rel="noopener"
-        aria-label={`Escribir por WhatsApp a ${site.artistName}`}
+        aria-label={t.ui.whatsappLabel}
         class="inline-flex size-11 items-center justify-center rounded-full transition-colors duration-700 ease-fluid hover:bg-bg/15"
       >
         <Icon name="whatsapp" class="size-6" />

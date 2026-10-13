@@ -64,4 +64,13 @@ const artworks = defineCollection({
       ),
 });
 
-export const collections = { artworks };
+// English copy of each artwork, matched by slug: title, image alts (same order) and description.
+const artworksEn = defineCollection({
+  loader: glob({ base: './src/content/artworks-en', pattern: '**/*.md' }),
+  schema: z.object({
+    title: z.string().min(1),
+    alts: z.array(z.string().min(1)).min(1),
+  }),
+});
+
+export const collections = { artworks, artworksEn };

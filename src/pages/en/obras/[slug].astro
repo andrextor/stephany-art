@@ -1,0 +1,8 @@
+---
+import { artworkPaths } from '../../../lib/artworks';
+import Page from '../../obras/[slug].astro';
+
+export const getStaticPaths = () => artworkPaths('en');
+---
+
+<Page {...Astro.props} />

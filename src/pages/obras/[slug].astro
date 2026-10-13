@@ -5,21 +5,12 @@ import ArtworkCard from '../../components/ArtworkCard.astro';
 import Brush from '../../components/Brush.astro';
 import Icon from '../../components/Icon.astro';
 import PaintedBackdrop from '../../components/PaintedBackdrop.astro';
+import { copy, langFromUrl, localePath } from '../../i18n';
 import Layout from '../../layouts/Layout.astro';
-import {
-  type Artwork,
-  artworkCta,
-  categoryLabels,
-  getPublishedArtworks,
-  mainImage,
-  statusLabels,
-} from '../../lib/artworks';
+import { type Artwork, artworkCta, artworkPaths, mainImage } from '../../lib/artworks';
 import { artworkJsonLd, graph } from '../../lib/seo';
 
-export const getStaticPaths = async () => {
-  const artworks = await getPublishedArtworks();
-  return artworks.map((artwork) => ({ params: { slug: artwork.id }, props: { artwork, artworks } }));
-};
+export const getStaticPaths = () => artworkPaths('es');
 
 interface Props {
   artwork: Artwork;
@@ -28,26 +19,32 @@ interface Props {
 
 const { artwork, artworks } = Astro.props;
 const { title, category, status, year, technique, dimensions } = artwork.data;
-const { Content } = await render(artwork);
-const hasDescription = Boolean(artwork.body?.trim());
+const lang = langFromUrl(Astro.url);
+const { categoryLabels, statusLabels, ui } = copy[lang];
+const worksPath = localePath(lang, '/obras');
+const { Content } = await render(artwork.content);
+const hasDescription = Boolean(artwork.content.body?.trim());
 
 const main = mainImage(artwork);
 const gallery = artwork.data.images.filter((image) => image !== main && image.kind !== 'certificate');
 const hasCertificate = artwork.data.images.some((image) => image.kind === 'certificate');
-const cta = artworkCta(artwork);
+const cta = artworkCta(artwork, lang);
 const related = artworks.filter((other) => other.data.category === category && other.id !== artwork.id).slice(0, 3);
 const ogImage = await getImage({ src: main.src, width: 1200, format: 'jpeg' });
 const origin = Astro.site ?? Astro.url;
-const jsonLd = graph(artworkJsonLd(artwork, origin, new URL(ogImage.src, origin).href));
+const jsonLd = graph(artworkJsonLd(artwork, origin, new URL(ogImage.src, origin).href, lang));
 const facts = [technique, year?.toString()].filter(Boolean).join(', ');
-const description = `${title}${facts ? ` (${facts})` : ''}, obra de Stephany Londoño, artista plástica colombiana. ${categoryLabels[category]}.`;
+const description = ui.artworkDescription(`${title}${facts ? ` (${facts})` : ''}`, categoryLabels[category]);
 
 const details = [
-  { label: 'Categoría', value: categoryLabels[category] },
-  { label: 'Estado', value: status ? statusLabels[status] : undefined },
-  { label: 'Año', value: year?.toString() },
-  { label: 'Técnica', value: technique },
-  { label: 'Medidas', value: dimensions ? `${dimensions.width} × ${dimensions.height} ${dimensions.unit}` : undefined },
+  { label: ui.category, value: categoryLabels[category] },
+  { label: ui.status, value: status ? statusLabels[status] : undefined },
+  { label: ui.year, value: year?.toString() },
+  { label: ui.technique, value: technique },
+  {
+    label: ui.dimensions,
+    value: dimensions ? `${dimensions.width} × ${dimensions.height} ${dimensions.unit}` : undefined,
+  },
 ].filter((detail): detail is { label: string; value: string } => detail.value !== undefined);
 const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
   sold: 'bg-sold',
@@ -59,9 +56,9 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
 <Layout title={title} description={description} image={ogImage.src} imageAlt={main.alt} type="article" jsonLd={jsonLd}>
   <PaintedBackdrop>
   <article class="mx-auto flex max-w-6xl flex-col gap-16 px-4 pt-32 md:px-8">
-    <a href="/obras" class="inline-flex w-max items-center gap-2 text-sm text-ink-soft transition-colors duration-700 ease-fluid hover:text-ink">
+    <a href={worksPath} class="inline-flex w-max items-center gap-2 text-sm text-ink-soft transition-colors duration-700 ease-fluid hover:text-ink">
       <Icon name="arrow-left" class="size-4" />
-      Todas las obras
+      {ui.backToWorks}
     </a>
 
     <div class="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-start">
@@ -114,7 +111,7 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
           hasCertificate && (
             <p class="flex items-center gap-2 text-sm text-ink">
               <Icon name="certificate" class="size-5 text-moss-deep" />
-              Incluye certificado de autenticidad
+              {ui.certificate}
             </p>
           )
         }
@@ -142,7 +139,7 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
     {
       gallery.length > 0 && (
         <section aria-labelledby="detalles" class="flex flex-col gap-6">
-          <h2 id="detalles" class="text-3xl">Detalles y proceso</h2>
+          <h2 id="detalles" class="text-3xl">{ui.detailsTitle}</h2>
           <div class="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {gallery.map((image) => (
               <figure class="glass rounded-2xl p-3">
@@ -167,9 +164,9 @@ const statusDots: Partial<Record<NonNullable<typeof status>, string>> = {
       related.length > 0 && (
         <section aria-labelledby="relacionadas" class="flex flex-col gap-6">
           <div class="flex items-end justify-between gap-4">
-            <h2 id="relacionadas" class="text-3xl">Más {categoryLabels[category].toLowerCase()}</h2>
-            <a href={`/obras?cat=${category}`} class="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
-              Ver todas
+            <h2 id="relacionadas" class="text-3xl">{ui.moreOf(categoryLabels[category])}</h2>
+            <a href={`${worksPath}?cat=${category}`} class="inline-flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
+              {ui.viewAll}
               <Icon name="arrow-right" class="size-4" />
             </a>
           </div>
