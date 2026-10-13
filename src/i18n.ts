@@ -82,7 +82,6 @@ const es = {
   techniques: {} as Record<string, string>,
   ui: {
     switchLabel: 'English',
-    switchShort: 'EN',
     skip: 'Saltar al contenido',
     mainNav: 'Principal',
     tour: 'Recorrido',
@@ -248,7 +247,6 @@ const en: Copy = {
   techniques: { 'Óleo sobre lienzo': 'Oil on canvas', 'Acrílico sobre lienzo': 'Acrylic on canvas' },
   ui: {
     switchLabel: 'Español',
-    switchShort: 'ES',
     skip: 'Skip to content',
     mainNav: 'Main',
     tour: 'Tour',
