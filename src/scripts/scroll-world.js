@@ -89,13 +89,6 @@
     13. Phone seeks (fase 13): one-frame step (1/24), the next seek waits for the previous
         frame to be painted (requestVideoFrameCallback, 150 ms safety timer), fastSeek on
         the all-intra phone clips, softer lerp (0.14).
-    15. Phones never load the clips: a seek costs 50-150 ms on a phone decoder, so the scrub
-        stuttered at every natural flick. The stills stay up with a continuous zoom across a
-        connector and the stop it leads to (same picture, so the seam is invisible) and a
-        wider dissolve between stops. Desktop is unchanged.
-    16. Phones snap one stop per gesture: a marker per stop (and one at the hand-off to the
-        page) inside the track, `scroll-snap-stop: always`, and `scroll-snap-type` on <html>
-        only while the tour is on screen so the page below scrolls freely.
     14. Legibility: a soft elliptical veil behind the copy on desktop (90 % of --sw-bg where
         the text sits, instead of a full-height column), a denser bottom gradient on phones,
         body text in full --sw-ink. The scroll hint is light with a dark shadow on desktop (it
@@ -110,8 +103,6 @@ export function mountScrollWorld(container, config) {
   const coarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   const smallMQ = window.matchMedia('(max-width: 860px)');
   const isMobile = () => coarse || smallMQ.matches;
-  // Stills only (no clips): phones and reduced motion.
-  const stillsOnly = () => reduce || isMobile();
   const SECTIONS = config.sections || [];
   const CONNECTORS = config.connectors || [];
   const CONNECTORS_M = config.connectorsMobile || [];
@@ -178,9 +169,6 @@ export function mountScrollWorld(container, config) {
 
   [sky, scrollbar, hasTopbar ? topbar : null, stage, copylayer, route, hint, track]
     .forEach(n => { if (n) container.appendChild(n); });
-  // Snap markers: one per stop plus the hand-off to the page (positioned in layout()).
-  const snaps = SECTIONS.map(() => track.appendChild(el('i', 'sw-snap')));
-  snaps.push(track.appendChild(el('i', 'sw-snap')));
 
   // segment scenes
   SEGMENTS.forEach(s => {
@@ -189,9 +177,7 @@ export function mountScrollWorld(container, config) {
     const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async';
     const poster = (isMobile() && s.stillM) ? s.stillM : s.still;
     s.poster = poster;
-    // Stills-only mode shows every poster at mount: a stop arrives in one snap, too fast
-    // to fetch its picture on the way (desktop defers them for the clips' bandwidth).
-    if (poster && (SEGMENTS.indexOf(s) === 0 || stillsOnly())) img.src = poster;
+    if (poster && SEGMENTS.indexOf(s) === 0) img.src = poster;
     scene.appendChild(img); stage.appendChild(scene);
     s.el = scene; s.img = img; s.video = null; s.hasClip = false;
     s.loading = false; s.ready = false; s.cur = 0; s.target = 0; s.visible = false;
@@ -228,7 +214,7 @@ export function mountScrollWorld(container, config) {
   // (where the copy peaks) and moves quicker near the seams. L=0 linear, L=1 full
   // mid-scene pause. f(0)=0, f(1)=1 always, so seam frames are untouched.
   const lingerEase = (x, L) => { L = clamp(L); const c = x - 0.5; return (1 - L) * x + L * (4 * c * c * c + 0.5); };
-  let vh = window.innerHeight, stageX = 0, totalW = 0, endY = 0, activeIndex = -1, lastY = -1;
+  let vh = window.innerHeight, stageX = 0, totalW = 0, activeIndex = -1, ticking = false;
   let laidOutW = window.innerWidth;   // width the current layout was computed at (see onResize)
 
   function layout() {
@@ -236,40 +222,21 @@ export function mountScrollWorld(container, config) {
     laidOutW = window.innerWidth;
     stageX = window.innerWidth > 860 ? 4 : 0;
     let off = 0;
-    // Stills-only: shorter segments, so one snap between stops is about one screen.
-    const k = stillsOnly() ? 0.7 : 1;
-    SEGMENTS.forEach(s => { s.start = off * vh; off += s.w * k; s.end = off * vh; });
+    SEGMENTS.forEach(s => { s.start = off * vh; off += s.w; s.end = off * vh; });
     totalW = off;
-    container.style.setProperty('--sw-total', totalW + 1);
-    // Zoom span of a still without clip: a connector and the dive after it show the same
-    // still, so they zoom over their combined range and meet at the seam at the same scale.
-    SEGMENTS.forEach((s, i) => {
-      const prev = SEGMENTS[i - 1], next = SEGMENTS[i + 1];
-      s.zoomStart = (s.kind === 'dive' && prev && prev.kind === 'conn') ? prev.start : s.start;
-      s.zoomEnd = (s.kind === 'conn' && next) ? next.end : s.end;
-    });
-    // +1vh so the last flight completes. Whole pixels: the browser snaps to integer offsets,
-    // so a fractional end marker would never count as past.
-    endY = Math.round(totalW * vh + vh);
-    track.style.height = endY + 'px';
-    snaps.forEach((m, i) => { m.style.top = (i < N ? stopY(i) : endY) + 'px'; });
+    track.style.height = (totalW * vh + vh) + 'px';   // +1vh so the last flight completes
     read();
   }
 
-  // Where a stop's copy is fully up: the landing for the first one, mid-scene for the rest.
-  function stopY(i) {
-    const seg = SECTIONS[i]._seg;
-    return i === 0 ? 0 : seg.start + (seg.end - seg.start) * 0.5;
-  }
-
   function jumpTo(i) {
-    window.scrollTo({ top: stopY(i), behavior: reduce ? 'auto' : 'smooth' });
+    const seg = SECTIONS[i]._seg;
+    window.scrollTo({ top: seg.start + (seg.end - seg.start) * 0.5, behavior: reduce ? 'auto' : 'smooth' });
   }
 
   function loadClip(s) {
     // Under prefers-reduced-motion we never load the clips at all — the stills stay up
     // and simply cross-dissolve as you scroll. No scrubbed video motion, no decode cost.
-    if (reduce || isMobile() || s.loading || !s.clip) return;
+    if (reduce || s.loading || !s.clip) return;
     s.loading = true;
     // Serve the lighter mobile encode on phones when one was provided.
     const url = (isMobile() && s.clipM) ? s.clipM : s.clip;
@@ -292,9 +259,7 @@ export function mountScrollWorld(container, config) {
 
   function read() {
     const y = window.scrollY || window.pageYOffset;
-    const stills = stillsOnly();
-    // Stills: the dissolve must end before a stop's rest position or the next picture bleeds in.
-    const fade = (stills ? 0.17 : CROSSFADE) * vh;
+    const fade = CROSSFADE * vh;
     let ci = 0;
     for (let i = 0; i < NSEG; i++) if (y >= SEGMENTS[i].start) ci = i;
 
@@ -312,14 +277,11 @@ export function mountScrollWorld(container, config) {
       const op = smooth(1 - outside / fade);
       s.el.style.opacity = op; s.visible = op > 0.001;
       s.el.style.zIndex = (i === ci) ? '120' : String(100 + Math.round(op * 10));
-      // Desktop static stops are not zoomed: their still matches the connectors' frames.
-      if (!s.clip && !stills) {
+      if (!s.clip) {
         s.img.style.transform = 'none';
       } else if (!s.hasClip || !s.ready) {
-        const zl = clamp((y - s.zoomStart) / (s.zoomEnd - s.zoomStart), 0, 1);
-        // Phones start at 1 so the first still matches the server-rendered poster at mount.
-        const sc = reduce ? 1 : (stills ? 1 : 1.03) + zl * 0.14;
-        s.img.style.transform = stills ? `scale(${sc.toFixed(3)})` : `translateX(${stageX - 2}vw) scale(${sc.toFixed(3)})`;
+        const sc = reduce ? 1 : 1.03 + local * 0.14;
+        s.img.style.transform = `translateX(${stageX - 2}vw) scale(${sc.toFixed(3)})`;
       }
     }
 
@@ -356,17 +318,13 @@ export function mountScrollWorld(container, config) {
     scrollbarFill.style.transform = `scaleX(${clamp(y / (totalW * vh))})`;
     container.style.setProperty('--sw-exit', `${Math.max(0, y - totalW * vh)}px`);
     container.classList.toggle('sw-leaving', y > totalW * vh);
-    const past = y >= endY - 1;
-    container.classList.toggle('sw-past', past);
-    document.documentElement.classList.toggle('sw-snapping', stills && !reduce && !past);
+    container.classList.toggle('sw-past', y >= totalW * vh + vh);
     hint.style.opacity = clamp(1 - y / (0.5 * vh));
     if (particles) particles.style.transform = `translate3d(0, ${-y * 0.05}px, 0)`;
+    ticking = false;
   }
 
   function raf() {
-    // Polled, not event-driven: a snap animation may not deliver scroll events per frame.
-    const y = window.scrollY;
-    if (y !== lastY) { lastY = y; read(); }
     const mobile = isMobile();
     // Phones: one frame at 24 fps. A smaller step costs a decode without changing the
     // picture. Desktop keeps the fine step; its decoder is not the bottleneck.
@@ -426,6 +384,7 @@ export function mountScrollWorld(container, config) {
 
   // Particles are a per-frame cost we can't afford alongside video scrubbing on a phone.
   seedParticles(particles, reduce || coarse);
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(read); } }, { passive: true });
   // Mobile browsers fire `resize` every time the URL bar slides in/out. Re-running
   // layout() there rebuilds the track height and yanks the scroll position, so on
   // touch we ignore height-only changes and only relayout when the width actually
@@ -479,8 +438,7 @@ function injectCSS() {
     --sw-font-display:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
     --sw-font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
     color:var(--sw-ink);font-family:var(--sw-font-body);}
-  /* overflow only on html: on body it would make body the scroll container and take the snap areas away from the viewport. */
-  html{overflow-x:hidden;} html,body{margin:0;background:var(--sw-bg,#F5EDE0);}
+  html,body{margin:0;background:var(--sw-bg,#F5EDE0);overflow-x:hidden;}
   .sw-sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--sw-bg);}
   .sw-sky__grad{position:absolute;inset:-10%;background:linear-gradient(178deg,color-mix(in srgb,var(--sw-accent) 12%,var(--sw-bg)) 0%,var(--sw-bg) 55%,color-mix(in srgb,var(--sw-accent) 6%,var(--sw-bg)) 100%);}
   .sw-sky__glow{position:absolute;inset:0;background:radial-gradient(60% 42% at 74% 16%,color-mix(in srgb,var(--sw-accent) 22%,transparent),transparent 70%),radial-gradient(46% 34% at 50% 50%,color-mix(in srgb,#fff 45%,transparent),transparent 70%);}
@@ -531,8 +489,6 @@ function injectCSS() {
   .sw-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
   @keyframes sw-wheel{0%{opacity:0;top:6px}40%{opacity:1}100%{opacity:0;top:17px}}
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
-  .sw-snap{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;scroll-snap-stop:always;}
-  html.sw-snapping{scroll-snap-type:y mandatory;}
   @media (max-width:860px){
     .sw-nav{display:none;}
     .sw-copylayer::before{width:100%;height:56%;top:auto;bottom:0;opacity:var(--sw-veil,1);background:linear-gradient(0deg,var(--sw-bg) 10%,color-mix(in srgb,var(--sw-bg) 92%,transparent) 45%,color-mix(in srgb,var(--sw-bg) 60%,transparent) 70%,transparent 100%);}

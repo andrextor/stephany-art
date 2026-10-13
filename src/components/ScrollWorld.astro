@@ -1,15 +1,13 @@
 ---
-import { site, whatsappUrl } from '../data/site';
+// Desktop studio tour (above 860px; ScrollWorldMobile.astro below): the stills and the
+// walks between them scrubbed by scroll. Stops are still frames taken from the clips
+// themselves (scripts/encode-world.mjs), and clip-N is the walk between stop N-1 and N.
+import { worldStops } from '../data/world';
 import { copy, langFromUrl, localePath } from '../i18n';
 
 const lang = langFromUrl(Astro.url);
-const { role, ui, messages, world } = copy[lang];
-const [home, studio, commissions, personal, inProgress] = world.stops;
-const commission = { label: ui.commission, href: whatsappUrl(messages.commission), external: true };
+const { world } = copy[lang];
 
-// Stops are still frames taken from the clips themselves (scripts/encode-world.mjs),
-// and clip-N is the walk between stop N-1 and stop N. Phones get a portrait crop of
-// each clip with the framing baked in, so there is no per-stop object-position.
 const config = {
   nav: false,
   atmosphere: false,
@@ -17,67 +15,7 @@ const config = {
   diveScroll: 0.5,
   connScroll: 0.8,
   crossfade: 0.12,
-  sections: [
-    {
-      id: 'inicio',
-      label: home.label,
-      still: '/world/stop-0.webp',
-      stillMobile: '/world/stop-0-portrait.webp',
-      scroll: 0.25,
-      titleTag: 'h1',
-      eyebrow: role,
-      title: site.artistName,
-      body: home.body,
-      cta: { primary: commission, secondary: { label: ui.viewWorks, href: localePath(lang, '/obras') } },
-    },
-    {
-      id: 'taller',
-      label: studio.label,
-      still: '/world/stop-1.webp',
-      stillMobile: '/world/stop-1-portrait.webp',
-      eyebrow: studio.eyebrow,
-      title: studio.title,
-      body: studio.body,
-    },
-    {
-      id: 'comision',
-      label: commissions.label,
-      still: '/world/stop-2.webp',
-      stillMobile: '/world/stop-2-portrait.webp',
-      eyebrow: commissions.eyebrow,
-      title: commissions.title,
-      body: commissions.body,
-      cta: {
-        primary: commission,
-        secondary: { label: world.viewCommissions, href: localePath(lang, '/obras?cat=commission') },
-      },
-    },
-    {
-      id: 'personales',
-      label: personal.label,
-      still: '/world/stop-3.webp',
-      stillMobile: '/world/stop-3-portrait.webp',
-      eyebrow: personal.eyebrow,
-      title: personal.title,
-      body: personal.body,
-      tags: world.personalTags,
-      cta: { secondary: { label: world.viewPersonal, href: localePath(lang, '/obras?cat=personal') } },
-    },
-    {
-      id: 'en-proceso',
-      label: inProgress.label,
-      still: '/world/stop-4.webp',
-      stillMobile: '/world/stop-4-portrait.webp',
-      scroll: 0.3,
-      eyebrow: inProgress.eyebrow,
-      title: inProgress.title,
-      body: inProgress.body,
-      cta: {
-        primary: commission,
-        secondary: { label: world.viewInProgress, href: localePath(lang, '/obras?estado=in-progress') },
-      },
-    },
-  ],
+  sections: worldStops(lang),
 };
 
 const configJson = JSON.stringify(config).replace(/</g, '\\u003c');
@@ -91,21 +29,18 @@ const totalViewportHeights =
 const firstStop = config.sections[0];
 ---
 
-<div id="world" data-spy="/#world" aria-label={world.label} style={`--sw-total: ${totalViewportHeights}`}>
-  <picture>
-    <source media="(max-width: 860px)" srcset={firstStop.stillMobile} width="664" height="1440" />
-    <img
-      class="sw-poster"
-      src={firstStop.still}
-      srcset={`${firstStop.still} 1920w, ${firstStop.still.replace('.webp', '-1440.webp')} 2560w`}
-      sizes="100vw"
-      alt=""
-      width="1920"
-      height="1080"
-      fetchpriority="high"
-      decoding="async"
-    />
-  </picture>
+<div id="world" data-spy={localePath(lang, '/#world')} aria-label={world.label} style={`--sw-total: ${totalViewportHeights}`}>
+  <img
+    class="sw-poster"
+    src={firstStop.still}
+    srcset={`${firstStop.still} 1920w, ${firstStop.still.replace('.webp', '-1440.webp')} 2560w`}
+    sizes="100vw"
+    alt=""
+    width="1920"
+    height="1080"
+    fetchpriority="high"
+    decoding="async"
+  />
   <div class="sw-prelude" aria-hidden="true">
     <article class="sw-copy">
       <span class="sw-copy__num">01 / {String(config.sections.length).padStart(2, '0')}</span>
@@ -113,10 +48,10 @@ const firstStop = config.sections[0];
       <h1 class="sw-copy__title">{firstStop.title}</h1>
       <p class="sw-copy__body">{firstStop.body}</p>
       <div class="sw-copy__cta">
-        <a class="sw-btn sw-btn--primary" href={firstStop.cta.primary.href} target="_blank" rel="noopener">
-          {firstStop.cta.primary.label}
+        <a class="sw-btn sw-btn--primary" href={firstStop.cta?.primary?.href} target="_blank" rel="noopener">
+          {firstStop.cta?.primary?.label}
         </a>
-        <a class="sw-btn sw-btn--ghost" href={firstStop.cta.secondary.href}>{firstStop.cta.secondary.label}</a>
+        <a class="sw-btn sw-btn--ghost" href={firstStop.cta?.secondary?.href}>{firstStop.cta?.secondary?.label}</a>
       </div>
     </article>
   </div>
@@ -129,11 +64,11 @@ const firstStop = config.sections[0];
   const configElement = document.getElementById('world-config');
   const container = document.getElementById('world');
 
-  if (configElement && container) {
+  // Phones get ScrollWorldMobile instead; the engine (and its clips) never mount there.
+  if (configElement && container && !window.matchMedia('(max-width: 860px)').matches) {
     const config = JSON.parse(configElement.textContent ?? '{}');
     const clips = [1, 2, 3, 4];
-    // Wide or hi-DPI desktops get the 2560x1440 tier; the rest the 1080 one (the phone
-    // path ignores both and takes connectorsMobile).
+    // Wide or hi-DPI desktops get the 2560x1440 tier; the rest the 1080 one.
     const wide = window.matchMedia('(min-width: 1800px), (min-width: 1200px) and (min-resolution: 1.5dppx)').matches;
     const tier = wide ? '1440' : '1080';
     const sections = wide
@@ -144,9 +79,16 @@ const firstStop = config.sections[0];
       ...config,
       sections,
       connectors: clips.map((n) => `/video/clip-${n}-${tier}.mp4`),
-      connectorsMobile: clips.map((n) => `/video/clip-${n}-portrait.mp4`),
     });
     // The engine now renders the first stop's copy itself; drop the static prelude.
     container.querySelector('.sw-prelude')?.remove();
   }
 </script>
+
+<style>
+  @media (max-width: 860px) {
+    #world {
+      display: none;
+    }
+  }
+</style>

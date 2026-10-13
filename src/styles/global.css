@@ -258,7 +258,8 @@ body {
 }
 
 /* First stop's copy, server rendered so the LCP does not wait for the engine. It mirrors
-   the engine's .sw-copy layout (scrub-engine.js injectCSS) and is removed on mount. */
+   the engine's .sw-copy layout (scrub-engine.js injectCSS) and is removed on mount. The
+   type rules are shared with the phone tour (ScrollWorldMobile.astro). */
 .sw-prelude {
   display: none;
 }
@@ -293,14 +294,14 @@ body {
   width: min(42vw, 460px);
 }
 
-.sw-prelude .sw-copy__num {
+:is(.sw-prelude, .world-m) .sw-copy__num {
   font-family: ui-monospace, Menlo, monospace;
   font-size: 0.74rem;
   letter-spacing: 0.12em;
   color: var(--color-ink-soft);
 }
 
-.sw-prelude .sw-copy__eyebrow {
+:is(.sw-prelude, .world-m) .sw-copy__eyebrow {
   display: block;
   margin-top: 18px;
   font-size: 0.8rem;
@@ -308,14 +309,14 @@ body {
   text-transform: uppercase;
 }
 
-.sw-prelude .sw-copy__title {
+:is(.sw-prelude, .world-m) .sw-copy__title {
   margin: 12px 0 0;
   font-size: clamp(2rem, 4.4vw, 3.5rem);
   line-height: 1.03;
   letter-spacing: -0.01em;
 }
 
-.sw-prelude .sw-copy__body {
+:is(.sw-prelude, .world-m) .sw-copy__body {
   margin-top: 18px;
   max-width: 40ch;
   font-size: clamp(1rem, 1.25vw, 1.14rem);
@@ -323,14 +324,7 @@ body {
   color: var(--color-ink);
 }
 
-/* Phones: tour buttons wrap before reaching the fixed social bar on the right. */
-@media (max-width: 860px) {
-  .sw-copy__cta {
-    padding-right: 3.5rem;
-  }
-}
-
-.sw-prelude .sw-copy__cta {
+:is(.sw-prelude, .world-m) .sw-copy__cta {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -338,54 +332,19 @@ body {
   pointer-events: auto;
 }
 
-.sw-prelude .sw-btn {
+:is(.sw-prelude, .world-m) .sw-btn {
   text-decoration: none;
   font-weight: 600;
   border-radius: 999px;
 }
 
-.sw-prelude .sw-btn--primary {
+:is(.sw-prelude, .world-m) .sw-btn--primary {
   background: var(--color-ink);
 }
 
-.sw-prelude .sw-btn--ghost {
+:is(.sw-prelude, .world-m) .sw-btn--ghost {
   color: var(--color-ink);
   border: 1.5px solid color-mix(in srgb, var(--color-ink) 25%, transparent);
-}
-
-@media (max-width: 860px) {
-  .js .sw-prelude::before {
-    width: 100%;
-    height: 56%;
-    top: auto;
-    bottom: 0;
-    background: linear-gradient(
-      0deg,
-      var(--color-bg) 10%,
-      color-mix(in srgb, var(--color-bg) 92%, transparent) 45%,
-      color-mix(in srgb, var(--color-bg) 60%, transparent) 70%,
-      transparent 100%
-    );
-  }
-
-  .sw-prelude .sw-copy {
-    left: clamp(18px, 5vw, 64px);
-    right: clamp(18px, 5vw, 64px);
-    top: auto;
-    bottom: calc(clamp(92px, 13dvh, 124px) + env(safe-area-inset-bottom));
-    transform: translateY(2vh);
-    width: auto;
-    max-width: 560px;
-  }
-
-  .sw-prelude .sw-copy__title {
-    font-size: clamp(1.9rem, 7.5vw, 2.7rem);
-  }
-
-  .sw-prelude .sw-copy__body {
-    max-width: none;
-    font-size: clamp(0.98rem, 3.6vw, 1.1rem);
-  }
 }
 
 /* Cross-document view transitions: a soft fade between pages, the artwork image travels

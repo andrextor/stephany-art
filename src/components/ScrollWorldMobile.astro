@@ -1,0 +1,233 @@
+---
+import { portraitStill, worldStops } from '../data/world';
+// Phone version of the studio tour (≤860px; ScrollWorld.astro above that). No scrubbed
+// video: seeking a frame costs 50-150 ms on a phone decoder and stuttered at every
+// flick. Each stop is a full-screen section the page snaps to, one per gesture; its
+// still is fixed behind the page and crossfades in with a slow zoom on arrival, while
+// the copy scrolls in with the section.
+import { copy, langFromUrl, localePath } from '../i18n';
+
+const lang = langFromUrl(Astro.url);
+const { world } = copy[lang];
+const stops = worldStops(lang);
+const pad = (n: number): string => String(n).padStart(2, '0');
+---
+
+<div class="world-m" data-world-mobile data-spy={localePath(lang, '/#world')} aria-label={world.label}>
+  <div class="world-m__veil" aria-hidden="true"></div>
+  {
+    stops.map((stop, index) => (
+      <section class="world-m__stop" data-stop>
+        <img
+          class="world-m__still"
+          src={portraitStill(stop.still)}
+          width="664"
+          height="1440"
+          alt=""
+          fetchpriority={index === 0 ? 'high' : undefined}
+          decoding="async"
+        />
+        <article class="sw-copy">
+          <span class="sw-copy__num">
+            {pad(index + 1)} / {pad(stops.length)}
+          </span>
+          <span class="sw-copy__eyebrow">{stop.eyebrow}</span>
+          {stop.titleTag === 'h1' ? <h1 class="sw-copy__title">{stop.title}</h1> : <h2 class="sw-copy__title">{stop.title}</h2>}
+          <p class="sw-copy__body">{stop.body}</p>
+          {stop.tags && (
+            <ul class="sw-copy__tags">
+              {stop.tags.map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          )}
+          {stop.cta && (
+            <div class="sw-copy__cta">
+              {stop.cta.primary && (
+                <a class="sw-btn sw-btn--primary" href={stop.cta.primary.href} target="_blank" rel="noopener">
+                  {stop.cta.primary.label}
+                </a>
+              )}
+              {stop.cta.secondary && (
+                <a class="sw-btn sw-btn--ghost" href={stop.cta.secondary.href}>
+                  {stop.cta.secondary.label}
+                </a>
+              )}
+            </div>
+          )}
+        </article>
+        {index === 0 && <span class="world-m__hint">{world.hint}</span>}
+      </section>
+    ))
+  }
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-world-mobile]');
+  const stops = [...document.querySelectorAll<HTMLElement>('[data-stop]')];
+  const last = stops.at(-1);
+
+  if (root && last) {
+    // A stop takes over once it covers half the screen and stays on until the next one
+    // does, so the last still holds while the page slides over it.
+    const activate = (stop: HTMLElement): void => {
+      for (const other of stops) other.classList.toggle('is-on', other === stop);
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) activate(entry.target as HTMLElement);
+        }
+      },
+      { threshold: 0.5 },
+    );
+    for (const stop of stops) observer.observe(stop);
+
+    // Snapping lives on <html> (the page is the scroller) and only before the last stop,
+    // which is reached by a snap and left by a free scroll into the rest of the page.
+    const snap = (): void => {
+      document.documentElement.classList.toggle('world-snap', window.scrollY < last.offsetTop);
+    };
+    window.addEventListener('scroll', snap, { passive: true });
+    snap();
+    // An anchor jump from inside the tour (the menu's "Contacto") must not stop at a stop.
+    document.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a[href*="#"]')) document.documentElement.classList.remove('world-snap');
+    });
+  }
+</script>
+
+<style>
+  @media (min-width: 861px) {
+    .world-m {
+      display: none;
+    }
+  }
+
+  /* Own stacking context: the stills (negative z-index) paint above the body background but
+     below everything that follows in the page. */
+  .world-m {
+    position: relative;
+    z-index: 0;
+  }
+
+  .world-m__stop {
+    position: relative;
+    height: 100svh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  :global(html.world-snap) {
+    scroll-snap-type: y mandatory;
+  }
+
+  /* Stills and veil sit below the page flow (negative z-index), so the sections after the
+     tour slide over them without any hand-off logic. */
+  .world-m__still {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1);
+    /* Outgoing: hold the picture under the incoming fade, then drop it. */
+    transition:
+      opacity 0s 900ms,
+      transform 0s 900ms;
+  }
+
+  .is-on .world-m__still {
+    z-index: -1;
+    opacity: 1;
+    transform: scale(1.1);
+    transition:
+      opacity 900ms var(--ease-fluid),
+      transform 9s linear;
+  }
+
+  .world-m__veil {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 0;
+    height: 56%;
+    pointer-events: none;
+    background: linear-gradient(
+      0deg,
+      var(--color-bg) 10%,
+      color-mix(in srgb, var(--color-bg) 92%, transparent) 45%,
+      color-mix(in srgb, var(--color-bg) 60%, transparent) 70%,
+      transparent 100%
+    );
+  }
+
+  .world-m .sw-copy {
+    position: absolute;
+    left: clamp(18px, 5vw, 64px);
+    right: clamp(18px, 5vw, 64px);
+    bottom: calc(clamp(92px, 13dvh, 124px) + env(safe-area-inset-bottom));
+    max-width: 560px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 700ms var(--ease-fluid) 250ms,
+      transform 700ms var(--ease-fluid) 250ms;
+  }
+
+  .is-on .sw-copy {
+    opacity: 1;
+    transform: none;
+  }
+
+  .world-m .sw-copy__title {
+    font-size: clamp(1.9rem, 7.5vw, 2.7rem);
+  }
+
+  .world-m .sw-copy__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0 0;
+    padding: 0;
+  }
+
+  .world-m .sw-copy__tags li {
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-moss) 14%, #fff);
+    border: 1px solid color-mix(in srgb, var(--color-moss) 30%, transparent);
+  }
+
+  .world-m .sw-copy__body {
+    max-width: none;
+    font-size: clamp(0.98rem, 3.6vw, 1.1rem);
+  }
+
+  /* The buttons wrap before reaching the fixed social bar on the right. */
+  .world-m .sw-copy__cta {
+    padding-right: 3.5rem;
+  }
+
+  .world-m__hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    text-align: center;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .is-on .world-m__still,
+    .world-m .sw-copy {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

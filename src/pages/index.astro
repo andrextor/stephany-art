@@ -7,6 +7,7 @@ import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 import Ridges from '../components/Ridges.astro';
 import ScrollWorld from '../components/ScrollWorld.astro';
+import ScrollWorldMobile from '../components/ScrollWorldMobile.astro';
 import { site, whatsappUrl } from '../data/site';
 import { copy, langFromUrl, localePath } from '../i18n';
 import Layout from '../layouts/Layout.astro';
@@ -36,6 +37,7 @@ const jsonLd = graph(websiteJsonLd(origin, lang), artistJsonLd(origin, lang));
 
 <Layout jsonLd={jsonLd} hideFooter>
   <ScrollWorld />
+  <ScrollWorldMobile />
 
   <div class="after-world">
     <section aria-labelledby="obra-insignia" data-spy={localePath(lang, '/obras')} class="grid md:grid-cols-[1.15fr_1fr]">
