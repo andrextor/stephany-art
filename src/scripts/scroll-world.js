@@ -89,6 +89,10 @@
     13. Phone seeks (fase 13): one-frame step (1/24), the next seek waits for the previous
         frame to be painted (requestVideoFrameCallback, 150 ms safety timer), fastSeek on
         the all-intra phone clips, softer lerp (0.14).
+    15. Phones never load the clips: a seek costs 50-150 ms on a phone decoder, so the scrub
+        stuttered at every natural flick. The stills stay up with a continuous zoom across a
+        connector and the stop it leads to (same picture, so the seam is invisible) and a
+        wider dissolve between stops. Desktop is unchanged.
     14. Legibility: a soft elliptical veil behind the copy on desktop (90 % of --sw-bg where
         the text sits, instead of a full-height column), a denser bottom gradient on phones,
         body text in full --sw-ink. The scroll hint is light with a dark shadow on desktop (it
@@ -224,6 +228,13 @@ export function mountScrollWorld(container, config) {
     let off = 0;
     SEGMENTS.forEach(s => { s.start = off * vh; off += s.w; s.end = off * vh; });
     totalW = off;
+    // Zoom span of a still without clip: a connector and the dive after it show the same
+    // still, so they zoom over their combined range and meet at the seam at the same scale.
+    SEGMENTS.forEach((s, i) => {
+      const prev = SEGMENTS[i - 1], next = SEGMENTS[i + 1];
+      s.zoomStart = (s.kind === 'dive' && prev && prev.kind === 'conn') ? prev.start : s.start;
+      s.zoomEnd = (s.kind === 'conn' && next) ? next.end : s.end;
+    });
     track.style.height = (totalW * vh + vh) + 'px';   // +1vh so the last flight completes
     read();
   }
@@ -236,7 +247,7 @@ export function mountScrollWorld(container, config) {
   function loadClip(s) {
     // Under prefers-reduced-motion we never load the clips at all — the stills stay up
     // and simply cross-dissolve as you scroll. No scrubbed video motion, no decode cost.
-    if (reduce || s.loading || !s.clip) return;
+    if (reduce || isMobile() || s.loading || !s.clip) return;
     s.loading = true;
     // Serve the lighter mobile encode on phones when one was provided.
     const url = (isMobile() && s.clipM) ? s.clipM : s.clip;
@@ -259,7 +270,8 @@ export function mountScrollWorld(container, config) {
 
   function read() {
     const y = window.scrollY || window.pageYOffset;
-    const fade = CROSSFADE * vh;
+    const stills = reduce || isMobile();
+    const fade = (stills ? 0.25 : CROSSFADE) * vh;
     let ci = 0;
     for (let i = 0; i < NSEG; i++) if (y >= SEGMENTS[i].start) ci = i;
 
@@ -277,11 +289,14 @@ export function mountScrollWorld(container, config) {
       const op = smooth(1 - outside / fade);
       s.el.style.opacity = op; s.visible = op > 0.001;
       s.el.style.zIndex = (i === ci) ? '120' : String(100 + Math.round(op * 10));
-      if (!s.clip) {
+      // Desktop static stops are not zoomed: their still matches the connectors' frames.
+      if (!s.clip && !stills) {
         s.img.style.transform = 'none';
       } else if (!s.hasClip || !s.ready) {
-        const sc = reduce ? 1 : 1.03 + local * 0.14;
-        s.img.style.transform = `translateX(${stageX - 2}vw) scale(${sc.toFixed(3)})`;
+        const zl = clamp((y - s.zoomStart) / (s.zoomEnd - s.zoomStart), 0, 1);
+        // Phones start at 1 so the first still matches the server-rendered poster at mount.
+        const sc = reduce ? 1 : (stills ? 1 : 1.03) + zl * 0.14;
+        s.img.style.transform = stills ? `scale(${sc.toFixed(3)})` : `translateX(${stageX - 2}vw) scale(${sc.toFixed(3)})`;
       }
     }
 
