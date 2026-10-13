@@ -81,10 +81,14 @@ body {
 
 /* Home: the sections after the flight stack. Each one pins while the next slides over
    it; a section taller than the viewport pins once its bottom is in view (--h is set
-   by the script in index.astro). */
-.js .after-world > :not(script) {
-  position: sticky;
-  top: min(0px, calc(100svh - var(--h, 0px)));
+   by the script in index.astro). Desktop only: on a phone the sections run two or three
+   screens tall, so a pinned one shows its ending for an instant before the next covers
+   it, and the scroll-linked quote stalls half lit. */
+@media (min-width: 861px) {
+  .js .after-world > :not(script) {
+    position: sticky;
+    top: min(0px, calc(100svh - var(--h, 0px)));
+  }
 }
 
 /* Arched top, like the attic windows. Sized for a 4:5 image. */
