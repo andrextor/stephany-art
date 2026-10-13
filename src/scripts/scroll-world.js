@@ -93,6 +93,9 @@
         stuttered at every natural flick. The stills stay up with a continuous zoom across a
         connector and the stop it leads to (same picture, so the seam is invisible) and a
         wider dissolve between stops. Desktop is unchanged.
+    16. Phones snap one stop per gesture: a marker per stop (and one at the hand-off to the
+        page) inside the track, `scroll-snap-stop: always`, and `scroll-snap-type` on <html>
+        only while the tour is on screen so the page below scrolls freely.
     14. Legibility: a soft elliptical veil behind the copy on desktop (90 % of --sw-bg where
         the text sits, instead of a full-height column), a denser bottom gradient on phones,
         body text in full --sw-ink. The scroll hint is light with a dark shadow on desktop (it
@@ -173,6 +176,9 @@ export function mountScrollWorld(container, config) {
 
   [sky, scrollbar, hasTopbar ? topbar : null, stage, copylayer, route, hint, track]
     .forEach(n => { if (n) container.appendChild(n); });
+  // Snap markers: one per stop plus the hand-off to the page (positioned in layout()).
+  const snaps = SECTIONS.map(() => track.appendChild(el('i', 'sw-snap')));
+  snaps.push(track.appendChild(el('i', 'sw-snap')));
 
   // segment scenes
   SEGMENTS.forEach(s => {
@@ -236,12 +242,18 @@ export function mountScrollWorld(container, config) {
       s.zoomEnd = (s.kind === 'conn' && next) ? next.end : s.end;
     });
     track.style.height = (totalW * vh + vh) + 'px';   // +1vh so the last flight completes
+    snaps.forEach((m, i) => { m.style.top = (i < N ? stopY(i) : totalW * vh + vh) + 'px'; });
     read();
   }
 
-  function jumpTo(i) {
+  // Where a stop's copy is fully up: the landing for the first one, mid-scene for the rest.
+  function stopY(i) {
     const seg = SECTIONS[i]._seg;
-    window.scrollTo({ top: seg.start + (seg.end - seg.start) * 0.5, behavior: reduce ? 'auto' : 'smooth' });
+    return i === 0 ? 0 : seg.start + (seg.end - seg.start) * 0.5;
+  }
+
+  function jumpTo(i) {
+    window.scrollTo({ top: stopY(i), behavior: reduce ? 'auto' : 'smooth' });
   }
 
   function loadClip(s) {
@@ -333,7 +345,9 @@ export function mountScrollWorld(container, config) {
     scrollbarFill.style.transform = `scaleX(${clamp(y / (totalW * vh))})`;
     container.style.setProperty('--sw-exit', `${Math.max(0, y - totalW * vh)}px`);
     container.classList.toggle('sw-leaving', y > totalW * vh);
-    container.classList.toggle('sw-past', y >= totalW * vh + vh);
+    const past = y >= totalW * vh + vh;
+    container.classList.toggle('sw-past', past);
+    document.documentElement.classList.toggle('sw-snapping', stills && !reduce && !past);
     hint.style.opacity = clamp(1 - y / (0.5 * vh));
     if (particles) particles.style.transform = `translate3d(0, ${-y * 0.05}px, 0)`;
     ticking = false;
@@ -453,7 +467,8 @@ function injectCSS() {
     --sw-font-display:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
     --sw-font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
     color:var(--sw-ink);font-family:var(--sw-font-body);}
-  html,body{margin:0;background:var(--sw-bg,#F5EDE0);overflow-x:hidden;}
+  /* overflow only on html: on body it would make body the scroll container and take the snap areas away from the viewport. */
+  html{overflow-x:hidden;} html,body{margin:0;background:var(--sw-bg,#F5EDE0);}
   .sw-sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--sw-bg);}
   .sw-sky__grad{position:absolute;inset:-10%;background:linear-gradient(178deg,color-mix(in srgb,var(--sw-accent) 12%,var(--sw-bg)) 0%,var(--sw-bg) 55%,color-mix(in srgb,var(--sw-accent) 6%,var(--sw-bg)) 100%);}
   .sw-sky__glow{position:absolute;inset:0;background:radial-gradient(60% 42% at 74% 16%,color-mix(in srgb,var(--sw-accent) 22%,transparent),transparent 70%),radial-gradient(46% 34% at 50% 50%,color-mix(in srgb,#fff 45%,transparent),transparent 70%);}
@@ -504,6 +519,8 @@ function injectCSS() {
   .sw-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
   @keyframes sw-wheel{0%{opacity:0;top:6px}40%{opacity:1}100%{opacity:0;top:17px}}
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
+  .sw-snap{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;scroll-snap-stop:always;}
+  html.sw-snapping{scroll-snap-type:y mandatory;}
   @media (max-width:860px){
     .sw-nav{display:none;}
     .sw-copylayer::before{width:100%;height:56%;top:auto;bottom:0;opacity:var(--sw-veil,1);background:linear-gradient(0deg,var(--sw-bg) 10%,color-mix(in srgb,var(--sw-bg) 92%,transparent) 45%,color-mix(in srgb,var(--sw-bg) 60%,transparent) 70%,transparent 100%);}
