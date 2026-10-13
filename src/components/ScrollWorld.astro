@@ -25,7 +25,7 @@ const configJson = JSON.stringify(config).replace(/</g, '\\u003c');
 const totalViewportHeights =
   config.sections.reduce(
     (sum, section, index) =>
-      sum + (section.scroll ?? config.diveScroll) + (index > 0 ? (section.walk ?? config.connScroll) : 0),
+      sum + (section.scroll || config.diveScroll) + (index > 0 ? section.walk || config.connScroll : 0),
     0,
   ) + 1;
 const firstStop = config.sections[0];
