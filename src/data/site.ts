@@ -1,7 +1,7 @@
 // Source of truth for bio and exhibitions: "Biografía Artística - Stephany Londoño.pdf".
 export const site = {
   artistName: 'Stephany Londoño',
-  role: 'Artista plástica y pintora',
+  role: 'Artista colombiana',
   country: 'Colombia',
   whatsapp: {
     display: '+57 313 793 7797',

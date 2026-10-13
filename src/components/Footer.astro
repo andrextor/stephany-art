@@ -43,7 +43,7 @@ const year = new Date().getFullYear();
 
     <div class="flex flex-col gap-2 text-sm text-bg/80 md:text-right">
       <p class="font-display text-2xl text-bg">{site.artistName}</p>
-      <p>{site.role} · {site.country}</p>
+      <p>{site.role}</p>
       <p>WhatsApp {site.whatsapp.display}</p>
       <a href={`mailto:${site.email}`} class="underline-offset-4 hover:text-bg hover:underline">{site.email}</a>
       <a href={site.instagram.url} target="_blank" rel="noopener" class="underline-offset-4 hover:text-bg hover:underline">

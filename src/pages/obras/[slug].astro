@@ -40,7 +40,7 @@ const ogImage = await getImage({ src: main.src, width: 1200, format: 'jpeg' });
 const origin = Astro.site ?? Astro.url;
 const jsonLd = graph(artworkJsonLd(artwork, origin, new URL(ogImage.src, origin).href));
 const facts = [technique, year?.toString()].filter(Boolean).join(', ');
-const description = `${title}${facts ? ` (${facts})` : ''}, obra de Stephany Londoño, artista plástica colombiana. ${categoryLabels[category]}.`;
+const description = `${title}${facts ? ` (${facts})` : ''}, obra de Stephany Londoño, artista colombiana. ${categoryLabels[category]}.`;
 
 const details = [
   { label: 'Categoría', value: categoryLabels[category] },
