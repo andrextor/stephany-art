@@ -110,6 +110,8 @@ export function mountScrollWorld(container, config) {
   const coarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   const smallMQ = window.matchMedia('(max-width: 860px)');
   const isMobile = () => coarse || smallMQ.matches;
+  // Stills only (no clips): phones and reduced motion.
+  const stillsOnly = () => reduce || isMobile();
   const SECTIONS = config.sections || [];
   const CONNECTORS = config.connectors || [];
   const CONNECTORS_M = config.connectorsMobile || [];
@@ -187,7 +189,9 @@ export function mountScrollWorld(container, config) {
     const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async';
     const poster = (isMobile() && s.stillM) ? s.stillM : s.still;
     s.poster = poster;
-    if (poster && SEGMENTS.indexOf(s) === 0) img.src = poster;
+    // Stills-only mode shows every poster at mount: a stop arrives in one snap, too fast
+    // to fetch its picture on the way (desktop defers them for the clips' bandwidth).
+    if (poster && (SEGMENTS.indexOf(s) === 0 || stillsOnly())) img.src = poster;
     scene.appendChild(img); stage.appendChild(scene);
     s.el = scene; s.img = img; s.video = null; s.hasClip = false;
     s.loading = false; s.ready = false; s.cur = 0; s.target = 0; s.visible = false;
@@ -224,7 +228,7 @@ export function mountScrollWorld(container, config) {
   // (where the copy peaks) and moves quicker near the seams. L=0 linear, L=1 full
   // mid-scene pause. f(0)=0, f(1)=1 always, so seam frames are untouched.
   const lingerEase = (x, L) => { L = clamp(L); const c = x - 0.5; return (1 - L) * x + L * (4 * c * c * c + 0.5); };
-  let vh = window.innerHeight, stageX = 0, totalW = 0, activeIndex = -1, ticking = false;
+  let vh = window.innerHeight, stageX = 0, totalW = 0, endY = 0, activeIndex = -1, lastY = -1;
   let laidOutW = window.innerWidth;   // width the current layout was computed at (see onResize)
 
   function layout() {
@@ -232,8 +236,11 @@ export function mountScrollWorld(container, config) {
     laidOutW = window.innerWidth;
     stageX = window.innerWidth > 860 ? 4 : 0;
     let off = 0;
-    SEGMENTS.forEach(s => { s.start = off * vh; off += s.w; s.end = off * vh; });
+    // Stills-only: shorter segments, so one snap between stops is about one screen.
+    const k = stillsOnly() ? 0.7 : 1;
+    SEGMENTS.forEach(s => { s.start = off * vh; off += s.w * k; s.end = off * vh; });
     totalW = off;
+    container.style.setProperty('--sw-total', totalW + 1);
     // Zoom span of a still without clip: a connector and the dive after it show the same
     // still, so they zoom over their combined range and meet at the seam at the same scale.
     SEGMENTS.forEach((s, i) => {
@@ -241,8 +248,11 @@ export function mountScrollWorld(container, config) {
       s.zoomStart = (s.kind === 'dive' && prev && prev.kind === 'conn') ? prev.start : s.start;
       s.zoomEnd = (s.kind === 'conn' && next) ? next.end : s.end;
     });
-    track.style.height = (totalW * vh + vh) + 'px';   // +1vh so the last flight completes
-    snaps.forEach((m, i) => { m.style.top = (i < N ? stopY(i) : totalW * vh + vh) + 'px'; });
+    // +1vh so the last flight completes. Whole pixels: the browser snaps to integer offsets,
+    // so a fractional end marker would never count as past.
+    endY = Math.round(totalW * vh + vh);
+    track.style.height = endY + 'px';
+    snaps.forEach((m, i) => { m.style.top = (i < N ? stopY(i) : endY) + 'px'; });
     read();
   }
 
@@ -282,8 +292,9 @@ export function mountScrollWorld(container, config) {
 
   function read() {
     const y = window.scrollY || window.pageYOffset;
-    const stills = reduce || isMobile();
-    const fade = (stills ? 0.25 : CROSSFADE) * vh;
+    const stills = stillsOnly();
+    // Stills: the dissolve must end before a stop's rest position or the next picture bleeds in.
+    const fade = (stills ? 0.17 : CROSSFADE) * vh;
     let ci = 0;
     for (let i = 0; i < NSEG; i++) if (y >= SEGMENTS[i].start) ci = i;
 
@@ -345,15 +356,17 @@ export function mountScrollWorld(container, config) {
     scrollbarFill.style.transform = `scaleX(${clamp(y / (totalW * vh))})`;
     container.style.setProperty('--sw-exit', `${Math.max(0, y - totalW * vh)}px`);
     container.classList.toggle('sw-leaving', y > totalW * vh);
-    const past = y >= totalW * vh + vh;
+    const past = y >= endY - 1;
     container.classList.toggle('sw-past', past);
     document.documentElement.classList.toggle('sw-snapping', stills && !reduce && !past);
     hint.style.opacity = clamp(1 - y / (0.5 * vh));
     if (particles) particles.style.transform = `translate3d(0, ${-y * 0.05}px, 0)`;
-    ticking = false;
   }
 
   function raf() {
+    // Polled, not event-driven: a snap animation may not deliver scroll events per frame.
+    const y = window.scrollY;
+    if (y !== lastY) { lastY = y; read(); }
     const mobile = isMobile();
     // Phones: one frame at 24 fps. A smaller step costs a decode without changing the
     // picture. Desktop keeps the fine step; its decoder is not the bottleneck.
@@ -413,7 +426,6 @@ export function mountScrollWorld(container, config) {
 
   // Particles are a per-frame cost we can't afford alongside video scrubbing on a phone.
   seedParticles(particles, reduce || coarse);
-  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(read); } }, { passive: true });
   // Mobile browsers fire `resize` every time the URL bar slides in/out. Re-running
   // layout() there rebuilds the track height and yanks the scroll position, so on
   // touch we ignore height-only changes and only relayout when the width actually
