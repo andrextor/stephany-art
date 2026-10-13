@@ -143,6 +143,12 @@ const pad = (n: number): string => String(n).padStart(2, '0');
       transform 9s linear;
   }
 
+  /* The last still holds at its final zoom: the page slides over it, and a picture still
+     moving underneath reads as a glitch. It lands at that scale while invisible. */
+  .world-m__stop:last-child.is-on .world-m__still {
+    transition: opacity 900ms var(--ease-fluid);
+  }
+
   .world-m__veil {
     position: fixed;
     inset: auto 0 0;
