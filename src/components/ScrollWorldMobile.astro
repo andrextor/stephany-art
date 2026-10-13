@@ -84,7 +84,7 @@ const pad = (n: number): string => String(n).padStart(2, '0');
 </script>
 
 <style>
-  @media (min-width: 861px) {
+  @media not all and (max-width: 860px) {
     .world-m {
       display: none;
     }
@@ -106,7 +106,8 @@ const pad = (n: number): string => String(n).padStart(2, '0');
 
   /* The page snaps stop by stop. The rest of the page (.after-world, footer included) is a
      single snap area taller than the screen, inside which the browser scrolls freely, so
-     nothing has to switch snapping off, and nothing re-snaps at the edge. */
+     nothing has to switch snapping off, and nothing re-snaps at the edge. A flick from
+     the last stop must still land on its start instead of anywhere inside it. */
   @media (max-width: 860px) {
     :global(html) {
       scroll-snap-type: y mandatory;
@@ -114,6 +115,7 @@ const pad = (n: number): string => String(n).padStart(2, '0');
 
     :global(.after-world) {
       scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
   }
 

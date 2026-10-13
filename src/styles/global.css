@@ -81,10 +81,14 @@ body {
 
 /* Home: the sections after the flight stack. Each one pins while the next slides over
    it; a section taller than the viewport pins once its bottom is in view (--h is set
-   by the script in index.astro). */
-.js .after-world > :not(script) {
-  position: sticky;
-  top: min(0px, calc(100svh - var(--h, 0px)));
+   by the script in index.astro). Desktop only: on a phone the sections run two or three
+   screens tall, so a pinned one shows its ending for an instant before the next covers
+   it, and the scroll-linked quote stalls half lit. */
+@media not all and (max-width: 860px) {
+  .js .after-world > :not(script) {
+    position: sticky;
+    top: min(0px, calc(100svh - var(--h, 0px)));
+  }
 }
 
 /* Arched top, like the attic windows. Sized for a 4:5 image. */
@@ -173,13 +177,15 @@ body {
   }
 }
 
-/* Quote words light up in reading order (src/scripts/motion.ts). */
+/* Quote words light up in reading order once the block scrolls into view (.is-in,
+   src/scripts/motion.ts). Timed like the brush, not scroll-linked: the block sits in a
+   pinned section, where a scroll-linked run stalls half lit. */
 .js [data-word] {
   opacity: 0.5;
-  transition: opacity 700ms var(--ease-fluid);
+  transition: opacity 700ms var(--ease-fluid) calc(var(--word, 0) * 70ms);
 }
 
-.js [data-word].is-lit {
+.js [data-words].is-in [data-word] {
   opacity: 1;
 }
 
@@ -200,7 +206,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal] {
+  .js [data-reveal],
+  .js [data-word] {
     transition: none;
   }
 }

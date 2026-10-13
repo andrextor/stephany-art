@@ -14,6 +14,8 @@ export interface WorldStop {
   still: string;
   /** Desktop engine: viewport-heights of scroll spent on this stop. */
   scroll?: number;
+  /** Desktop engine: viewport-heights of scroll for the walk that arrives at this stop. */
+  walk?: number;
   titleTag?: 'h1' | 'h2';
   eyebrow: string;
   title: string;
@@ -36,7 +38,7 @@ export const worldStops = (lang: Lang): WorldStop[] => {
       id: 'inicio',
       label: home.label,
       still: '/world/stop-0.webp',
-      scroll: 0.25,
+      scroll: 1.2,
       titleTag: 'h1',
       eyebrow: role,
       title: site.artistName,
@@ -77,7 +79,11 @@ export const worldStops = (lang: Lang): WorldStop[] => {
       id: 'en-proceso',
       label: inProgress.label,
       still: '/world/stop-4.webp',
-      scroll: 0.3,
+      scroll: 0.5,
+      // The copy is fully in before this dive starts (copy lead), so a short dwell is
+      // enough: anything longer is a still picture under finished copy before the page
+      // slides up. clip-4 runs 20 s, the other walks 10 s: twice the scroll, same pace.
+      walk: 2.8,
       eyebrow: inProgress.eyebrow,
       title: inProgress.title,
       body: inProgress.body,
