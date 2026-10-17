@@ -1,6 +1,6 @@
 import { site } from '../data/site';
 import { copy, type Lang, localePath } from '../i18n';
-import type { Artwork } from './artworks';
+import type { Artwork, ArtworkStatus } from './artworks';
 
 export type JsonLd = Record<string, unknown>;
 
@@ -14,6 +14,7 @@ export const artistJsonLd = (origin: URL, lang: Lang): JsonLd => ({
   description: copy[lang].bio[0],
   email: site.email,
   sameAs: [site.instagram.url],
+  award: copy[lang].exhibitions.map(({ event, year }) => `${event} ${year}`),
 });
 
 export const websiteJsonLd = (origin: URL, lang: Lang): JsonLd => ({
@@ -25,8 +26,15 @@ export const websiteJsonLd = (origin: URL, lang: Lang): JsonLd => ({
   publisher: { '@id': new URL('/#artista', origin).href },
 });
 
+const availability: Partial<Record<ArtworkStatus, string>> = {
+  available: 'https://schema.org/InStock',
+  reserved: 'https://schema.org/LimitedAvailability',
+  sold: 'https://schema.org/SoldOut',
+};
+
 export const artworkJsonLd = (artwork: Artwork, origin: URL, imageUrl: string, lang: Lang): JsonLd => {
-  const { title, year, technique, dimensions } = artwork.data;
+  const { title, year, technique, dimensions, status, price } = artwork.data;
+  const offerAvailability = status && availability[status];
   return {
     '@type': 'VisualArtwork',
     name: title,
@@ -39,6 +47,13 @@ export const artworkJsonLd = (artwork: Artwork, origin: URL, imageUrl: string, l
     ...(dimensions && {
       width: { '@type': 'Distance', name: `${dimensions.width} ${dimensions.unit}` },
       height: { '@type': 'Distance', name: `${dimensions.height} ${dimensions.unit}` },
+    }),
+    ...(offerAvailability && {
+      offers: {
+        '@type': 'Offer',
+        availability: offerAvailability,
+        ...(price?.visible && { price: price.amount, priceCurrency: price.currency }),
+      },
     }),
   };
 };

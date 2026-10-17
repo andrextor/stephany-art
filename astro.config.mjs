@@ -10,7 +10,14 @@ const site = process.env.SITE_URL ?? 'https://stephany.ialopez11012.workers.dev'
 // https://astro.build/config
 export default defineConfig({
   site,
-  integrations: site ? [sitemap({ filter: (page) => !page.endsWith('/404/') })] : [],
+  integrations: site
+    ? [
+        sitemap({
+          filter: (page) => !page.endsWith('/404/'),
+          i18n: { defaultLocale: 'es', locales: { es: 'es', en: 'en' } },
+        }),
+      ]
+    : [],
   fonts: [
     {
       name: 'Cormorant Garamond',

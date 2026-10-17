@@ -19,7 +19,7 @@ const origin = Astro.site ?? Astro.url;
 const jsonLd = graph(
   {
     '@type': 'ProfilePage',
-    url: new URL(localePath(lang, '/sobre-mi'), origin).href,
+    url: new URL(localePath(lang, '/sobre-mi/'), origin).href,
     mainEntity: { '@id': new URL('/#artista', origin).href },
   },
   artistJsonLd(origin, lang),

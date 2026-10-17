@@ -47,7 +47,7 @@ const firstStop = config.sections[0];
     <article class="sw-copy">
       <span class="sw-copy__num">01 / {String(config.sections.length).padStart(2, '0')}</span>
       <span class="sw-copy__eyebrow">{firstStop.eyebrow}</span>
-      <h1 class="sw-copy__title">{firstStop.title}</h1>
+      <p class="sw-copy__title font-display">{firstStop.title}</p>
       <p class="sw-copy__body">{firstStop.body}</p>
       <div class="sw-copy__cta">
         <a class="sw-btn sw-btn--primary" href={firstStop.cta?.primary?.href} target="_blank" rel="noopener">
