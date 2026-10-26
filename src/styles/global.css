@@ -354,17 +354,46 @@ body {
   border: 1.5px solid color-mix(in srgb, var(--color-ink) 25%, transparent);
 }
 
-/* Cross-document view transitions: a soft fade between pages, the artwork image travels
-   from card to detail page (view-transition-name: obra-<slug>) and the header stays put. */
+/* Cross-document view transitions: the new page is painted in over the old one like a
+   brush stroke sweeping left to right, the artwork image travels from card to detail page
+   (view-transition-name: obra-<slug>) and the header stays put. */
 @view-transition {
   navigation: auto;
 }
 
-::view-transition-group(*),
-::view-transition-old(root),
-::view-transition-new(root) {
+::view-transition-group(*) {
   animation-duration: 450ms;
   animation-timing-function: var(--ease-fluid);
+}
+
+::view-transition-old(root) {
+  animation: page-recede 700ms var(--ease-fluid) both;
+}
+
+/* The mask is 250% of the page wide, opaque on its left 45% and clear from 55%: sliding it
+   from 100% to 0% moves the soft edge across the page. */
+::view-transition-new(root) {
+  mask-image: linear-gradient(100deg, #000 45%, transparent 55%);
+  mask-size: 250% 100%;
+  mask-repeat: no-repeat;
+  animation: page-paint 700ms var(--ease-fluid) both;
+}
+
+@keyframes page-recede {
+  to {
+    opacity: 0.4;
+    filter: blur(6px);
+    transform: scale(0.985);
+  }
+}
+
+@keyframes page-paint {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
