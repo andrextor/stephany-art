@@ -24,6 +24,7 @@ const es = {
   intro:
     'Artista colombiana y autodidacta. Pinta entre la luz y la sombra, con veladuras pacientes y texturas orgánicas, desde su nuevo estudio.',
   highlights: [
+    { title: 'Bienal de Cali', detail: '2026' },
     { title: 'Bienal de Armenia', detail: '2024 · 2026' },
     { title: 'Portada de revista', detail: 'FILBo 2025' },
     { title: 'Óleo y acrílico', detail: 'Veladuras y texturas' },
@@ -43,6 +44,7 @@ const es = {
       event: 'Portada de revista presentada en la Feria Internacional del Libro de Bogotá (FILBo)',
     },
     { year: 2026, artwork: 'transito-del-alma', event: 'Bienal de Armenia' },
+    { year: 2026, artwork: 'memento-mori', event: 'Bienal de Cali' },
   ],
   // PENDIENTE: validar los pasos con Stephany (plazos, anticipo, envío)
   commissionSteps: [
@@ -103,6 +105,9 @@ const es = {
     viewAllWorks: (count: number): string => `Ver las ${count} obras`,
     readBio: 'Leer la biografía',
     moreWorks: 'Más obras',
+    newWorks: 'Obras nuevas',
+    olderWork: 'Anterior',
+    newerWork: 'Más reciente',
     commissionTitle: 'Cómo funciona un encargo',
     commissionText: 'Una obra hecha a mano a partir de tu historia, en tres pasos.',
     faqTitle: 'Preguntas frecuentes',
@@ -194,6 +199,7 @@ const en: Copy = {
   intro:
     'Colombian, self-taught artist. She paints between light and shadow, with patient glazes and organic textures, from her new studio.',
   highlights: [
+    { title: 'Cali Biennial', detail: '2026' },
     { title: 'Armenia Biennial', detail: '2024 · 2026' },
     { title: 'Magazine cover', detail: 'FILBo 2025' },
     { title: 'Oil and acrylic', detail: 'Glazes and textures' },
@@ -212,6 +218,7 @@ const en: Copy = {
       event: 'Magazine cover presented at the Bogotá International Book Fair (FILBo)',
     },
     { year: 2026, artwork: 'transito-del-alma', event: 'Armenia Biennial' },
+    { year: 2026, artwork: 'memento-mori', event: 'Cali Biennial' },
   ],
   commissionSteps: [
     {
@@ -268,6 +275,9 @@ const en: Copy = {
     viewAllWorks: (count) => `View all ${count} works`,
     readBio: 'Read the biography',
     moreWorks: 'More works',
+    newWorks: 'New works',
+    olderWork: 'Previous',
+    newerWork: 'Newer',
     commissionTitle: 'How a commission works',
     commissionText: 'A handmade painting based on your story, in three steps.',
     faqTitle: 'Frequently asked questions',
