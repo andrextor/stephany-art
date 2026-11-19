@@ -19,6 +19,8 @@
   /* Status dots: the gallery red dot for a sold work, a pulsing green one for an available work. */
   --color-sold: #a8432f;
   --color-available: #3f8f5a;
+  /* Darker green for the word "Disponible": the dot green is too light for small text. */
+  --color-available-deep: #2c6a42;
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 

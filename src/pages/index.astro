@@ -1,5 +1,5 @@
 ---
-import { Picture } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import ArtistPortrait from '../components/ArtistPortrait.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import Brush from '../components/Brush.astro';
@@ -11,26 +11,36 @@ import ScrollWorldMobile from '../components/ScrollWorldMobile.astro';
 import { site, whatsappUrl } from '../data/site';
 import { copy, langFromUrl, localePath } from '../i18n';
 import Layout from '../layouts/Layout.astro';
-import { getPublishedArtworks, mainImage } from '../lib/artworks';
+import { type Artwork, getPublishedArtworks, mainImage } from '../lib/artworks';
 import { artistJsonLd, graph, websiteJsonLd } from '../lib/seo';
 
 const lang = langFromUrl(Astro.url);
 const t = copy[lang];
 const { categoryNames, statusLabels, ui } = t;
 const published = await getPublishedArtworks(lang);
-const [hero, ...rest] = published.filter((artwork) => artwork.data.featured);
-const more = rest.slice(0, 6);
+// Newest personal works first: latest year, then gallery order within it. Works still in
+// progress have no year and stay out until they are finished.
+const recent = published
+  .filter((artwork) => artwork.data.category === 'personal' && artwork.data.year)
+  .sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0) || a.data.order - b.data.order)
+  .slice(0, 3);
+const recentIds = new Set(recent.map((artwork) => artwork.id));
+const more = published.filter((artwork) => artwork.data.featured && !recentIds.has(artwork.id)).slice(0, 6);
 const quoteWords = `“${t.quote}”`.split(' ');
-const heroImage = mainImage(hero);
-const heroExhibition = t.exhibitions.findLast((exhibition) => exhibition.artwork === hero.id);
-const heroCaption = [
-  categoryNames[hero.data.category],
-  heroExhibition
-    ? `${heroExhibition.event} ${heroExhibition.year}`
-    : hero.data.status && statusLabels[hero.data.status],
-]
-  .filter(Boolean)
-  .join(' · ');
+const caption = ({ id, data }: Artwork): string => {
+  const exhibition = t.exhibitions.findLast((item) => item.artwork === id);
+  return [
+    categoryNames[data.category],
+    // "Disponible" gets its own green tag next to the caption, so it is left out here.
+    exhibition
+      ? `${exhibition.event} ${exhibition.year}`
+      : data.status && data.status !== 'available'
+        ? statusLabels[data.status]
+        : data.year,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+};
 const origin = Astro.site ?? Astro.url;
 const jsonLd = graph(websiteJsonLd(origin, lang), artistJsonLd(origin, lang));
 ---
@@ -40,27 +50,109 @@ const jsonLd = graph(websiteJsonLd(origin, lang), artistJsonLd(origin, lang));
   <ScrollWorldMobile />
 
   <div class="after-world">
-    <section aria-labelledby="obra-insignia" data-spy={localePath(lang, '/obras')} class="grid md:grid-cols-[1.15fr_1fr]">
-      <a
-        href={localePath(lang, `/obras/${hero.id}`)}
-        class="group flex flex-col items-center justify-center gap-5 bg-ink px-4 py-16 md:px-10 md:py-20"
-      >
-        <div data-reveal style={`view-transition-name: obra-${hero.id}`}>
-          <Picture
-            src={heroImage.src}
-            alt={heroImage.alt}
-            formats={['avif', 'webp']}
-            fallbackFormat="webp"
-            widths={[480, 720, 960, 1280]}
-            sizes="(min-width: 768px) 50vw, 90vw"
-            class="canvas max-h-[78vh] w-auto transition-transform duration-700 ease-fluid group-hover:-translate-y-1"
-          />
+    <section aria-labelledby="obras-nuevas" data-spy={localePath(lang, '/obras')} class="grid md:grid-cols-[1.15fr_1fr]">
+      <div class="flex min-w-0 flex-col justify-center gap-6 bg-ink py-16 md:py-20">
+        <div class="px-4 md:px-10">
+          <h2
+            id="obras-nuevas"
+            data-reveal
+            class="mx-auto flex w-full max-w-xl items-center gap-2 font-sans text-xs font-semibold tracking-[0.16em] text-clay uppercase"
+          >
+            <span class="inline-flex items-center gap-2 rounded-full border border-clay/35 bg-clay/10 px-3 py-1">
+              <span class="relative flex size-1.5" aria-hidden="true">
+                <span class="absolute inset-0 rounded-full bg-clay opacity-75 motion-safe:animate-ping"></span>
+                <span class="relative size-1.5 rounded-full bg-clay"></span>
+              </span>
+              {ui.newWorks}
+            </span>
+          </h2>
         </div>
-        <div class="flex w-full max-w-xl flex-col gap-0.5">
-          <h2 id="obra-insignia" data-reveal class="text-3xl text-bg italic">{hero.data.title}</h2>
-          <p class="text-sm text-ink-faint">{heroCaption}</p>
-        </div>
-      </a>
+
+        <ul data-carousel data-reveal class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]">
+          {
+            recent.map((artwork, index) => {
+              const image = mainImage(artwork);
+              const older = recent[index + 1];
+              return (
+                <li class="flex w-full shrink-0 snap-start flex-col items-center gap-6 px-4 pt-1 pb-4 md:px-10">
+                  <a href={localePath(lang, `/obras/${artwork.id}`)} class="group flex w-full flex-col items-center gap-5">
+                    <div style={`view-transition-name: obra-${artwork.id}`}>
+                      <Picture
+                        src={image.src}
+                        alt={image.alt}
+                        formats={['avif', 'webp']}
+                        fallbackFormat="webp"
+                        widths={[480, 720, 960, 1280]}
+                        sizes="(min-width: 768px) 50vw, 90vw"
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        class="canvas max-h-[64vh] w-auto transition-transform duration-700 ease-fluid group-hover:-translate-y-1"
+                      />
+                    </div>
+                    <div class="flex w-full max-w-xl flex-col gap-0.5">
+                      <h3 class="text-3xl text-bg italic">{artwork.data.title}</h3>
+                      <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-faint">
+                        {caption(artwork)}
+                        {artwork.data.status === 'available' && (
+                          <span class="inline-flex items-center gap-1.5 rounded-full border border-available/50 bg-available/20 px-2 py-0.5 font-semibold text-bg">
+                            <span class="relative flex size-1.5" aria-hidden="true">
+                              <span class="absolute inset-0 rounded-full bg-available opacity-75 motion-safe:animate-ping" />
+                              <span class="relative size-1.5 rounded-full bg-available" />
+                            </span>
+                            {statusLabels.available}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </a>
+
+                  <div class="flex w-full max-w-xl items-center justify-between gap-4 border-t border-bg/10 pt-4">
+                    {index > 0 ? (
+                      <button
+                        type="button"
+                        data-step="-1"
+                        class="hidden items-center gap-2 text-sm font-semibold text-ink-faint transition-colors duration-700 ease-fluid hover:text-bg [.js_&]:inline-flex"
+                      >
+                        <Icon name="arrow-left" class="size-4" />
+                        {ui.newerWork}
+                      </button>
+                    ) : (
+                      <span />
+                    )}
+                    {older ? (
+                      <button
+                        type="button"
+                        data-step="1"
+                        class="group/older hidden items-center gap-3 text-right [.js_&]:inline-flex"
+                      >
+                        <span class="flex flex-col">
+                          <span class="text-xs font-semibold tracking-[0.16em] text-ink-faint uppercase">{ui.olderWork}</span>
+                          <span class="font-display text-lg text-bg italic">{older.data.title}</span>
+                        </span>
+                        <Image
+                          src={mainImage(older).src}
+                          alt=""
+                          widths={[48, 96]}
+                          sizes="48px"
+                          class="h-15 w-12 rounded-sm object-cover ring-1 ring-bg/15 transition-transform duration-700 ease-fluid group-hover/older:-translate-y-0.5"
+                        />
+                        <Icon name="arrow-right" class="size-4 text-clay" />
+                      </button>
+                    ) : (
+                      <a
+                        href={localePath(lang, '/obras')}
+                        class="inline-flex items-center gap-2 text-sm font-semibold text-bg transition-colors duration-700 ease-fluid hover:text-clay"
+                      >
+                        {ui.viewWorks}
+                        <Icon name="arrow-right" class="size-4" />
+                      </a>
+                    )}
+                  </div>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
 
       <div class="relative flex flex-col justify-center gap-8 overflow-hidden bg-bg px-4 py-16 md:px-12 md:py-20">
         <Ridges
@@ -218,6 +310,31 @@ const jsonLd = graph(websiteJsonLd(origin, lang), artistJsonLd(origin, lang));
         }
       });
       for (const section of stack.children) observer.observe(section);
+    }
+
+    // New works carousel: swipe and trackpad scroll it natively; the buttons step one slide.
+    const carousel = document.querySelector<HTMLElement>('[data-carousel]');
+    if (carousel) {
+      // Lenis smooths the page's vertical wheel and would swallow a mostly sideways trackpad
+      // swipe too, so sideways gestures stop here and stay native to the carousel.
+      carousel.addEventListener(
+        'wheel',
+        (event) => {
+          if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) event.stopPropagation();
+        },
+        { passive: true },
+      );
+      carousel.addEventListener('click', (event) => {
+        const button = (event.target as Element).closest<HTMLElement>('[data-step]');
+        const slide = button?.closest('li');
+        if (!button || !slide) return;
+        const step = Number(button.dataset.step);
+        const target = step > 0 ? slide.nextElementSibling : slide.previousElementSibling;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        carousel.scrollBy({ left: step * carousel.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+        // Keyboard users land on the slide they moved to, not on a button that scrolled away.
+        target?.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
+      });
     }
   </script>
 </Layout>

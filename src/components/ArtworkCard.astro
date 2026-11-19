@@ -52,10 +52,22 @@ const { categoryNames, statusLabels } = copy[lang];
   </div>
   <div class="flex flex-col gap-0.5">
     <Heading class="text-2xl text-ink italic">{title}</Heading>
-    <p class="text-sm text-ink-soft">
+    <p class="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-ink-soft">
       {categoryNames[category]}
-      {status && <span class="font-semibold text-moss-deep"> · {statusLabels[status]}</span>}
-      {!status && year && <span> · {year}</span>}
+      {
+        status === 'available' ? (
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-available/15 px-2 py-0.5 font-semibold text-available-deep">
+            <span class="relative flex size-1.5" aria-hidden="true">
+              <span class="absolute inset-0 rounded-full bg-available opacity-75 motion-safe:animate-ping" />
+              <span class="relative size-1.5 rounded-full bg-available" />
+            </span>
+            {statusLabels[status]}
+          </span>
+        ) : (
+          status && <span class="font-semibold text-moss-deep">· {statusLabels[status]}</span>
+        )
+      }
+      {!status && year && <span>· {year}</span>}
     </p>
   </div>
 </a>
